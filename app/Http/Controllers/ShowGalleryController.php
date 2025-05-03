@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Gallery;
 
 
-class GalleryController extends Controller{
+class ShowGalleryController extends Controller{
     public function showGallery(Request $request)
     {
         $query = Gallery::with('subGalleries.imageGroups.images');

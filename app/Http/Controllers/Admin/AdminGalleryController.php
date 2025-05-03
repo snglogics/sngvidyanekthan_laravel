@@ -12,6 +12,12 @@ use App\Models\ImageGroup;
 
 class AdminGalleryController extends Controller
 {
+    public function mediahome()
+    {
+        return view('media.adminmedia');
+    }
+
+    
     public function index()
     {
         $galleries = Gallery::with('subGalleries.imageGroups.images')->get();

@@ -2,7 +2,7 @@
 /* --------------------------------------------
 Google Map
 -------------------------------------------- */	
-
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
 function basicmap() {
         // Basic options for a simple Google Map
         // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
@@ -11,7 +11,7 @@ function basicmap() {
             zoom: 11,
             scrollwheel: false,
             // The latitude and longitude to center the map (always required)
-            center: new google.maps.LatLng(23.694182, 90.457313), // New York
+            center: new google.maps.LatLng(10.110935, 76.380997), // New York
             // This is where you would paste any style found on Snazzy Maps.
             styles: [
     {
@@ -104,7 +104,7 @@ function basicmap() {
 
         // Let's also add a marker while we're at it
         var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(23.694182, 90.457313),
+            position: new google.maps.LatLng(10.110935, 76.380997),
             map: map,
             title: 'Cryptox'
         });

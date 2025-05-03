@@ -17,7 +17,7 @@
     <div class="sidebar">
         <a href="{{ route('admin.dashboard') }}">Dashboard</a>
         <a href="{{ route('admin.home') }}">HomePage</a>
-        <a href="{{ route('admin.home') }}">Media</a>
+        <a href="{{ route('admin.media') }}">Media</a>
 
     </div>
 

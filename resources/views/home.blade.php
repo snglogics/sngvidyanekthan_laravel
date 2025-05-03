@@ -162,7 +162,7 @@
   <div class="cta-content">
     <h2>Empowering Education Through Technology</h2>
     <p>Discover a modern learning environment built for students, parents, and teachers. Join us in shaping the future of education at Sree Narayana Vidyaniketan.</p>
-    <a href="/admissions" class="cta-button">Apply Now</a>
+    <a href="{{ route('contact')}}" class="cta-button">Apply Now</a>
   </div>
 </section>
 <!-- End  of the CTAs Section -->
@@ -233,7 +233,7 @@
   </div>
 </div>
 
-
+<!-- Announcements Section -->
 
 
 @if($announcements->count())

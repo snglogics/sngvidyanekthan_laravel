@@ -10,7 +10,8 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\UpcomingEventController;
 use App\Http\Controllers\Admin\AdminGalleryController;
-use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\ShowGalleryController;
+use App\Http\Controllers\ContactController;
 
 
 // Routes for the Frontend (Public Pages)
@@ -72,6 +73,11 @@ Route::prefix('admin/events')->name('admin.events.')->group(function () {
   Route::delete('/{id}', [UpcomingEventController::class, 'destroy'])->name('destroy');
 });
 
+
+
+//Admin Media routes
+Route::get('/admin/media', [AdminGalleryController::class, 'mediahome'])->name('admin.media');
+
 // Route for the gallery
 Route::prefix('admin/gallery')->name('admin.gallery.')->group(function () {
   Route::get('/', [AdminGalleryController::class, 'index'])->name('index');
@@ -80,5 +86,13 @@ Route::prefix('admin/gallery')->name('admin.gallery.')->group(function () {
   Route::post('/group/store', [AdminGalleryController::class, 'storeImageGroup'])->name('group.store');
 });
 // Route for the main gallery
-route::get('/gallery', [GalleryController::class, 'showGallery'])->name('gallery.show');
+// route::get('/gallery', [ShowGalleryController::class, 'showGallery'])->name('gallery.show');
+Route::get('admin/gallery', [ShowGalleryController::class, 'showGallery'])->name('gallery.show');
+
+// contact pate
+Route::get('/contact', [ContactController::class, 'viewContact'])->name('contact');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+
+
+
 require __DIR__.'/auth.php';
