@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
-use App\Models\upcoming_events;
+use App\Models\UploadEvents;
 
 
-class FrontEndController extends Controller
+class EventController extends Controller
 {
    
 }

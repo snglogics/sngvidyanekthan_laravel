@@ -85,4 +85,11 @@ class AdminGalleryController extends Controller
 
         return back()->with('success', 'Image group uploaded.');
     }
+
+    public function gallerylist()
+    {
+        $galleries = Gallery::with('subGalleries.imageGroups.images')->orderBy('id', 'desc')->get();
+        return view('admin.videos.Gallerylist', compact('galleries'));
+    }
 }
+ 

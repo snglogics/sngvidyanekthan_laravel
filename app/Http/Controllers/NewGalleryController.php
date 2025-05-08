@@ -22,4 +22,5 @@ class NewGalleryController extends Controller{
         return view('gallery', compact('galleries', 'allGalleries'));
     }
     
+    
 }

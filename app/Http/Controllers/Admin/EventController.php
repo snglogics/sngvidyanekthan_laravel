@@ -77,5 +77,11 @@ public function deleteByHeader(Request $request)
 
     return redirect()->back()->with('success', 'All images under "' . $request->common_header . '" deleted successfully.');
 }
+
+public function eventlist()
+{
+    $groupedEvents = UploadEvents::orderBy('id', 'desc')->get()->groupBy('common_header');
+    return view('activities.evntlist', compact('groupedEvents'));
+}
     
 }

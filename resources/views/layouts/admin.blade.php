@@ -8,8 +8,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" /> 
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/flipbook-vue@latest/dist/flipbook.min.css" rel="stylesheet" />
+     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.1/aos.css" rel="stylesheet" />
+     
+
  
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"> 
+    
     @yield('styles')
 </head>
 <body>
@@ -17,7 +22,10 @@
     <div class="sidebar">
         <a href="{{ route('admin.dashboard') }}">Dashboard</a>
         <a href="{{ route('admin.home') }}">HomePage</a>
+        <a href="{{ route('faculty.home') }}">Faculty</a>
         <a href="{{ route('admin.media') }}">Media</a>
+        <a href="{{ route('facility.home') }}">Facility</a>
+        
 
     </div>
 
@@ -44,13 +52,16 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    
+ 
     <script>
   AOS.init({
     duration: 1000,
     once: true,
   });
+  
 </script>
 
 @yield('scripts')

@@ -77,13 +77,15 @@
     Application Form
 </a>
 <div class="dropdown-menu">
-    <a class="dropdown-item" href="{{ asset('pdfs/lkg_form.pdf') }}" download>📄 For LKG</a>
-    <a class="dropdown-item" href="{{ asset('pdfs/class_1_to_10_form.pdf') }}" download>📄 Class 1 to 10</a>
-    <a class="dropdown-item" href="{{ asset('pdfs/plus_one_plus_two_form.pdf') }}" download>📄 For Plus One & Plus Two</a>
+<a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSchCpl-toWyB0eNfrmxfXvylMEuqx_F5vxSgsLtLAcTdmH8Aw/viewform" target="_blank">
+    📄 For LKG
+</a>
+<a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/application-form-for-i-ix/" target="_blank">📄 Class 1 to 10</a>
+<a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSdsdaaACy5hvhkYDgl1n98vV-AUTmKRmnKnqqJT7TyR3ggoxQ/viewform" target="_blank">📄 For Plus One & Plus Two</a>
 </div>
                     </div>
                     <div class="button float-left ml-3">
-                        <a href="#" class="main-btn">Fee Payment</a>
+                        <a href="https://epay.federalbank.co.in/easypayments/" target="_blank" class="main-btn">Fee Payment</a>
                     </div>
                 </div> <!-- support-button -->
             </div>
@@ -111,11 +113,14 @@
                                    <li class="nav-item">
                                    <a href="{{ route('about') }}">About</a>
                                        <ul class="sub-menu">
-                                           <li><a href="mission-vision.html">Mission and Vision</a></li>
-                                           <li><a href="aims-objectives.html">Aims and Objectives</a></li>
-                                           <li><a href="who-we-are.html">Who We Are</a></li>
-                                           <li><a href="school-history.html">School History</a></li>
-                                           <li><a href="principal-message.html">Principal Message</a></li>
+                                            <li><a href="{{ route('about') }}">School History</a></li>
+                                           <li><a href="{{ route('school.vision') }}">Mission and Vision</a></li>
+                                           <li><a href="{{ route('principal.msg') }}">Principal Message</a></li>
+                                           <li><a href="{{ route('about') }}">Campus Overview</a></li>
+                                           <li><a href="{{ route('school.info') }}">Who We Are</a></li>
+                                           <li><a href="{{ route('teachers.public') }}">Teacher's Details</a></li>
+                                         
+                                           
                                        </ul>
                                    </li>
                                    <li class="nav-item">
@@ -126,6 +131,7 @@
                                            <li><a href="curriculum.html">Curriculum</a></li>
                                            <li><a href="examination.html">Examination</a></li>
                                            <li><a href="academic-year-plan.html">Annual Academic Year Plan</a></li>
+                                           <li><a href="{{ route('timetable.list') }}">Timetable</a></li>
                                        </ul>
                                    </li>
                                    <li class="nav-item">
@@ -142,7 +148,7 @@
                                        <a href="activities.html">Activities</a>
                                        <ul class="sub-menu">
                                            <li><a href="co-curricular.html">Co-Curricular Activities</a></li>
-                                           <li><a href="school-activities.html">School</a></li>
+                                           <li><a href="{{route('events.list')}}">Events</a></li>
                                            <li><a href="ncc.html">NCC</a></li>
                                            <li><a href="youth-festival.html">Youth Festival</a></li>
                                            <li><a href="sahodaya.html">Sahodaya</a></li>
@@ -158,12 +164,12 @@
                                        <ul class="sub-menu">
                                            <li><a href="news.html">News</a></li>
                                            <li><a href="newsletter.html">News Letter</a></li>
-                                           <li><a href="{{ route('gallery.show')}}">Photo Gallery</a></li>
-                                           <li><a href="videos.html">Videos</a></li>
+                                           <li><a href="{{ route('gallery.list')}}">Photo Gallery</a></li>
+                                           <li><a href="{{ route('videos.list')}}">Videos</a></li>
                                        </ul>
                                    </li>
                                    <li class="nav-item">
-                                       <a href="contact.html">Contact</a>
+                                       <a href="{{ route('contact')}}">Contact</a>
                                    </li>
                                    <li class="nav-item">
                                        <a href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">DISCLOSURE </a>

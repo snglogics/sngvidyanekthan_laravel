@@ -9,10 +9,8 @@
         @php
             $buttons = [
                 ['route' => 'admin.gallery.index', 'label' => 'Create Gallery', 'icon' => 'fas fa-images', 'color' => 'primary'],
-                ['route' => 'image.form', 'label' => 'Update Principal', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
-                ['route' => 'announcement.uploadForm', 'label' => 'Update Announcements', 'icon' => 'fas fa-bullhorn', 'color' => 'warning'],
-                ['route' => 'admin.events.create', 'label' => 'Upcoming Events', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
-                ['route' => 'events.upload', 'label' => 'Update Events', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
+                ['route' => 'admin.videos.create', 'label' => 'Video Album', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
+               
             ];
         @endphp
 

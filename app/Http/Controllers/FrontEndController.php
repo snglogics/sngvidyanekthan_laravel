@@ -9,6 +9,7 @@ use App\Models\Announcement;
 use App\Models\Slider;
 use App\Models\PrincipalMsg;
 use App\Models\upcoming_events; 
+use App\Models\ManagerMsg;
 
 class FrontEndController extends Controller
 {
@@ -65,5 +66,11 @@ class FrontEndController extends Controller
    return redirect()->back()->with('notification', 'Your result is ready! Download now.');
 }
 
+public function viewPrincipal()
+    {
+        $principalMsg = PrincipalMsg::latest()->first();
+        $managerMsg = ManagerMsg::latest()->first();
+        return view('prinicpalmsgpage',compact('principalMsg','managerMsg'));
+    }
 
 }
