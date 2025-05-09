@@ -8,7 +8,7 @@ use Cloudinary\Cloudinary;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Storage;
 
 class StudentApplicationController extends Controller
 {
@@ -19,6 +19,7 @@ class StudentApplicationController extends Controller
 
     public function submitForm(Request $request)
     {
+        // Validate incoming data
         $request->validate([
             'class' => 'required|string|max:50',
             'pupil_name' => 'required|string|max:255',
@@ -27,11 +28,25 @@ class StudentApplicationController extends Controller
             'father_name' => 'required|string|max:255',
             'mother_name' => 'required|string|max:255',
             'address' => 'required|string',
-            'phone_number' => 'required|string|max:15',
+            'mobile_number' => 'required|string|max:15',
             'email' => 'required|email',
             'nationality' => 'nullable|string|max:100',
             'religion' => 'nullable|string|max:100',
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'father_occupation' => 'nullable|string|max:255',
+            'mother_occupation' => 'nullable|string|max:255',
+            'Whatsapp_number' => 'nullable|string|max:15',
+            'aadhar' => 'nullable|string|max:12',
+            'annual_income' => 'nullable|string|max:20',
+            'mother_toungue' => 'nullable|string|max:50',
+            'father_education' => 'nullable|string|max:255',
+            'mother_education' => 'nullable|string|max:255',
+            'total_members' => 'nullable|string|max:3',
+            'siblings' => 'nullable|string|max:255',
+            'local_guardian' => 'nullable|string|max:255',
+            'hobbies' => 'nullable|string|max:255',
+            'blood_group' => 'nullable|string|max:5',
+            'boarding_point' => 'nullable|string|max:255',
+            'pdf_url' => 'nullable|string|max:255',
         ]);
 
         // Upload photo to Cloudinary
@@ -50,7 +65,7 @@ class StudentApplicationController extends Controller
             'resource_type' => 'image'
         ]);
 
-        //  Save student data
+        // Save student data
         $student = StudentApplication::create([
             'class' => $request->class,
             'pupil_name' => $request->pupil_name,
@@ -59,19 +74,44 @@ class StudentApplicationController extends Controller
             'father_name' => $request->father_name,
             'mother_name' => $request->mother_name,
             'address' => $request->address,
-            'phone_number' => $request->phone_number,
+            'mobile_number' => $request->phone_number,
             'email' => $request->email,
             'nationality' => $request->nationality,
             'religion' => $request->religion,
-            'photo_url' => $uploadResponse['secure_url']
+            'photo_url' => $uploadResponse['secure_url'],
+            'father_occupation' => $request->father_occupation,
+            'mother_occupation' => $request->mother_occupation,
+            'Whatsapp_number' => $request->Whatsapp_number,
+            'aadhar' => $request->aadhar,
+            'annual_income' => $request->annual_income,
+            'mother_toungue' => $request->mother_toungue,
+            'father_education' => $request->father_education,
+            'mother_education' => $request->mother_education,
+            'total_members' => $request->total_members,
+            'siblings' => $request->siblings,
+            'local_guardian' => $request->local_guardian,
+            'hobbies' => $request->hobbies,
+            'blood_group' => $request->blood_group,
+            'boarding_point' => $request->boarding_point,
+            'pdf_url' => $request->pdf_url,
         ]);
 
         // Generate PDF
-        $pdf = Pdf::loadView('student_application.pdf', compact('student'));
-        $pdfPath = storage_path('app/public/applications/' . $student->id . '.pdf');
-        $pdf->save($pdfPath);
+        // Ensure directory exists
+        Storage::makeDirectory('public/applications');
 
-        // Send email
+        // Generate PDF
+        $pdf = Pdf::loadView('student_application.pdf', ['student' => $student]);
+
+        $pdfFilename = 'applications/' . $student->id . '.pdf';
+        Storage::put('public/' . $pdfFilename, $pdf->output());
+
+        // Save PDF path to database
+        $student->update([
+            'pdf_url' => 'storage/' . $pdfFilename
+        ]);
+
+        // Send email with the application PDF
         try {
             Mail::send('emails.application', ['student' => $student], function ($message) use ($student, $pdfPath) {
                 $message->to($student->email)
