@@ -4482,7 +4482,213 @@ p.form-message.error {
     margin-top: 4px;
 }
 
-/* Container */
-.container {
-    max-width: 1440px !important; /* or any value you prefer */
+/* campus overview */
+
+.campus-card {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 30px;
+}
+.campus-card:hover {
+    transform: translateY(-10px);
+}
+.campus-card img {
+    width: 100%;
+    border-radius: 12px 12px 0 0;
+    object-fit: cover;
+    height: 250px;
+}
+.campus-card-body {
+    padding: 20px;
+}
+.campus-card-title {
+    font-size: 1.5rem;
+    color: #0f64af;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.campus-card-description {
+    color: #555;
+}
+.progress-bar-container {
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.progress-bar {
+    height: 30px;
+    background-color: #0d6efd;
+    color: #fff;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: width 0.3s;
+}
+
+.photo-input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.remove-photo-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 0 5px 0 5px;
+    cursor: pointer;
+}
+
+.remove-photo-btn:hover {
+    background-color: #c82333;
+}
+
+.add-photo-btn {
+    background-color: #198754;
+    color: #fff;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.add-photo-btn:hover {
+    background-color: #157347;
+}
+/* edit */
+.photo-preview {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 15px;
+    margin-right: 15px;
+}
+
+.photo-preview img {
+    max-width: 150px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.photo-actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 5px;
+}
+
+.photo-actions button {
+    border: none;
+    background-color: #dc3545;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.photo-actions button.update-btn {
+    background-color: #007bff;
+}
+
+/* calender style */
+.event-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    color: #fff;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.event-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.event-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: background 0.3s;
+}
+
+.event-card .overlay:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.event-card .event-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #f7d00b;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.event-card .event-meta {
+    font-size: 0.9rem;
+    color: #ddd;
+    margin-bottom: 15px;
+}
+
+.event-card .view-attachment {
+    background-color: #f7d00b;
+    color: #000;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 8px 15px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.event-card .view-attachment:hover {
+    background-color: #ffc107;
+}
+
+.event-card .icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #f7d00b;
+}
+
+/* admission form uploading */
+.form-heading {
+    position: relative;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.form-logo-upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-align: center;
+}
+.form-logo-upload input[type="file"] {
+    display: none;
+}
+.form-logo-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 5px;
 }

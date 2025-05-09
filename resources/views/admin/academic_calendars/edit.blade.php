@@ -3,7 +3,7 @@
 @section('title', 'Edit Academic Event')
 
 @section('content')
-<form action="{{ route('academic-calendars.update', $academicCalendar->id) }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('admin.academic-calendars.update', $academicCalendar->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 

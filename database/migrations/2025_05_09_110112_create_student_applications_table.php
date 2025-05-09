@@ -24,7 +24,26 @@ return new class extends Migration
             $table->string('email');
             $table->string('nationality')->nullable();
             $table->string('religion')->nullable();
-            $table->string('photo_url')->nullable();
+            $table->string('photo_url');
+
+            // Additional fields
+            $table->string('father_occupation')->nullable();
+            $table->string('mother_occupation')->nullable();
+            $table->string('mobile_number')->nullable();
+            $table->string('Whatsapp_number')->nullable();
+            $table->string('aadhar')->nullable();
+            $table->string('annual_income')->nullable();
+            $table->string('mother_toungue')->nullable();
+            $table->string('father_education')->nullable();
+            $table->string('mother_education')->nullable();
+            $table->string('total_members')->nullable();
+            $table->string('siblings')->nullable();
+            $table->string('local_guardian')->nullable();
+            $table->string('hobbies')->nullable();
+            $table->string('blood_group')->nullable();
+            $table->string('boarding_point')->nullable();
+            $table->string('pdf_url')->nullable();
+
             $table->timestamps();
         });
     }

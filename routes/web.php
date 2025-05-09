@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\LiveClassController;
 use App\Http\Controllers\Admin\TimeTableController;
 use App\Http\Controllers\StudentApplicationController;
 use App\Http\Controllers\AcademicCalendarController;
+use App\Http\Controllers\CampusOverviewController;
 
 // Routes for the Frontend (Public Pages)
 Route::get('/', [FrontEndController::class, 'home'])->name('home');  // Define home route
@@ -200,3 +201,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 Route::get('/academic-calendar', [AcademicCalendarController::class, 'academicCalendarFrontend'])->name('academic-calendar.frontend');
 Route::get('/academic-calendars/events', [AcademicCalendarController::class, 'academicCalendar'])->name('academic-calendars.events');
+
+Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
+  Route::resource('campus-overviews', CampusOverviewController::class);
+  Route::delete('campus-overviews/{campusOverview}/photos/{photoIndex}', [CampusOverviewController::class, 'destroyPhoto'])->name('campus-overviews.delete-photo');
+  Route::put('campus-overviews/{campusOverview}/photos/{photoIndex}/update', [CampusOverviewController::class, 'updatePhoto'])->name('campus-overviews.update-photo');
+});
+

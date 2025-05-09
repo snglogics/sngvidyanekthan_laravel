@@ -9,6 +9,38 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class AcademicCalendarController extends Controller
 {
+    public function academicCalendarFrontend()
+    {
+        // Fetch distinct academic years for filtering
+        $academicYears = AcademicCalendar::select('academic_year')->distinct()->pluck('academic_year');
+        return view('admin.academic_calendars.frontend', compact('academicYears'));
+    }
+    
+    public function academicCalendar(Request $request)
+    {
+        $query = AcademicCalendar::query();
+    
+        if ($request->has('academic_year') && $request->academic_year !== 'all') {
+            $query->where('academic_year', $request->academic_year);
+        }
+    
+        if ($request->has('month') && $request->month !== 'all') {
+            $query->whereMonth('start_date', $request->month);
+        }
+    
+        $events = $query->get()->map(function ($event) {
+            return [
+                'event_name' => $event->event_name,
+                'start_date' => $event->start_date,
+                'end_date' => $event->end_date,
+                'audience' => $event->audience,
+                'attachment_url' => $event->attachment_url,
+            ];
+        });
+    
+        return response()->json($events);
+    }
+
     public function index()
     {
         $events = AcademicCalendar::orderBy('start_date', 'asc')->get();
@@ -69,7 +101,7 @@ class AcademicCalendarController extends Controller
         'attachment_url' => $attachmentUrl
     ]);
 
-    return redirect()->route('academic-calendars.index')->with('success', 'Event added successfully!');
+    return redirect()->route('admin.academic-calendars.index')->with('success', 'Event added successfully!');
 }
 
     public function show(AcademicCalendar $academicCalendar)
@@ -94,63 +126,41 @@ class AcademicCalendarController extends Controller
             'color' => 'nullable|string|max:7',
             'attachment' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048'
         ]);
-
+        
+        $cloudinary = new \Cloudinary\Cloudinary([
+            'cloud' => [
+                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                'api_key'    => env('CLOUDINARY_API_KEY'),
+                'api_secret' => env('CLOUDINARY_API_SECRET'),
+            ]
+        ]);
         // Update file if provided
         if ($request->hasFile('attachment')) {
-            $uploadedFile = Cloudinary::upload($request->file('attachment')->getRealPath(), [
+            $uploadedFile =  $cloudinary->uploadApi()->upload($request->file('attachment')->getRealPath(), [
                 'folder' => 'academic_attachments',
                 'public_id' => uniqid(),
                 'overwrite' => true,
                 'resource_type' => 'auto'
             ]);
-            $academicCalendar->attachment_url = $uploadedFile->getSecurePath();
+        
+            // Set the new attachment URL
+            $request->merge([
+                'attachment_url' => $uploadedFile['secure_url']
+            ]);
         }
-
         // Update other fields
         $academicCalendar->update($request->except(['attachment']));
 
-        return redirect()->route('academic-calendars.index')->with('success', 'Event updated successfully!');
+        return redirect()->route('admin.academic-calendars.index')->with('success', 'Event updated successfully!');
     }
 
     public function destroy(AcademicCalendar $academicCalendar)
     {
         $academicCalendar->delete();
-        return redirect()->route('academic-calendars.index')->with('success', 'Event deleted successfully!');
+        return redirect()->route('admin.academic-calendars.index')->with('success', 'Event deleted successfully!');
     }
 
 
-public function academicCalendar(Request $request)
-{
-    $query = AcademicCalendar::query();
 
-    // Apply Academic Year Filter
-    if ($request->has('academic_year') && $request->academic_year !== 'all') {
-        $query->where('academic_year', $request->academic_year);
-    }
-
-    // Apply Month Filter
-    if ($request->has('month') && $request->month !== 'all') {
-        $query->whereMonth('start_date', $request->month);
-    }
-
-    $events = $query->get()->map(function ($event) {
-        return [
-            'title' => $event->event_name,
-            'start' => $event->start_date,
-            'end' => $event->end_date,
-            'backgroundColor' => $event->color ?? '#007bff',
-            'borderColor' => $event->color ?? '#007bff',
-            'extendedProps' => $event->toArray(),
-        ];
-    });
-
-    return response()->json($events);
-}
-public function academicCalendarFrontend()
-{
-    // Fetch distinct academic years for filtering
-    $academicYears = AcademicCalendar::select('academic_year')->distinct()->pluck('academic_year');
-    return view('admin.academic_calendars.frontend', compact('academicYears'));
-}
 
 }
