@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Curriculum extends Model
 {
+    protected $table = 'curriculums';
     protected $fillable = [
         'class_group',
         'subject',
@@ -15,3 +16,4 @@ class Curriculum extends Model
         'document_url'
     ];
 }
+

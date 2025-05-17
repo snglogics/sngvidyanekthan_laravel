@@ -1293,9 +1293,12 @@ p {
 .news-events {
     overflow: hidden;
 }
+.scrollcontainer {
+    position: relative;
+    overflow: hidden;
+}
 
 .news-container {
-    position: relative;
     width: 100%;
     height: 260px;
     overflow: hidden;
@@ -1872,6 +1875,42 @@ p {
     9. TEACHERS css 
 ======================================================*/
 
+.teacher-form {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.teacher-form h2 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.teacher-form .form-control {
+    border-radius: 5px;
+}
+
+.teacher-form .btn-success {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: all 0.3s ease-in-out;
+}
+
+.teacher-form .btn-success:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.image-preview {
+    margin-top: 15px;
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+    display: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
 .teachers-cont {
 }
 .teachers-cont p {
@@ -4450,36 +4489,65 @@ p.form-message.error {
 
 /* timetable view */
 .timetable-card {
-    background: #fff;
-    border-radius: 10px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    margin-bottom: 30px;
-}
-.timetable-header {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #0f64af;
     margin-bottom: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
+
+.timetable-card:hover {
+    transform: translateY(-5px);
+    background-color: #ffffff;
+}
+
+.timetable-header {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.timetable-header i {
+    margin-right: 10px;
+    color: #007bff;
+    font-size: 1.5em;
+}
+
 .timetable-table {
     width: 100%;
-    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.timetable-table th, .timetable-table td {
+    padding: 10px;
+    border: 1px solid #dee2e6;
     text-align: center;
 }
-.timetable-table th,
-.timetable-table td {
-    border: 1px solid #dee2e6;
-    padding: 12px;
+
+.timetable-details {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
-.timetable-table th {
-    background-color: #0f64af;
-    color: white;
-}
+
 .subject-cell small {
     display: block;
-    color: #888;
-    margin-top: 4px;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.toggle-icon {
+    float: right;
+    font-size: 1.2em;
+    cursor: pointer;
 }
 
 /* campus overview */
@@ -4692,3 +4760,295 @@ p.form-message.error {
     border-radius: 8px;
     margin-bottom: 5px;
 }
+
+/* student council */
+
+.student-council-section {
+    background: linear-gradient(135deg, #1e3a8a, #042772);
+    color: #fff;
+    padding: 60px 0;
+    position: relative;
+}
+
+.councilcontainer {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.counciltitle {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.counciltitle .highlight {
+    color: #fbbf24;
+}
+
+.councldescription {
+    max-width: 800px;
+    margin: 0 auto 60px auto;
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+}
+
+.council-section {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.council-row {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.council-row.reverse {
+    flex-direction: row-reverse;
+}
+
+.council-image {
+    flex-shrink: 0;
+    width: 50%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.council-text {
+    width: 50%;
+    color: #f0f0f0;
+}
+
+.council-text h3 {
+    font-size: 2rem;
+    color: #fbbf24;
+    margin-bottom: 20px;
+}
+
+.councldescription p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+}
+.council-paragraph {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+}
+.cta-section {
+    text-align: center;
+    margin-top: 80px;
+}
+
+.cta-button {
+    background-color: #fbbf24;
+    color: #041850;
+    padding: 15px 40px;
+    font-weight: bold;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.cta-button:hover {
+    background-color: #f59e0b;
+    color: #fff;
+    transform: translateY(-5px);
+}
+
+/* Mobile Styles */
+@media (max-width: 1024px) {
+    .council-row {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .council-row.reverse {
+        flex-direction: column;
+    }
+
+    .council-image, .council-text {
+        width: 100%;
+    }
+}
+
+/* House Life Styles */
+/* House Life Styles */
+.house-life-section {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: #fff;
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.houselifecontainer {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.houselifetitle {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #fbbf24;
+    position: relative;
+    z-index: 1;
+}
+
+.intro-text {
+    max-width: 800px;
+    margin: 0 auto 60px auto;
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+    position: relative;
+    z-index: 1;
+}
+
+.house-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-bottom: 60px;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.house-card {
+    width: calc(50% - 40px);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    background-color: #f0f0f0;
+    color: #333;
+    text-align: center;
+    position: relative;
+}
+
+.house-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+    transition: transform 0.3s ease-in-out;
+}
+
+.house-card .house-info {
+    padding: 20px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.house-card h3 {
+    font-size: 1.8rem;
+    color: #2563eb;
+    margin-bottom: 15px;
+}
+
+.house-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+.house-card:hover img {
+    transform: scale(1.1);
+}
+
+.house-card:hover .house-info {
+    background-color: #2563eb;
+    color: #f0f0f0;
+    border-radius: 0 0 20px 20px;
+    
+}
+
+.mission-section {
+    text-align: center;
+    margin-top: 60px;
+    color: #f0f0f0;
+    position: relative;
+    z-index: 1;
+}
+
+.mission-section h3 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #fbbf24;
+}
+
+.mission-section p {
+    max-width: 900px;
+    margin: auto;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+}
+
+/* Background Layer */
+.house-life-section::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 20%, transparent 60%);
+    z-index: 0;
+    opacity: 0.3;
+    animation: rotate-bg 30s infinite linear;
+    pointer-events: none;
+}
+.hourselifetext{
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+    
+}
+.houselifeheader{
+    color: #fbbf24;
+}
+
+/* Background Animation */
+@keyframes rotate-bg {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .house-card {
+        width: 100%;
+    }
+
+    .house-card img {
+        height: 200px;
+    }
+
+    .mission-section h3 {
+        font-size: 2rem;
+    }
+
+    .mission-section p {
+        font-size: 1rem;
+    }
+}
+

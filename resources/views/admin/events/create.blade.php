@@ -1,5 +1,36 @@
 @extends('layouts.admin')
 
+@section('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-gradient-primary {
+        background: linear-gradient(90deg, #007bff, #0056b3);
+        color: #fff;
+        border: none;
+        transition: background 0.3s ease;
+    }
+
+    .btn-gradient-primary:hover {
+        background: linear-gradient(90deg, #0056b3, #003366);
+    }
+
+    .form-control-lg {
+        border-radius: 12px;
+    }
+
+    .text-primary {
+        color: #007bff !important;
+    }
+</style>
+@endsection
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -68,13 +99,39 @@
 
                     <!-- Submit Button -->
                     <div class="col-12 text-end mt-3">
-                        <button type="submit" class="btn btn-gradient-primary btn-lg px-4 py-2 animate__animated animate__pulse animate__infinite">
-                            <i class="fas fa-upload me-2"></i>Upload Event
-                        </button>
+                    <button type="submit" id="submitButton" class="btn btn-gradient-primary btn-lg px-4 py-2 animate__animated animate__pulse animate__infinite">
+    <i class="fas fa-upload me-2"></i><span id="submitText">Upload Event</span>
+</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
 @endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const submitButton = document.getElementById('submitButton');
+        const submitText = document.getElementById('submitText');
+
+        form.addEventListener('submit', function(event) {
+            // Disable the button to prevent multiple submissions
+            submitButton.disabled = true;
+
+            // Change button text to "Uploading..."
+            submitText.textContent = "Uploading...";
+
+            // Optional: Add spinner animation
+            submitButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Uploading...
+            `;
+        });
+    });
+</script>
+@endsection
+

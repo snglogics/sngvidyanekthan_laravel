@@ -67,8 +67,17 @@
                         </div>
                     </div> -->
 
-                    <div class="button float-left ml-3">
-                        <a href="#" class="main-btn">Apply Now</a>
+                    <div class="button float-left ml-3 dropdown">
+                    <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Online Application
+</a>
+<div class="dropdown-menu">
+<a class="dropdown-item" href="{{ route('student.form') }}">
+    📄 For LKG
+</a>
+<a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Class 1 to 10</a>
+<a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 For Plus One & Plus Two</a>
+</div>
                     </div>
 
                     <!-- New Dropdown Button -->
@@ -115,8 +124,8 @@
                                        <ul class="sub-menu">
                                             <li><a href="{{ route('about') }}">School History</a></li>
                                            <li><a href="{{ route('school.vision') }}">Mission and Vision</a></li>
-                                           <li><a href="{{ route('principal.msg') }}">Principal Message</a></li>
-                                           <li><a href="{{ route('about') }}">Campus Overview</a></li>
+                                           <li><a href="{{ route('principal.msg') }}">Messages</a></li>
+                                           <li><a href="{{ route('campus-overviews.frontendIndex') }}">Campus Overview</a></li>
                                            <li><a href="{{ route('school.info') }}">Who We Are</a></li>
                                            <li><a href="{{ route('teachers.public') }}">Teacher's Details</a></li>
                                          
@@ -126,44 +135,76 @@
                                    <li class="nav-item">
                                        <a href="academics.html">Academics</a>
                                        <ul class="sub-menu">
-                                           <li><a href="course.html">Course</a></li>
-                                           <li><a href="affiliation.html">Affiliation</a></li>
-                                           <li><a href="curriculum.html">Curriculum</a></li>
-                                           <li><a href="examination.html">Examination</a></li>
-                                           <li><a href="academic-year-plan.html">Annual Academic Year Plan</a></li>
+                                           <li><a href="{{ route('curriculums.list') }}">Curriculum details </a></li>
+                                         
+                                           <li><a href="{{ route('academic-calendar.frontend') }}">Academic Calendar</a></li>
+                                           <li><a href="{{ route('syllabus.list') }}">Online syllabus</a></li>
+                                   
                                            <li><a href="{{ route('timetable.list') }}">Timetable</a></li>
                                        </ul>
-                                   </li>
+                                   </li>    
                                    <li class="nav-item">
-                                       <a href="facilities.html">Facilities</a>
+                                       <a href="facilities.html">Faculty</a>
                                        <ul class="sub-menu">
-                                           <li><a href="counselling-cell.html">Counselling Cell</a></li>
-                                           <li><a href="labs-library.html">Labs and Library</a></li>
-                                           <li><a href="digital-classrooms.html">Digital Class Rooms</a></li>
-                                           <li><a href="auditorium-indoor.html">Auditorium and Indoor Stadium</a></li>
-                                           <li><a href="atl-labs.html">ATL Labs</a></li>
+                                           <!-- <li><a href="{{ route('teachers.public') }}"> Teacher and staff</a></li>
+                                           <li><a href="{{ route('teachers.profile') }}"> Profiles</a></li> -->
+                                           <li><a href="{{ route('admin.live-classes.index') }}">Digital Class Rooms</a></li>
+                                           <li><a href="{{ route('teachers.categorized') }}">Teachers & Staff</a></li>
+                                           <li><a href="{{ route('frontend.bus_routes') }}">Bus Route</a></li>
+                                          
                                        </ul>
                                    </li>
                                    <li class="nav-item">
                                        <a href="activities.html">Activities</a>
                                        <ul class="sub-menu">
-                                           <li><a href="co-curricular.html">Co-Curricular Activities</a></li>
+                                           <li><a href="{{route('frontend.co_curricular_programs.index')}}">Co-Curricular Activities</a></li>
                                            <li><a href="{{route('events.list')}}">Events</a></li>
-                                           <li><a href="ncc.html">NCC</a></li>
-                                           <li><a href="youth-festival.html">Youth Festival</a></li>
-                                           <li><a href="sahodaya.html">Sahodaya</a></li>
-                                           <li><a href="sports.html">Sports</a></li>
+                                           <li><a href="#">Club activities </a></li>
+                                           <li><a href="{{route('interschool-participations.index')}}">Inter-school participation & results
+                                           </a></li>
+                                         
+                                           <li><a href="{{route('frontend.sports_games.index')}}">Sports</a></li>
                                            <li><a href="swamiji-visiting.html">Swamiji Visiting</a></li>
                                        </ul>
                                    </li>
                                    <li class="nav-item">
                                        <a href="achievements.html">Achievements</a>
+                                       <ul class="sub-menu">
+                                       <li><a href="{{route('frontend.academic_performances.index')}}">Academic performance</a></li>
+                                           <li><a href="{{route('frontend.sports_awards.index')}}">Sports awards</a></li>
+                                           <li><a href="{{route('frontend.cultural_competitions.index')}}">Cultural competition recognitions </a></li>
+                                           
+                                          
+                                       </ul>
                                    </li>
                                    <li class="nav-item">
-                                       <a href="media.html">Media</a>
+                                       <a href="media.html">Gallery</a>
                                        <ul class="sub-menu">
-                                           <li><a href="news.html">News</a></li>
-                                           <li><a href="newsletter.html">News Letter</a></li>
+                                           
+                                           <li><a href="{{ route('gallery.list')}}">Events Gallery</a></li>
+                                           <li><a href="{{ route('gallery.list')}}">Lab & Library</a></li>
+                                           <li><a href="{{ route('magazines.list')}}">magazine</a></li>
+                                           <li><a href="{{ route('videos.list')}}">Videos</a></li>
+                                       </ul>
+                                   </li>
+                                   <li class="nav-item">
+                                       <a href="media.html">Student Life</a>
+                                       <ul class="sub-menu">
+                                           
+                                           <li><a href="{{ route('house_life')}}">House System</a></li>
+                                           <li><a href="{{ route('frontend.sports_games.index')}}"> Sports & Games</a></li>
+                                           <li><a href="{{ route('student_council')}}">Student Council</a></li>
+                                           <li><a href="{{ route('frontend.field_trips.index')}}">Field Trips and Tours</a></li>
+                                       </ul>
+                                   </li>
+                                   <li class="nav-item">
+                                       <a href="media.html">Events</a>
+                                       <ul class="sub-menu">
+                                           <li><a href="{{ route('academic-calendar.frontend') }}">Upcoming event calendar</a></li>
+                                           <li><a href="{{ route('news.index')}}">News</a></li>
+                                           
+                                           <li><a href="newsletter.html">Public updates</a></li>
+                                           <li><a href="newsletter.html">School curriculars /  announcement</a></li>
                                            <li><a href="{{ route('gallery.list')}}">Photo Gallery</a></li>
                                            <li><a href="{{ route('videos.list')}}">Videos</a></li>
                                        </ul>
@@ -179,12 +220,12 @@
                        </nav>
                    </div>
                    <div class="col-lg-2 col-md-2 col-sm-3 col-4">
-                       <div class="right-icon text-right">
+                       <!-- <div class="right-icon text-right">
                            <ul>
                                <li><a href="#" id="search"><i class="fa fa-search"></i></a></li>
                                <li ><a href="#"><i class="fa fa-bell"></i><span>{{ $announcementCount ?? 0 }}</span></a></li>
                            </ul>
-                       </div>
+                       </div> -->
                    </div>
                </div>
            </div>

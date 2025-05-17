@@ -10,6 +10,7 @@ use App\Models\Slider;
 use App\Models\PrincipalMsg;
 use App\Models\upcoming_events; 
 use App\Models\ManagerMsg;
+use App\Models\News;
 
 class FrontEndController extends Controller
 {
@@ -23,8 +24,8 @@ class FrontEndController extends Controller
         $events = UploadEvents::all()->groupBy('common_header');
 
          // Fetch all slider records
-         $scrollers = Slider::first();
-
+        //  $scrollers = Slider::first();
+        $scrollers = News::whereNotNull('image_url')->get();
          
         $slider = Slider::first();
 

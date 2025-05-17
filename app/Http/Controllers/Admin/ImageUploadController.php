@@ -34,7 +34,7 @@ class ImageUploadController extends Controller
         ],
     ]);
     
-    // Now upload
+    // Now upload 
     $uploadedFile = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath(), [
         'folder' => 'principal_msgs',
     ]);
@@ -59,6 +59,7 @@ class ImageUploadController extends Controller
         'publicId' => $publicId,
     ]);
 }
+
 
 
 

@@ -10,7 +10,7 @@
             <img src="{{ asset($principalMsg->image_url) }}" alt="Principal" class="img-fluid rounded-3 shadow" style="max-height: 300px; object-fit: cover;">
             <p class="mt-3 fw-bold text-primary fs-5">{{ $principalMsg->image_name }}</p>
         </div>
-
+ 
         <!-- Right: Message -->
         <div class="col-md-8">
             <h2 class="text-dark fw-semibold mb-3">{{ $principalMsg->image_header }}</h2>
@@ -25,7 +25,7 @@
         
         <!-- Left: Image + Name -->
         <div class="col-md-4 text-center">
-            <img src="{{ asset($principalMsg->image_url) }}" alt="Principal" class="img-fluid rounded-3 shadow" style="max-height: 300px; object-fit: cover;">
+            <img src="{{ asset($managerMsg->image_url) }}" alt="Principal" class="img-fluid rounded-3 shadow" style="max-height: 300px; object-fit: cover;">
             <p class="mt-3 fw-bold text-primary fs-5">{{ $managerMsg->image_name }}</p>
         </div>
 

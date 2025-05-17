@@ -706,7 +706,7 @@
                             <h1 data-animation="bounceInLeft" data-delay="1s">{{ $slider['header'] ?? '' }}</h1>
                             <p data-animation="fadeInUp" data-delay="1.3s">{{ $slider['common_header'] ?? '' }}</p>
                             <ul>
-                                <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="#">Read More</a></li>
+                                <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="{{ route('about') }}">Read More</a></li>
                                 <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2" href="#">Get Started</a></li>
                             </ul>
                         </div>
@@ -959,27 +959,28 @@
 <div class="mt-80">
     @foreach($events as $commonHeader => $group)
     <div class="event-section {{ $loop->index % 2 == 0 ? 'bg-light' : '' }}">
-    <div class="container">
-          <h3 class="mb-4" style="color: #0f64af">{{ $commonHeader }}</h3>
-        <div class="event-carousel-container">
-            <button class="scroll-btn left" onclick="scrollEvents(this, -1)"><i class="fas fa-chevron-left"></i></button>
-            <div class="event-carousel">
-                @foreach($group as $event)
-                <div class="event-card">
-                    <img src="{{ $event->image_url }}" alt="event">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $event->header }}</h5>
-                        @if (!empty($event->description))
-                            <p class="card-text">{{ $event->description }}</p>
-                        @endif
+        <div class="container">
+            <h3 class="mb-4" style="color: #0f64af">{{ $commonHeader }}</h3>
+            <div class="event-carousel-container">
+                <button class="scroll-btn left" onclick="scrollEvents(this, -1)"><i class="fas fa-chevron-left"></i></button>
+                <div class="event-carousel">
+                    @foreach($group as $event)
+                    <div class="event-card">
+                        <a href="{{ route('gallery.list') }}">
+                            <img src="{{ $event->image_url }}" alt="event">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $event->header }}</h5>
+                            @if (!empty($event->description))
+                                <p class="card-text">{{ $event->description }}</p>
+                            @endif
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
+                <button class="scroll-btn right" onclick="scrollEvents(this, 1)"><i class="fas fa-chevron-right"></i></button>
             </div>
-            <button class="scroll-btn right" onclick="scrollEvents(this, 1)"><i class="fas fa-chevron-right"></i></button>
         </div>
-    </div>
-      
     </div>
     @endforeach
 </div>
@@ -995,35 +996,24 @@
 
 
   <!-- -- News & Events Overlay Image Card -- -->
-  <div class="container card news-events">
+  <a href="{{ route('news.index') }}" class="scrollcontainer card news-events" style="text-decoration: none;">
     <div class="news-container">
-      
-      {{-- Scrolling images --}}
-      
-      <div class="news-images">
-    @if(!empty($scrollers->slider1))
-        <img src="{{ asset($scrollers->slider1) }}" alt="News 1" class="news-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-    @endif
+        {{-- Scrolling Images --}}
+        <div class="news-images">
+            @foreach($scrollers as $news)
+                @if(!empty($news->image_url))
+                    <img src="{{ asset($news->image_url) }}" alt="{{ $news->title }}" class="news-image" />
+                @endif
+            @endforeach
+        </div>
 
-    @if(!empty($scrollers->slider2))
-        <img src="{{ asset($scrollers->slider2) }}" alt="News 2" class="news-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-    @endif
-
-    @if(!empty($scrollers->slider3))
-        <img src="{{ asset($scrollers->slider3) }}" alt="News 3" class="news-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-    @endif
-</div>
-
-
-      
-      {{-- Overlay text --}}
-      <div class="news-overlay">
-        <p class="news-title">News & Events</p>
-      </div>
-
+        {{-- Overlay text --}}
+        <div class="news-overlay">
+            <p class="news-title">News & Events</p>
+        </div>
     </div>
-  </div>
-</div>
+</a>
+
 
 <!-- Announcements Section -->
 

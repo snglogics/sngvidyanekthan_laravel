@@ -12,6 +12,7 @@ class NewsController extends Controller
         return view('admin.news.newsfrontend', compact('news'));
     }
     
+    
     public function create() {
         return view('admin.news.create');
     }

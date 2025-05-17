@@ -52,3 +52,4 @@ class UpcomingEventController extends Controller
         return back()->with('success', 'Event deleted.');
     }
 }
+ 

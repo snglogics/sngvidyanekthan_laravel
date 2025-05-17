@@ -7,15 +7,42 @@ use Illuminate\Http\Request;
 use App\Models\Teacher;
 use Cloudinary\Cloudinary;
 
-
 class TeacherController extends Controller
 {
-
     public function publicList()
+    {
+        $teachers = Teacher::latest()->get();
+        return view('about.teacherslist', compact('teachers'));
+    }
+
+    public function teacherProfile(Teacher $teacher)
+    {
+    $teachers = Teacher::all();
+    return view('about.teacherProfile', compact('teachers'));
+    }
+
+    public function categorizedList(Request $request)
 {
-    $teachers = Teacher::latest()->get();
-    return view('about.teacherslist', compact('teachers'));
+    $departments = Teacher::distinct()->pluck('department')->sort();
+    $subjects = Teacher::distinct()->pluck('subject')->sort();
+
+    $teachers = Teacher::query();
+
+    if ($request->department) {
+        $teachers->where('department', $request->department);
+    }
+
+    if ($request->subject) {
+        $teachers->where('subject', $request->subject);
+    }
+
+    return view('about.teachers_categories', [
+        'teachers' => $teachers->get(),
+        'departments' => $departments,
+        'subjects' => $subjects,
+    ]);
 }
+
 
     public function index()
     {
@@ -34,13 +61,17 @@ class TeacherController extends Controller
             'name' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'experience' => 'required|integer|min:0',
+            'qualification' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'subject' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'photo' => 'nullable|image|max:5120',
         ]);
-    
+
         $photoUrl = null;
         if ($request->hasFile('photo')) {
             $cloudinary = new Cloudinary();
-    
+
             $uploadResult = $cloudinary->uploadApi()->upload(
                 $request->file('photo')->getRealPath(),
                 [
@@ -50,63 +81,74 @@ class TeacherController extends Controller
                     ]
                 ]
             );
-    
+
             $photoUrl = $uploadResult['secure_url'];
         }
-    
+
         Teacher::create([
             'name' => $request->name,
             'designation' => $request->designation,
             'experience' => $request->experience,
+            'qualification' => $request->qualification,
+            'department' => $request->department,
+            'subject' => $request->subject,
+            'description' => $request->description,
             'photo' => $photoUrl,
         ]);
-    
+
         return redirect()->route('teachers.index')->with('success', 'Teacher added successfully!');
     }
 
     public function edit(Teacher $teacher)
-{
-    return view('admin.teachers.edit', compact('teacher'));
-}
-
-public function update(Request $request, Teacher $teacher)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'designation' => 'required|string|max:255',
-        'experience' => 'required|integer|min:0',
-        'photo' => 'nullable|image|max:5120',
-    ]);
-
-    $photoUrl = $teacher->photo;
-
-    if ($request->hasFile('photo')) {
-        $cloudinary = new \Cloudinary\Cloudinary();
-        $upload = $cloudinary->uploadApi()->upload(
-            $request->file('photo')->getRealPath(),
-            [
-                'folder' => 'teachers',
-                'transformation' => [['width' => 400, 'height' => 400, 'crop' => 'limit', 'quality' => 'auto']]
-            ]
-        );
-        $photoUrl = $upload['secure_url'];
+    {
+        return view('admin.teachers.edit', compact('teacher'));
     }
 
-    $teacher->update([
-        'name' => $request->name,
-        'designation' => $request->designation,
-        'experience' => $request->experience,
-        'photo' => $photoUrl,
-    ]);
+    public function update(Request $request, Teacher $teacher)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'experience' => 'required|integer|min:0',
+            'qualification' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'subject' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'photo' => 'nullable|image|max:5120',
+        ]);
 
-    return redirect()->route('teachers.index')->with('success', 'Teacher updated successfully!');
+        $photoUrl = $teacher->photo;
+
+        if ($request->hasFile('photo')) {
+            $cloudinary = new Cloudinary();
+            $uploadResult = $cloudinary->uploadApi()->upload(
+                $request->file('photo')->getRealPath(),
+                [
+                    'folder' => 'teachers',
+                    'transformation' => [['width' => 400, 'height' => 400, 'crop' => 'limit', 'quality' => 'auto']]
+                ]
+            );
+            $photoUrl = $uploadResult['secure_url'];
+        }
+
+        $teacher->update([
+            'name' => $request->name,
+            'designation' => $request->designation,
+            'experience' => $request->experience,
+            'qualification' => $request->qualification,
+            'department' => $request->department,
+            'subject' => $request->subject,
+            'description' => $request->description,
+            'photo' => $photoUrl,
+        ]);
+
+        return redirect()->route('teachers.index')->with('success', 'Teacher updated successfully!');
+    }
+
+    public function destroy(Teacher $teacher)
+    {
+        $teacher->delete();
+        return redirect()->route('teachers.index')->with('success', 'Teacher deleted successfully.');
+    }
 }
 
-public function destroy(Teacher $teacher)
-{
-    $teacher->delete();
-    return redirect()->route('teachers.index')->with('success', 'Teacher deleted successfully.');
-}
-
-    
-}

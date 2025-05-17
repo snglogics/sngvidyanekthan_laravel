@@ -8,6 +8,17 @@ use Cloudinary\Cloudinary;
 
 class CampusOverviewController extends Controller
 {
+    public function frontendshow(CampusOverview $campusOverview)
+{
+    return view('frontend.campus_overviews.frontendshow', compact('campusOverview'));
+}
+
+public function frontendIndex()
+{
+    $overviews = CampusOverview::all();
+    return view('frontend.campus_overviews.index', compact('overviews'));
+}
+
     public function index()
     {
         $overviews = CampusOverview::all();

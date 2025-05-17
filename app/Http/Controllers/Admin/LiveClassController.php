@@ -19,12 +19,13 @@ class LiveClassController extends Controller
         ->orderBy('scheduled_at')
         ->get();
 
-    return view('liveClass.index', compact('classes'));
+    return view('admin.live-classes.index', compact('classes'));
     }
 
     public function create()
     {
-        return view('admin.liveclasses');
+        $classes = LiveClass::orderBy('scheduled_at', 'desc')->get(); // fetch all for listing
+        return view('admin.live-classes.create', compact('classes'));
     }
 
     public function store(Request $request)
@@ -43,7 +44,7 @@ class LiveClassController extends Controller
 
     public function edit(LiveClass $liveClass)
     {
-        return view('admin.live_classes.edit', compact('liveClass'));
+        return view('admin.live-classes.edit', compact('liveClass'));
     }
 
     public function update(Request $request, LiveClass $liveClass)
@@ -57,7 +58,7 @@ class LiveClassController extends Controller
 
         $liveClass->update($request->all());
 
-        return redirect()->route('admin.live-classes.index')->with('success', 'Live class updated.');
+        return redirect()->route('admin.live-classes.create')->with('success', 'Live class updated.');
     }
 
     public function destroy(LiveClass $liveClass)

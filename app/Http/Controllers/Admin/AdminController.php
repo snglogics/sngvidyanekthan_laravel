@@ -16,4 +16,38 @@ class AdminController extends Controller
     {
         return view('admin.home'); 
     }
+
+    public function adminabout () 
+    {
+        return view('admin.about'); 
+    }
+
+    public function adminacademics () 
+    {
+        return view('admin.academics'); 
+    }
+    public function adminfaculties () 
+    {
+        return view('admin.faculties'); 
+    }
+    public function adminactivities () 
+    {
+        return view('admin.activities'); 
+    }
+    public function adminachievements () 
+    {
+        return view('admin.achievements'); 
+    }
+    public function admingalleries () 
+    {
+        return view('admin.galleries'); 
+    }
+    public function adminstudentlife () 
+    {
+        return view('admin.studentlife'); 
+    }
+    public function adminevent () 
+    {
+        return view('admin.event'); 
+    }
 }
