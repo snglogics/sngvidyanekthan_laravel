@@ -48,55 +48,55 @@
        <div class="header-logo-support pt-30 pb-30" style="background-color: #001f4d; color: white;">
     <div class="container">
         <div class="row">
-            <div class="col-lg-4 col-md-4">
+            <div class="col-lg-2 col-md-2">
                 <div class="logo">
-                    <a href="index-2.html">
+                    <a href="#">
                         <img src="{{ asset('frontend/images/logo.png') }}" alt="Logo" style="width: 200px; height: auto;">
                     </a>
                 </div>
             </div>
-            <div class="col-lg-8 col-md-8">
+
+
+            <div class="col-lg-9 col-md-9">
+                 
                 <div class="support-button float-right d-none d-md-block">
-                    <!-- <div class="support float-left">
-                        <div class="icon">
-                            <img src="{{ asset('frontend/images/all-icon/support.png') }}" alt="icon">
-                        </div>
-                        <div class="cont">
-                            <p>Need Help? Call us free</p>
-                            <span style="color: rgb(196, 209, 7);">321 325 5678</span>
-                        </div>
-                    </div> -->
+                   
 
                     <div class="button float-left ml-3 dropdown">
                     <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Online Application
-</a>
-<div class="dropdown-menu">
-<a class="dropdown-item" href="{{ route('student.form') }}">
-    📄 For LKG
-</a>
-<a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Class 1 to 10</a>
-<a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 For Plus One & Plus Two</a>
-</div>
+                    Online Application
+                    </a>
+                    <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ route('student.form') }}">
+                        📄 For LKG
+                    </a>
+                    <a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Class 1 to 10</a>
+                    <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 For Plus One & Plus Two</a>
                     </div>
+                    </div>                  
 
                     <!-- New Dropdown Button -->
                     <div class="button float-left ml-3 dropdown">
                     <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Application Form
-</a>
-<div class="dropdown-menu">
-<a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSchCpl-toWyB0eNfrmxfXvylMEuqx_F5vxSgsLtLAcTdmH8Aw/viewform" target="_blank">
-    📄 For LKG
-</a>
-<a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/application-form-for-i-ix/" target="_blank">📄 Class 1 to 10</a>
-<a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSdsdaaACy5hvhkYDgl1n98vV-AUTmKRmnKnqqJT7TyR3ggoxQ/viewform" target="_blank">📄 For Plus One & Plus Two</a>
-</div>
+                        Application Form
+                    </a>
+                    <div class="dropdown-menu">
+                    <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSchCpl-toWyB0eNfrmxfXvylMEuqx_F5vxSgsLtLAcTdmH8Aw/viewform" target="_blank">
+                        📄 For LKG
+                    </a>
+                    <a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/application-form-for-i-ix/" target="_blank">📄 Class 1 to 10</a>
+                    <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSdsdaaACy5hvhkYDgl1n98vV-AUTmKRmnKnqqJT7TyR3ggoxQ/viewform" target="_blank">📄 For Plus One & Plus Two</a>
+                    </div>
                     </div>
                     <div class="button float-left ml-3">
                         <a href="https://epay.federalbank.co.in/easypayments/" target="_blank" class="main-btn">Fee Payment</a>
                     </div>
+                   
                 </div> <!-- support-button -->
+                
+                <div class="button  ml-3">
+                        <a href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf" target="_blank" class="main-btn">DISCLOSURE</a>
+                    </div>
             </div>
         </div> <!-- row -->
     </div> <!-- container -->
@@ -119,6 +119,7 @@
                                    <li class="nav-item">
                                        <a class="active" href="{{ route('home') }}">Home</a>
                                    </li>
+
                                    <li class="nav-item">
                                    <a href="{{ route('about') }}">About</a>
                                        <ul class="sub-menu">
@@ -126,95 +127,81 @@
                                            <li><a href="{{ route('school.vision') }}">Mission and Vision</a></li>
                                            <li><a href="{{ route('principal.msg') }}">Messages</a></li>
                                            <li><a href="{{ route('campus-overviews.frontendIndex') }}">Campus Overview</a></li>
-                                           <li><a href="{{ route('school.info') }}">Who We Are</a></li>
-                                           <li><a href="{{ route('teachers.public') }}">Teacher's Details</a></li>
-                                         
-                                           
-                                       </ul>
+                                           <li><a href="{{ route('school.info') }}">School Info</a></li>
+                                        </ul>
                                    </li>
+
                                    <li class="nav-item">
-                                       <a href="academics.html">Academics</a>
+                                       <a href="#">Academics</a>
                                        <ul class="sub-menu">
                                            <li><a href="{{ route('curriculums.list') }}">Curriculum details </a></li>
-                                         
                                            <li><a href="{{ route('academic-calendar.frontend') }}">Academic Calendar</a></li>
                                            <li><a href="{{ route('syllabus.list') }}">Online syllabus</a></li>
-                                   
                                            <li><a href="{{ route('timetable.list') }}">Timetable</a></li>
                                        </ul>
-                                   </li>    
+                                   </li> 
+
                                    <li class="nav-item">
                                        <a href="facilities.html">Faculty</a>
                                        <ul class="sub-menu">
-                                           <!-- <li><a href="{{ route('teachers.public') }}"> Teacher and staff</a></li>
-                                           <li><a href="{{ route('teachers.profile') }}"> Profiles</a></li> -->
                                            <li><a href="{{ route('admin.live-classes.index') }}">Digital Class Rooms</a></li>
                                            <li><a href="{{ route('teachers.categorized') }}">Teachers & Staff</a></li>
                                            <li><a href="{{ route('frontend.bus_routes') }}">Bus Route</a></li>
-                                          
-                                       </ul>
+                                        </ul>
                                    </li>
+                                   
                                    <li class="nav-item">
                                        <a href="activities.html">Activities</a>
                                        <ul class="sub-menu">
                                            <li><a href="{{route('frontend.co_curricular_programs.index')}}">Co-Curricular Activities</a></li>
-                                           <li><a href="{{route('events.list')}}">Events</a></li>
-                                           <li><a href="#">Club activities </a></li>
+                                          <li><a href="{{ route('house_life')}}">Club activities </a></li>
                                            <li><a href="{{route('interschool-participations.index')}}">Inter-school participation & results
                                            </a></li>
-                                         
-                                           <li><a href="{{route('frontend.sports_games.index')}}">Sports</a></li>
-                                           <li><a href="swamiji-visiting.html">Swamiji Visiting</a></li>
-                                       </ul>
+                                          <li><a href="{{route('frontend.sports_games.index')}}">Sports</a></li>
+                                        </ul>
                                    </li>
+
                                    <li class="nav-item">
                                        <a href="achievements.html">Achievements</a>
                                        <ul class="sub-menu">
-                                       <li><a href="{{route('frontend.academic_performances.index')}}">Academic performance</a></li>
+                                           <li><a href="{{route('frontend.academic_performances.index')}}">Academic performance</a></li>
                                            <li><a href="{{route('frontend.sports_awards.index')}}">Sports awards</a></li>
                                            <li><a href="{{route('frontend.cultural_competitions.index')}}">Cultural competition recognitions </a></li>
-                                           
-                                          
-                                       </ul>
+                                         </ul>
                                    </li>
+
                                    <li class="nav-item">
                                        <a href="media.html">Gallery</a>
                                        <ul class="sub-menu">
-                                           
-                                           <li><a href="{{ route('gallery.list')}}">Events Gallery</a></li>
-                                           <li><a href="{{ route('gallery.list')}}">Lab & Library</a></li>
                                            <li><a href="{{ route('magazines.list')}}">magazine</a></li>
+                                            <li><a href="{{ route('gallery.list')}}">Photo Gallery</a></li>
                                            <li><a href="{{ route('videos.list')}}">Videos</a></li>
                                        </ul>
                                    </li>
+
                                    <li class="nav-item">
                                        <a href="media.html">Student Life</a>
                                        <ul class="sub-menu">
-                                           
-                                           <li><a href="{{ route('house_life')}}">House System</a></li>
                                            <li><a href="{{ route('frontend.sports_games.index')}}"> Sports & Games</a></li>
                                            <li><a href="{{ route('student_council')}}">Student Council</a></li>
                                            <li><a href="{{ route('frontend.field_trips.index')}}">Field Trips and Tours</a></li>
                                        </ul>
                                    </li>
+
                                    <li class="nav-item">
                                        <a href="media.html">Events</a>
                                        <ul class="sub-menu">
                                            <li><a href="{{ route('academic-calendar.frontend') }}">Upcoming event calendar</a></li>
                                            <li><a href="{{ route('news.index')}}">News</a></li>
-                                           
+                                            <li><a href="{{route('events.list')}}">Events Gallery</a></li>
                                            <li><a href="newsletter.html">Public updates</a></li>
-                                           <li><a href="newsletter.html">School curriculars /  announcement</a></li>
-                                           <li><a href="{{ route('gallery.list')}}">Photo Gallery</a></li>
-                                           <li><a href="{{ route('videos.list')}}">Videos</a></li>
                                        </ul>
                                    </li>
+                                   
                                    <li class="nav-item">
                                        <a href="{{ route('contact')}}">Contact</a>
                                    </li>
-                                   <li class="nav-item">
-                                       <a href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">DISCLOSURE </a>
-                                   </li>
+
                                </ul>
                            </div>
                        </nav>
