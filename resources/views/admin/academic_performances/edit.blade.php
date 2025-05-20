@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('title', 'Edit Academic Performance')
+@section('breadcrumb-title', 'Achievements')
+@section('breadcrumb-link', route('admin.achievements'))
+@section('styles')
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+@endsection
 
 @section('content')
 <div class="container my-5">

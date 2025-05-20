@@ -1,28 +1,34 @@
 @extends('layouts.admin')
 
 @section('title', 'Edit Campus Overview')
+@section('breadcrumb-title', 'About')
+@section('breadcrumb-link', route('admin.about'))
+
+@section('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+@endsection
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-4">Edit Campus Overview</h2>
+    <h2 class="text-center mb-4"><i class="bi bi-building"></i> Edit Campus Overview</h2>
     <form action="{{ route('admin.campus-overviews.update', $campusOverview->id) }}" method="POST" enctype="multipart/form-data" id="overviewForm">
         @csrf
         @method('PUT')
 
-        <div class="mb-3">
-            <label>Main Heading</label>
-            <input type="text" name="main_heading" class="form-control" value="{{ $campusOverview->main_heading }}" required>
-        </div>
+       <div class="mb-3">
+    <label><i class="bi bi-type-h1 me-1"></i> Main Heading</label>
+    <input type="text" name="main_heading" class="form-control" value="{{ $campusOverview->main_heading }}" required>
+</div>
 
         <div class="mb-3">
-            <label>Description</label>
-            <textarea name="description" class="form-control" rows="4" required>{{ $campusOverview->description }}</textarea>
-        </div>
+    <label><i class="bi bi-pencil-square me-1"></i> Description</label>
+    <textarea name="description" class="form-control" rows="4" required>{{ $campusOverview->description }}</textarea>
+</div>
 
         <div class="mb-3">
-            <label>Existing Photos</label>
-            <div class="row">
-                @foreach($campusOverview->photos as $index => $photo)
+    <label><i class="bi bi-images me-1"></i> Existing Photos</label>
+    <div class="row">
+        @foreach($campusOverview->photos as $index => $photo)
                     @php
                         $photoUrl = is_array($photo) ? $photo['url'] : $photo;
                         $photoTitle = is_array($photo) ? ($photo['title'] ?? '') : '';
@@ -36,20 +42,22 @@
                         <form action="{{ route('admin.campus-overviews.delete-photo', ['campusOverview' => $campusOverview->id, 'photoIndex' => $index]) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm mt-2" onclick="return confirm('Are you sure you want to delete this photo?')">Delete</button>
-                        </form>
-                    </div>
-                @endforeach
-            </div>
-        </div>
+                            <button type="submit" class="btn btn-danger btn-sm mt-2" onclick="return confirm('Are you sure you want to delete this photo?')">
+                <i class="bi bi-trash"></i> Delete
+            </button>
+        @endforeach
+    </div>
+</div>
 
-        <div class="mb-3">
-            <label>New Photos</label>
-            <input type="file" name="photos[]" multiple class="form-control">
-            <small class="text-muted">Leave this empty if you do not want to add new photos.</small>
-        </div>
+       <div class="mb-3">
+    <label><i class="bi bi-upload me-1"></i> Upload New Photos</label>
+    <input type="file" name="photos[]" multiple class="form-control">
+    <small class="text-muted">Leave this empty if you do not want to add new photos.</small>
+</div>
 
-        <button type="submit" class="btn btn-primary" id="submitBtn">Update Overview</button>
+       <button type="submit" class="btn btn-primary" id="submitBtn">
+    <i class="bi bi-arrow-repeat"></i> Update Overview
+</button>
     </form>
 </div>
 

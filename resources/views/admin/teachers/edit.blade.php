@@ -1,100 +1,103 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Academic Performance')
-
 @section('styles')
-<style>
-    .form-container {
-        background-color: #f8f9fa;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        margin-bottom: 30px;
-    }
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-    .form-container h2 {
-        color: #007bff;
-        margin-bottom: 20px;
-    }
-
-    .image-preview {
-        margin-top: 15px;
-        width: 150px;
-        height: 150px;
-        border-radius: 10px;
-        object-fit: cover;
-        display: block;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-    }
-</style>
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="form-container">
-        <h2>Edit Academic Performance</h2>
-        <form action="{{ route('admin.academic_performances.update', $academicPerformance->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Edit Teacher</h4>
+            <a href="{{ route('teachers.index') }}" class="btn btn-light btn-sm">
+                <i class="bi bi-arrow-left-circle"></i> Back to List
+            </a>
+        </div>
 
-            <div class="mb-3">
-                <label>Student Name</label>
-                <input type="text" name="student_name" class="form-control" value="{{ $academicPerformance->student_name }}" required>
-            </div>
+        <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <h5><i class="bi bi-exclamation-triangle-fill me-2"></i> Please fix the following issues:</h5>
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-            <div class="mb-3">
-                <label>Roll Number</label>
-                <input type="text" name="roll_number" class="form-control" value="{{ $academicPerformance->roll_number }}" required>
-            </div>
+            <form action="{{ route('teachers.update', $teacher->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-            <div class="mb-3">
-                <label>Subjects and Marks (JSON Format)</label>
-                <textarea name="subjects_marks" class="form-control" rows="4" required>{{ json_encode($academicPerformance->subjects_marks) }}</textarea>
-            </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" name="name" value="{{ old('name', $teacher->name) }}" class="form-control" required>
+                        </div>
+                    </div>
 
-            <div class="mb-3">
-                <label>Total Marks</label>
-                <input type="number" name="total_marks" class="form-control" value="{{ $academicPerformance->total_marks }}" required>
-            </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="designation" class="form-label">Designation <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-briefcase-fill"></i></span>
+                            <input type="text" name="designation" value="{{ old('designation', $teacher->designation) }}" class="form-control" required>
+                        </div>
+                    </div>
 
-            <div class="mb-3">
-                <label>Percentage</label>
-                <input type="number" name="percentage" class="form-control" value="{{ $academicPerformance->percentage }}" required>
-            </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="experience" class="form-label">Experience (Years) <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
+                            <input type="number" name="experience" value="{{ old('experience', $teacher->experience) }}" class="form-control" min="0" required>
+                        </div>
+                    </div>
 
-            <div class="mb-3">
-                <label>Grade</label>
-                <input type="text" name="grade" class="form-control" value="{{ $academicPerformance->grade }}" required>
-            </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="qualification" class="form-label">Qualification</label>
+                        <input type="text" name="qualification" value="{{ old('qualification', $teacher->qualification) }}" class="form-control">
+                    </div>
 
-            <div class="mb-3">
-                <label>Image</label>
-                <input type="file" name="image" class="form-control" accept="image/*" onchange="previewImage(event)">
-                @if($academicPerformance->image_url)
-                    <img src="{{ $academicPerformance->image_url }}" id="image-preview" class="image-preview">
-                @else
-                    <img id="image-preview" class="image-preview" style="display: none;">
-                @endif
-            </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="department" class="form-label">Department</label>
+                        <input type="text" name="department" value="{{ old('department', $teacher->department) }}" class="form-control">
+                    </div>
 
-            <button class="btn btn-primary w-100">Update Performance</button>
-        </form>
+                    <div class="col-md-6 mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" name="subject" value="{{ old('subject', $teacher->subject) }}" class="form-control">
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4">{{ old('description', $teacher->description) }}</textarea>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label for="photo" class="form-label">Photo</label>
+                        @if ($teacher->photo)
+                            <div class="mb-2">
+                                <img src="{{ $teacher->photo }}" alt="Teacher Photo" class="img-thumbnail shadow-sm" width="150">
+                            </div>
+                        @endif
+                        <input type="file" name="photo" class="form-control">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i> Update Teacher
+                    </button>
+                    <a href="{{ route('teachers.index') }}" class="btn btn-secondary">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<script>
-    function previewImage(event) {
-        const file = event.target.files[0];
-        const preview = document.getElementById('image-preview');
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                preview.src = reader.result;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-</script>
 @endsection

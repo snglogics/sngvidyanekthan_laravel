@@ -135,6 +135,8 @@ Route::prefix('admin/gallery')->name('admin.gallery.')->group(function () {
   Route::post('/subgallery/store', [AdminGalleryController::class, 'storeSubGallery'])->name('subgallery.store');
   Route::post('/group/store', [AdminGalleryController::class, 'storeImageGroup'])->name('group.store');
 });
+Route::delete('/admin/gallery/image/{id}', [AdminGalleryController::class, 'deleteImage'])->name('admin.gallery.image.delete');
+
 //frontend gallery
 Route::get('/gallerylist', [AdminGalleryController::class, 'gallerylist'])->name('gallery.list');
 
@@ -178,6 +180,10 @@ Route::view('/school-vision', 'about.vision_mission')->name('school.vision');
 Route::prefix('admin')->middleware('auth')->group(function () {
   Route::get('/magazines', [MagazineController::class, 'index'])->name('admin.magazines.index');
   Route::post('/magazines', [MagazineController::class, 'store'])->name('admin.magazines.store');
+
+   Route::get('/magazines/{id}/edit', [MagazineController::class, 'edit'])->name('admin.magazines.edit');
+    Route::put('/magazines/{id}', [MagazineController::class, 'update'])->name('admin.magazines.update');
+    Route::delete('/magazines/{id}', [MagazineController::class, 'destroy'])->name('admin.magazines.destroy');
 });
 Route::get('/magazineslist', [MagazineController::class, 'list'])->name('magazines.list');
 Route::get('/magazines/{id}', [MagazineController::class, 'show'])->name('magazines.show');

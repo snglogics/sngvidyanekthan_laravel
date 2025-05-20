@@ -3,13 +3,13 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">Admin Dashboard</h2>
+    <h2 class="text-center mb-5 fw-bold text-primary">Student Life</h2>
     <div class="row g-4 justify-content-center homepage-buttons">
 
         @php
             $buttons = [
-                ['route' => 'admin.sports_games.index', 'label' => 'Sports & Games', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
-                ['route' => 'admin.field_trips.index', 'label' => 'Field Trips & Tours', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
+                ['route' => 'admin.sports_games.index', 'label' => 'Sports & Games', 'icon' => 'fas fa-football-ball', 'color' => 'success'],
+                ['route' => 'admin.field_trips.index', 'label' => 'Field Trips & Tours', 'icon' => 'fas fa-route', 'color' => 'info'],
                 ];
         @endphp
 

@@ -1,9 +1,11 @@
 @extends('layouts.admin')
 
 @section('title', 'Manage Announcements')
-
+@section('breadcrumb-title', 'Home')
+@section('breadcrumb-link', route('admin.home'))
 @section('styles')
 <link href="{{ asset('frontend/css/uploadPrincipal.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 @endsection
 
 @section('content')
@@ -32,7 +34,7 @@
 
             <div id="fileInputs" class="d-flex flex-column gap-3"></div>
 
-            <button type="submit" class="btn btn-primary mt-3">Upload Announcement</button>
+            <button type="submit" id="uploadButton" class="btn btn-primary mt-3">Upload Announcement</button>
         </form>
     </div>
 
@@ -62,7 +64,7 @@
                         <form action="{{ route('announcement.delete', $announcement->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure you want to delete this announcement?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="submit"  class="btn btn-danger btn-sm">Delete</button>
                         </form>
                     </td>
                 </tr>
@@ -94,32 +96,45 @@
         });
     });
 
-    document.getElementById('announcementForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+   document.getElementById('announcementForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-        const formData = new FormData(this);
+    const formData = new FormData(this);
+    const submitBtn = document.getElementById('uploadButton');
+   
+    // Change button text and disable it
+    submitBtn.textContent = 'Uploading...';
+    submitBtn.disabled = true;
 
-        try {
-            const response = await fetch("{{ route('announcement.upload') }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                body: formData
-            });
+    try {
+        const response = await fetch("{{ route('announcement.upload') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            body: formData
+        });
 
-            const result = await response.json();
+        const result = await response.json();
 
-            if (result.success) {
-                toastr.success(result.message, 'Success');
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                toastr.error(result.message || 'Upload failed.', 'Error');
-            }
-        } catch (error) {
-            console.error('Upload Error:', error);
-            toastr.error('Something went wrong.', 'Error');
+        if (result.success) {
+            toastr.success(result.message, 'Success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            toastr.error(result.message || 'Upload failed.', 'Error');
         }
-    });
+    } catch (error) {
+        console.error('Upload Error:', error);
+        toastr.error('Something went wrong.', 'Error');
+    } finally {
+        // Reset button text and re-enable it
+        submitBtn.textContent = 'Upload Announcement';
+        submitBtn.disabled = false;
+    }
+});
+
+   
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 @endsection

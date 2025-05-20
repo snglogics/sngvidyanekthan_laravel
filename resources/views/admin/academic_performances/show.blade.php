@@ -1,7 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Academic Performance Details')
-
+@section('breadcrumb-title', 'Achievements')
+@section('breadcrumb-link', route('admin.achievements'))
 @section('styles')
 <style>
     .performance-details {

@@ -1,49 +1,90 @@
 @extends('layouts.admin')
 
+@section('breadcrumb-title', 'Events list')
+@section('breadcrumb-link', route('admin.events.index'))
+
 @section('styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!-- Animate.css & Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+<!-- Custom Styling -->
 <style>
+    body {
+        background: linear-gradient(to right, #dfe9f3, #ffffff);
+    }
+
     .card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 1.5rem;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(12px);
+        padding: 2rem;
+        animation: fadeInUp 0.5s ease-in-out;
+    }
+
+    .form-label i {
+        margin-right: 0.5rem;
+        color: #0d6efd;
+    }
+
+    .form-control, .form-select {
+        border-radius: 12px;
+        border: 1px solid #ced4da;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        border-color: #0d6efd;
     }
 
     .btn-gradient-primary {
-        background: linear-gradient(90deg, #007bff, #0056b3);
+        background: linear-gradient(to right, #0d6efd, #6610f2);
         color: #fff;
         border: none;
-        transition: background 0.3s ease;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
     }
 
     .btn-gradient-primary:hover {
-        background: linear-gradient(90deg, #0056b3, #003366);
+        background: linear-gradient(to right, #6610f2, #0d6efd);
+        transform: translateY(-2px);
     }
 
-    .form-control-lg {
-        border-radius: 12px;
+    .section-title {
+        font-weight: bold;
+        font-size: 1.75rem;
+        color: #343a40;
+        text-align: center;
     }
 
-    .text-primary {
-        color: #007bff !important;
+    .alert-success {
+        border-left: 6px solid #198754;
+        border-radius: 10px;
     }
 </style>
 @endsection
+
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <!-- Glass Card -->
-            <div class="card shadow-lg border-0 rounded-4 bg-light bg-opacity-75 p-4 animate__animated animate__fadeInUp" style="backdrop-filter: blur(10px);">
+        <div class="col-lg-10 col-xl-8">
+            <div class="card animate__animated animate__fadeInUp">
 
-                <h3 class="text-center mb-4 text-primary">
-                    <i class="fas fa-calendar-plus me-2"></i>Upload New Event
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-calendar-plus me-2 text-primary"></i> Upload New Event
                 </h3>
 
                 @if(session('success'))
-                    <div class="alert alert-success animate__animated animate__fadeIn">{{ session('success') }}</div>
+                    <div class="alert alert-success animate__animated animate__fadeIn">
+                        <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                    </div>
                 @endif
 
                 <form action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data" class="row g-4">
@@ -51,87 +92,80 @@
 
                     <!-- Heading -->
                     <div class="col-md-12">
-                        <label for="heading" class="form-label fw-semibold text-dark">
-                            <i class="fas fa-heading me-2 text-secondary"></i>Heading
+                        <label for="heading" class="form-label">
+                            <i class="fas fa-heading"></i> Event Title
                         </label>
-                        <input type="text" class="form-control form-control-lg" name="heading" id="heading" required placeholder="Enter event title">
+                        <input type="text" class="form-control" name="heading" id="heading" required placeholder="Enter event title">
                     </div>
 
                     <!-- Description -->
                     <div class="col-md-12">
-                        <label for="description" class="form-label fw-semibold text-dark">
-                            <i class="fas fa-align-left me-2 text-secondary"></i>Description
+                        <label for="description" class="form-label">
+                            <i class="fas fa-align-left"></i> Description
                         </label>
                         <textarea class="form-control" name="description" id="description" rows="4" placeholder="Write a brief description..."></textarea>
                     </div>
 
                     <!-- Event Date -->
                     <div class="col-md-6">
-                        <label for="event_date" class="form-label fw-semibold text-dark">
-                            <i class="fas fa-calendar-day me-2 text-secondary"></i>Date
+                        <label for="event_date" class="form-label">
+                            <i class="fas fa-calendar-day"></i> Date
                         </label>
                         <input type="date" class="form-control" name="event_date" id="event_date" required>
                     </div>
 
                     <!-- Time Interval -->
                     <div class="col-md-6">
-                        <label for="time_interval" class="form-label fw-semibold text-dark">
-                            <i class="fas fa-clock me-2 text-secondary"></i>Time Interval
+                        <label for="time_interval" class="form-label">
+                            <i class="fas fa-clock"></i> Time Interval
                         </label>
                         <input type="text" class="form-control" name="time_interval" id="time_interval" placeholder="e.g., 10:00 AM - 1:00 PM" required>
                     </div>
 
                     <!-- Venue -->
                     <div class="col-md-12">
-                        <label for="venue" class="form-label fw-semibold text-dark">
-                            <i class="fas fa-map-marker-alt me-2 text-secondary"></i>Venue
+                        <label for="venue" class="form-label">
+                            <i class="fas fa-map-marker-alt"></i> Venue
                         </label>
                         <input type="text" class="form-control" name="venue" id="venue" required placeholder="Event location">
                     </div>
 
-                    <!-- Image -->
+                    <!-- Image Upload -->
                     <div class="col-md-12">
-                        <label for="image" class="form-label fw-semibold text-dark">
-                            <i class="fas fa-image me-2 text-secondary"></i>Event Image
+                        <label for="image" class="form-label">
+                            <i class="fas fa-image"></i> Event Image
                         </label>
                         <input type="file" class="form-control" name="image" id="image" accept="image/*" required>
                     </div>
 
                     <!-- Submit Button -->
                     <div class="col-12 text-end mt-3">
-                    <button type="submit" id="submitButton" class="btn btn-gradient-primary btn-lg px-4 py-2 animate__animated animate__pulse animate__infinite">
-    <i class="fas fa-upload me-2"></i><span id="submitText">Upload Event</span>
-</button>
+                        <button type="submit" id="submitButton" class="btn btn-gradient-primary px-5 py-2 animate__animated animate__pulse animate__infinite">
+                            <i class="fas fa-upload me-2"></i><span id="submitText">Upload Event</span>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
 @endsection
 
 @section('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const form = document.querySelector('form');
         const submitButton = document.getElementById('submitButton');
         const submitText = document.getElementById('submitText');
 
-        form.addEventListener('submit', function(event) {
-            // Disable the button to prevent multiple submissions
+        form.addEventListener('submit', function () {
             submitButton.disabled = true;
-
-            // Change button text to "Uploading..."
-            submitText.textContent = "Uploading...";
-
-            // Optional: Add spinner animation
-            submitButton.innerHTML = `
-                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Uploading...
-            `;
+            submitText.textContent = 'Uploading...';
         });
     });
 </script>
-@endsection
 
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+@endsection

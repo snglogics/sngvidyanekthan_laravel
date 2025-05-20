@@ -3,16 +3,16 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">Admin Dashboard</h2>
+    <h2 class="text-center mb-5 fw-bold text-primary">Gallery</h2>
     <div class="row g-4 justify-content-center homepage-buttons">
 
         @php
             $buttons = [
                 ['route' => 'admin.gallery.index', 'label' => 'Gallery', 'icon' => 'fas fa-images', 'color' => 'primary'],
-                ['route' => 'admin.videos.create', 'label' => 'Videos', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
-                ['route' => 'admin.magazines.index', 'label' => 'Manazine', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
-                ['route' => 'admin.events.create', 'label' => '+ New', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
-                ['route' => 'events.upload', 'label' => '+ New', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
+                ['route' => 'admin.videos.create', 'label' => 'Videos', 'icon' => 'fas fa-video', 'color' => 'success'],
+                ['route' => 'admin.magazines.index', 'label' => 'Manazine', 'icon' => 'fas fa-book-open', 'color' => 'info'],
+                ['route' => 'admin.events.create', 'label' => '+ New', 'icon' => 'fas fa-plus-circle', 'color' => 'info'],
+                ['route' => 'events.upload', 'label' => '+ New', 'icon' => 'fas fa-plus-circle', 'color' => 'info'],
             ];
         @endphp
 

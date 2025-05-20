@@ -1,7 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Curriculum Management')
-
+@section('breadcrumb-title', 'Academics')
+@section('breadcrumb-link', route('admin.academics'))
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">

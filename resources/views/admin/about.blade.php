@@ -1,15 +1,16 @@
 @extends('layouts.admin')
 @section('title', 'Admin About')
 
+
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">Admin Dashboard</h2>
+    <h2 class="text-center mb-5 fw-bold text-primary">About</h2>
     <div class="row g-4 justify-content-center homepage-buttons">
 
         @php
             $buttons = [
-                ['route' => 'admin.events.create', 'label' => 'Upcoming Events', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
-                ['route' => 'admin.campus-overviews.index', 'label' => 'Campus overviews', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
+                ['route' => 'admin.events.create', 'label' => 'Upcoming Events',  'icon' => 'fas fa-calendar-check', 'color' => 'info'],
+                ['route' => 'admin.campus-overviews.index', 'label' => 'Campus overviews', 'icon' => 'fas fa-university', 'color' => 'info'],
                  ];
         @endphp
 

@@ -14,7 +14,11 @@ class NewsController extends Controller
     
     
     public function create() {
-        return view('admin.news.create');
+          $allNews = News::latest()->get(); // get all news
+    $news = null; // for form binding
+
+    return view('admin.news.create', compact('allNews', 'news'));
+       
     }
     
     public function store(Request $request) {
@@ -60,7 +64,7 @@ class NewsController extends Controller
     
         $news->update($request->only(['title', 'content', 'youtube_link']));
     
-        return redirect()->route('admin.news.index')->with('success', 'News updated!');
+        return redirect()->route('news.create')->with('success', 'News updated!');
     }
     
     public function destroy(News $news) {

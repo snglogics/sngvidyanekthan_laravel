@@ -1,9 +1,11 @@
 @extends('layouts.admin')
 
 @section('title', 'Upload Principal Message')
-
+@section('breadcrumb-title', 'Home')
+@section('breadcrumb-link', route('admin.home'))
 @section('styles')
 <link href="{{ asset('frontend/css/uploadPrincipal.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 @endsection
 
 @section('content')
@@ -108,4 +110,6 @@
         toastr.error("{{ session('error') }}", 'Error');
     @endif
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 @endsection

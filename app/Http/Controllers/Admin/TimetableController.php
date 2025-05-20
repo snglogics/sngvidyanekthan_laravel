@@ -59,8 +59,8 @@ return view('admin.timetable.timetable', compact('groupedTimetables'));
 
         Timetable::create($request->all());
 
-        return response()->json(['success' => true, 'message' => 'Timetable entry created successfully.']);
-    }
+        return response()->json(['success' => true, 'message' => 'Timetable entry created successfully.', 'redirect' => route('admin.timetables.index')]);
+        }
 
     public function edit(Timetable $timetable)
     {
@@ -83,7 +83,8 @@ return view('admin.timetable.timetable', compact('groupedTimetables'));
 
         $timetable->update($request->all());
 
-        return redirect()->route('admin.timetables.index')->with('success', 'Timetable updated successfully.');
+       return redirect()->route('admin.timetables.index')
+                 ->with('success', 'Timetable entry created successfully.');
     }
 
     public function destroy(Timetable $timetable)

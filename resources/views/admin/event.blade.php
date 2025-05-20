@@ -3,16 +3,16 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">Admin Dashboard</h2>
+    <h2 class="text-center mb-5 fw-bold text-primary">Events</h2>
     <div class="row g-4 justify-content-center homepage-buttons">
 
         @php
             $buttons = [
-                ['route' => 'admin.events.create', 'label' => 'Upcoming Events', 'icon' => 'fas fa-images', 'color' => 'primary'],
-                ['route' => 'news.create', 'label' => 'News', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
+                ['route' => 'admin.events.create', 'label' => 'Upcoming Events', 'icon' => 'fas fa-calendar-check', 'color' => 'primary'],
+                ['route' => 'news.create', 'label' => 'News', 'icon' => 'fas fa-newspaper', 'color' => 'success'],
                 ['route' => 'announcement.uploadForm', 'label' => 'Public Updates', 'icon' => 'fas fa-bullhorn', 'color' => 'warning'],
-                ['route' => 'admin.magazines.index', 'label' => 'Manazine', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
-                ['route' => 'events.upload', 'label' => 'Update Events', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
+                ['route' => 'admin.magazines.index', 'label' => 'Manazine', 'icon' => 'fas fa-book-open', 'color' => 'info'],
+                ['route' => 'events.upload', 'label' => 'Update Events', 'icon' => 'fas fa-upload', 'color' => 'info'],
             ];
         @endphp
 

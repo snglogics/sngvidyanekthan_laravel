@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">Admin Dashboard</h2>
+    <h2 class="text-center mb-5 fw-bold text-primary">Home</h2>
     <div class="row g-4 justify-content-center homepage-buttons">
 
         @php

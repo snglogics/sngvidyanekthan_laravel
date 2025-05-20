@@ -3,15 +3,15 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">Admin Dashboard</h2>
+    <h2 class="text-center mb-5 fw-bold text-primary">Academics</h2>
     <div class="row g-4 justify-content-center homepage-buttons">
 
         @php
             $buttons = [
-                ['route' => 'admin.curriculums.index', 'label' => 'curriculum', 'icon' => 'fas fa-images', 'color' => 'primary'],
-                ['route' => 'admin.academic-calendars.index', 'label' => 'academic Calendar', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
-                ['route' => 'admin.syllabuses.index', 'label' => 'Online syllabus', 'icon' => 'fas fa-bullhorn', 'color' => 'warning'],
-                ['route' => 'admin.timetables.index', 'label' => 'Timetable', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
+                ['route' => 'admin.curriculums.index', 'label' => 'curriculum', 'icon' => 'fas fa-book-open', 'color' => 'primary'],
+                ['route' => 'admin.academic-calendars.index', 'label' => 'academic Calendar', 'icon' => 'fas fa-calendar-alt', 'color' => 'success'],
+                ['route' => 'admin.syllabuses.index', 'label' => 'Online syllabus', 'icon' => 'fas fa-file-alt', 'color' => 'warning'],
+                ['route' => 'admin.timetables.index', 'label' => 'Timetable', 'icon' => 'fas fa-clock', 'color' => 'info'],
                
             ];
         @endphp

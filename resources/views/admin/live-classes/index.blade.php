@@ -1,7 +1,8 @@
 @extends('layouts.layout')
 
 @section('title', 'Live Classes')
- 
+ @section('breadcrumb-title', 'Faculty')
+@section('breadcrumb-link', route('admin.faculties'))
 @section('content')
 <div class="container py-5">
     <h2 class="text-center text-primary mb-4">Upcoming Live Classes</h2>

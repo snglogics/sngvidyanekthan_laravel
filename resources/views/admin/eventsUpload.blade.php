@@ -1,7 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Manage Gallery')
-
+@section('breadcrumb-title', 'Activities')
+@section('breadcrumb-link', route('admin.activities'))
 @section('styles')
 <link href="{{ asset('frontend/css/uploadPrincipal.css') }}" rel="stylesheet">
 @endsection

@@ -28,7 +28,7 @@ class AdminGalleryController extends Controller
     public function storeGallery(Request $request)
     {
         $request->validate([
-            'title' => 'required|string',
+            'title' => 'required|string|unique:galleries,title',
             'main_image' => 'nullable|image'
         ]);
 
@@ -45,7 +45,7 @@ class AdminGalleryController extends Controller
     {
         $request->validate([
             'gallery_id' => 'required|exists:galleries,id',
-            'title' => 'required|string',
+            'title' => 'required|string|unique:sub_galleries,title,NULL,id,gallery_id,' . $request->gallery_id,
             'image' => 'nullable|image'
         ]);
 
@@ -91,5 +91,28 @@ class AdminGalleryController extends Controller
         $galleries = Gallery::with('subGalleries.imageGroups.images')->orderBy('id', 'desc')->get();
         return view('admin.videos.Gallerylist', compact('galleries'));
     }
+
+    public function destroyGallery($id)
+    {
+        $gallery = Gallery::findOrFail($id);
+        $gallery->delete();
+        return back()->with('success', 'Gallery deleted successfully.');
+    }
+    
+    
+public function deleteImage($id)
+{
+    $image = GalleryImage::findOrFail($id);
+
+    // Optional: If you are storing file URLs and not paths, you might skip this
+    // However, if you want to delete from Cloudinary, use their API
+    // For example:
+    // (new Cloudinary())->uploadApi()->destroy(public_id)
+
+    // Delete from database
+    $image->delete();
+
+    return back()->with('success', 'Image deleted successfully.');
+}
 }
  

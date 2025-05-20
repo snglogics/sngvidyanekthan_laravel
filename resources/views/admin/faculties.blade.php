@@ -3,14 +3,14 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">Admin Dashboard</h2>
+    <h2 class="text-center mb-5 fw-bold text-primary">Faculty</h2>
     <div class="row g-4 justify-content-center homepage-buttons">
 
         @php
             $buttons = [
-                ['route' => 'teachers.index', 'label' => 'Employees', 'icon' => 'fas fa-images', 'color' => 'primary'],
-                ['route' => 'admin.live-classes.create', 'label' => 'Digital Classroom', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
-                ['route' => 'admin.school_bus_routes.index', 'label' => 'Bus Route', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
+                ['route' => 'teachers.index', 'label' => 'Employees', 'icon' => 'fas fa-users', 'color' => 'primary'],
+                ['route' => 'admin.live-classes.create', 'label' => 'Digital Classroom', 'icon' => 'fas fa-chalkboard-teacher', 'color' => 'success'],
+                ['route' => 'admin.school_bus_routes.index', 'label' => 'Bus Route', 'icon' => 'fas fa-bus', 'color' => 'success'],
                 ];
         @endphp
 

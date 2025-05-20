@@ -12,6 +12,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
+
+
     {{-- Custom Admin Styles --}}
     <style>
 
@@ -157,8 +159,10 @@
         {{-- Navbar --}}
         <div class="navbar">
             <div>
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-            </div>
+                <a class="text-blue-600 font-semibold hover:underline" href="@yield('breadcrumb-link', route('admin.dashboard'))">
+    @yield('breadcrumb-title', 'Dashboard')
+</a>
+</div>
             <div>
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout-link">
                     <i class="fa fa-sign-out-alt"></i> Logout

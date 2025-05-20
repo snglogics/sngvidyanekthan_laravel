@@ -3,16 +3,16 @@
 
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center mb-5 fw-bold text-primary">Admin Dashboard</h2>
+    <h2 class="text-center mb-5 fw-bold text-primary">Achievements</h2>
     <div class="row g-4 justify-content-center homepage-buttons">
 
         @php
             $buttons = [
-                ['route' => 'admin.academic_performances.index', 'label' => 'Academic Performance', 'icon' => 'fas fa-images', 'color' => 'primary'],
-                ['route' => 'admin.sports_awards.index', 'label' => 'Sports Awards', 'icon' => 'fas fa-user-tie', 'color' => 'success'],
-                ['route' => 'admin.cultural_competitions.index', 'label' => 'Cultural competition', 'icon' => 'fas fa-bullhorn', 'color' => 'warning'],
-                ['route' => 'admin.events.create', 'label' => '+ New', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
-                ['route' => 'events.upload', 'label' => '+ New', 'icon' => 'fas fa-calendar-alt', 'color' => 'info'],
+                ['route' => 'admin.academic_performances.index', 'label' => 'Academic Performance', 'icon' => 'fas fa-graduation-cap', 'color' => 'primary'],
+                ['route' => 'admin.sports_awards.index', 'label' => 'Sports Awards', 'icon' => 'fas fa-trophy', 'color' => 'success'],
+                ['route' => 'admin.cultural_competitions.index', 'label' => 'Cultural competition', 'icon' => 'fas fa-theater-masks', 'color' => 'warning'],
+                ['route' => 'admin.events.create', 'label' => '+ New', 'icon' => 'fas fa-plus-circle', 'color' => 'info'],
+                ['route' => 'events.upload', 'label' => '+ New', 'icon' => 'fas fa-plus-circle', 'color' => 'info'],
             ];
         @endphp
 

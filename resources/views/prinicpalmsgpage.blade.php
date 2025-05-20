@@ -1,5 +1,8 @@
 @extends('layouts.layout')
+
+
 @section('content')
+
 
 <!-- -- Principal's Message Card -- -->
 <div class="card p-4 my-4 shadow-lg border-0" style="max-width: 1100px; margin: auto;">
