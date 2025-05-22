@@ -4,61 +4,86 @@
 
 @section('styles')
 <style>
+    /* Parallax background */
+    .parallax-section {
+        background-image: url('{{ asset('frontend/images/parallel7.jpg') }}');
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        padding: 100px 0 60px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .parallax-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: -1;
+    }
+
     .competitions-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
-        padding-bottom: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+        z-index: 2;
+        position: relative;
     }
 
     .competition-card {
-        background-color: #ffffff;
-        border-radius: 15px;
+        background: linear-gradient(145deg, #ffffff, #f0f0f0);
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease-in-out;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
         position: relative;
         cursor: pointer;
     }
 
     .competition-card img {
         width: 100%;
-        height: 200px;
+        height: 220px;
         object-fit: cover;
-        border-radius: 15px 15px 0 0;
+        border-radius: 20px 20px 0 0;
+        transition: transform 0.3s ease;
+    }
+
+    .competition-card:hover img {
+        transform: scale(1.05);
     }
 
     .competition-card h3 {
-        padding: 15px;
-        font-size: 20px;
+        font-size: 22px;
         color: #007bff;
-        margin: 0;
+        margin: 20px 15px 5px;
         text-align: center;
     }
 
     .competition-card p {
-        padding: 0 15px 15px;
-        color: #555;
+        color: #666;
+        font-size: 17px;
+        margin: 0 15px 15px;
         text-align: center;
-        font-weight: 500;
     }
 
     .competition-card .icon-overlay {
         position: absolute;
         top: 15px;
-        right: 15px;
+        left: 15px;
         background-color: #007bff;
         color: #fff;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 55px;
+        height: 55px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
-        transition: all 0.3s ease-in-out;
-        z-index: 10;
+        font-size: 22px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        z-index: 2;
     }
 
     .competition-card .icon-overlay:hover {
@@ -66,50 +91,73 @@
         transform: rotate(360deg);
     }
 
-    .competition-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    }
-
     .competition-card a {
         display: block;
-        color: #007bff;
-        font-weight: 600;
-        padding: 10px 15px;
         text-align: center;
+        padding: 12px 0;
+        font-weight: 600;
+        color: #007bff;
         background-color: #f8f9fa;
-        border-radius: 0 0 15px 15px;
         text-decoration: none;
-        transition: all 0.3s ease-in-out;
+        font-size: 16px;
+        border-top: 1px solid #ddd;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .competition-card a:hover {
         background-color: #007bff;
         color: #fff;
     }
+
+    @media (max-width: 768px) {
+        .parallax-section {
+            padding: 60px 0;
+        }
+
+        .competition-card h3 {
+            font-size: 20px;
+        }
+
+        .competition-card p {
+            font-size: 15px;
+        }
+    }
 </style>
 @endsection
 
-@section('content')
-<div class="container">
-    <h2 class="mb-4">Cultural Competitions</h2>
+@section('hero_title', 'Cultural Competitions')
 
-    <div class="competitions-container">
-        @foreach($competitions as $competition)
-            <div class="competition-card">
-                @if($competition->image_url)
-                    <img src="{{ $competition->image_url }}" alt="{{ $competition->title }}">
-                @else
-                    <img src="https://via.placeholder.com/300x200" alt="No Image Available">
-                @endif
-                <div class="icon-overlay">
-                    <i class="fas fa-award"></i>
+@section('content')
+<div class="parallax-section">
+    <div class="container">
+        <div class="competitions-container">
+            @foreach($competitions as $competition)
+                <div class="competition-card" data-aos="zoom-in">
+                    @if($competition->image_url)
+                        <img src="{{ $competition->image_url }}" alt="{{ $competition->title }}">
+                    @else
+                        <img src="https://via.placeholder.com/320x220" alt="No Image Available">
+                    @endif
+                    <div class="icon-overlay">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>{{ $competition->title }}</h3>
+                    <p><i class="fas fa-calendar-alt"></i> {{ $competition->competition_year }}</p>
+                    <a href="{{ route('frontend.cultural_competitions.show', $competition->id) }}">
+                        View Details <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                <h3>{{ $competition->title }}</h3>
-                <p>{{ $competition->competition_year }}</p>
-                <a href="{{ route('frontend.cultural_competitions.show', $competition->id) }}">View Details</a>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
 </div>
+
+<!-- AOS Scroll Animation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true,
+    });
+</script>
 @endsection

@@ -1,68 +1,113 @@
 @extends('layouts.layout')
 
-@section('title', 'House Life')
+@section('title', 'Club Activities')
+
+@section('styles')
+<style>
+    .parallax-section {
+        position: relative;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-shadow: 0px 0px 10px rgba(0,0,0,0.6);
+        font-size: 2rem;
+        text-align: center;
+        padding: 0 1rem;
+    }
+
+    .parallax-1 {
+        background-image: url('/frontend/images/club/club8.jpg');
+    }
+
+    .parallax-2 {
+        background-image: url('/frontend/images/club/club9.jpg');
+    }
+
+    .parallax-3 {
+        background-image: url('/frontend/images/club/club7.jpg');
+    }
+</style>
+@endsection
+
+@section('hero_title', 'Club Activities')
 
 @section('content')
-<!-- House Life Section -->
+<!-- Club Activities Section -->
 <div class="house-life-section">
     <div class="houselifecontainer">
-        <!-- Title Section -->
-        <h2 class="houselifetitle" data-aos="fade-up">
-            <span class="highlight">House</span> Life
-        </h2>
-
         <!-- Introduction Section -->
         <div class="intro-text" data-aos="fade-up" data-aos-delay="100">
             <p class="hourselifetext">
-                House life plays a crucial role in fostering a sense of belonging, teamwork, and leadership among students. It encourages healthy competition, builds lifelong friendships, and develops important life skills such as collaboration, communication, and sportsmanship.
+                School clubs play a vital role in shaping well-rounded students by encouraging participation in extracurricular activities. From arts and culture to science and community service, clubs offer a space for creativity, collaboration, leadership, and personal growth.
             </p>
         </div>
 
-        <!-- House Cards Section -->
+        <!-- Parallax Section 1 -->
+        <div class="parallax-section parallax-1">
+            <div>Explore Your Passion</div>
+        </div>
+
+        <!-- Club Cards Section -->
         <div class="house-cards">
-            <!-- House 1 -->
+            <!-- Club 1 -->
             <div class="house-card" data-aos="fade-up">
-                <img src="{{ asset('frontend/images/redhouse.jpg') }}" alt="Red House">
+                <img src="{{ asset('frontend/images/club/club6.jpg') }}" alt="Science Club">
                 <div class="house-info">
-                    <h3>Red House</h3>
-                    <p>Known for its courage and determination, the Red House inspires students to rise above challenges and strive for excellence in every field.</p>
+                    <h3>Science Club</h3>
+                    <p>Fueling curiosity through experiments, exhibitions, and innovation, the Science Club inspires young minds to explore and question the world around them.</p>
                 </div>
             </div>
 
-            <!-- House 2 -->
+            <!-- Club 2 -->
             <div class="house-card" data-aos="fade-up" data-aos-delay="100">
-                <img src="{{ asset('frontend/images/bkuehouse.jpg') }}" alt="Blue House">
+                <img src="{{ asset('frontend/images/club/club5.jpg') }}" alt="Literary Club">
                 <div class="house-info">
-                    <h3>Blue House</h3>
-                    <p>With a spirit of perseverance and unity, the Blue House encourages students to work together towards common goals and achieve greatness.</p>
+                    <h3>Literary Club</h3>
+                    <p>Enhancing language and communication skills through debates, creative writing, and elocution, this club nurtures expression and storytelling.</p>
                 </div>
             </div>
 
-            <!-- House 3 -->
+            <!-- Club 3 -->
             <div class="house-card" data-aos="fade-up" data-aos-delay="200">
-                <img src="{{ asset('frontend/images/greenhouse.jpg') }}" alt="Green House">
+                <img src="{{ asset('frontend/images/club/club4.jpg') }}" alt="Eco Club">
                 <div class="house-info">
-                    <h3>Green House</h3>
-                    <p>Symbolizing growth and harmony, the Green House promotes environmental awareness and inspires students to lead by example.</p>
+                    <h3>Eco Club</h3>
+                    <p>Promoting environmental awareness and sustainable practices, the Eco Club motivates students to be responsible caretakers of our planet.</p>
                 </div>
             </div>
 
-            <!-- House 4 -->
+            <!-- Club 4 -->
             <div class="house-card" data-aos="fade-up" data-aos-delay="300">
-                <img src="{{ asset('frontend/images/yellowhouse.jpg') }}" alt="Yellow House">
+                <img src="{{ asset('frontend/images/club/club3.jpg') }}" alt="Art & Culture Club">
                 <div class="house-info">
-                    <h3 class="houselifeheader">Yellow House</h3>
-                    <p>Bright and vibrant, the Yellow House encourages creativity, positivity, and innovation among its members.</p>
+                    <h3>Art & Culture Club</h3>
+                    <p>Celebrating creativity through dance, music, painting, and drama, this club allows students to express themselves artistically and culturally.</p>
                 </div>
             </div>
+        </div>
+
+        <!-- Parallax Section 2 -->
+        <div class="parallax-section parallax-2">
+            <div>Discover Your Potential</div>
         </div>
 
         <!-- Mission Section -->
         <div class="mission-section" data-aos="fade-up" data-aos-delay="400">
-            <h3>Our Mission</h3>
-            <p>
-                Our house system aims to nurture leadership, encourage teamwork, and foster a sense of belonging. It provides a platform for students to excel in academics, sports, and cultural activities, while building lasting bonds and memories.
+            <h3>Our Vision</h3>
+            <p class="hourselifetext">
+                Our clubs aim to foster talent, promote teamwork, and develop leadership qualities in students. They provide a vibrant platform for young learners to explore their interests, serve the community, and grow beyond the classroom.
             </p>
+        </div>
+
+        <!-- Parallax Section 3 -->
+        <div class="parallax-section parallax-3">
+            <div>Learn Beyond the Classroom</div>
         </div>
     </div>
 </div>

@@ -21,6 +21,14 @@
 <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
 
 </head>
+<style>
+    #digital-clock {
+        font-family: 'Courier New', monospace; /* Fixed-width font */
+        min-width: 80px;                       /* Reserve space for 8 characters (hh:mm:ss) */
+        display: inline-block;                 /* Prevent shrinking */
+        text-align: left;
+    }
+</style>
 <body>
 <header id="header-part">
        
@@ -38,92 +46,97 @@
                    </div>
                    <div class="col-lg-6">
                        <div class="header-opening-time text-lg-right text-center">
-                           <p>Opening Hours : Monday to Saturay - 8 Am to 5 Pm</p>
+                           <p>Opening Hours : Monday to Saturay - 8 Am to 5 Pm
+                             <span id="digital-clock" class="font-weight-bold ml-2">
+                           </p>
+                          
                        </div>
                    </div>
                </div> <!-- row -->
            </div> <!-- container -->
        </div> <!-- header top -->
        
-       <div class="header-logo-support pt-30 pb-30" style="background-color: #001f4d; color: white;">
+<div class="header-logo-support pt-30 pb-30" style="background-color: #001f4d; color: white;">
     <div class="container">
-    <div class="row align-items-center">
-        <!-- Logo section -->
-        <div class="col-lg-2 col-md-3 col-6">
-            <div class="logo">
-                <a href="#">
-                    <img src="{{ asset('frontend/images/logo.png') }}" alt="Logo" style="width: 150px; height: auto;">
-                </a>
-            </div>
-        </div>
-
-        <!-- Buttons section -->
-         <div class="d-flex d-lg-none justify-content-end">
-    <button class="btn btn-outline-primary" id="supportToggle">
-        ☰ Options
-    </button>
-</div>
-<div class="dropdown mt-2 d-none" id="mobileSupportMenu">
-    <div class="dropdown-menu show p-2">
-        <a class="dropdown-item" href="{{ route('student.form') }}">📄 Online Application - LKG</a>
-        <a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Online Application - Class 1 to 10</a>
-        <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 Online Application - Plus One & Two</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item"href="https://docs.google.com/forms/d/e/1FAIpQLSchCpl-toWyB0eNfrmxfXvylMEuqx_F5vxSgsLtLAcTdmH8Aw/viewform" target="_blank">📄 Application Form - LKG</a>
-        <a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/application-form-for-i-ix/" target="_blank">📄 Application Form - Class 1 to 10</a>
-        <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSdsdaaACy5hvhkYDgl1n98vV-AUTmKRmnKnqqJT7TyR3ggoxQ/viewform" target="_blank">📄 Application Form - Plus One & Two</a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="https://epay.federalbank.co.in/easypayments/" target="_blank">💳 Fee Payment</a>
-        <a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf" target="_blank">📢 Disclosure</a>
+  <div class="row align-items-center">
+    <!-- Logo section -->
+    <div class="col-lg-2 col-md-3 col-6">
+      <div class="logo">
+        <a href="#">
+          <img src="{{ asset('frontend/images/logo.png') }}" alt="Logo" style="width: 150px; height: auto;">
+        </a>
+      </div>
     </div>
-</div>
-        <div class="support-button d-none d-lg-flex justify-content-end align-items-center flex-wrap" id="supportButtons">
-        <div class="col-lg-10 col-md-9 col-12">
-            <div class="support-button d-flex justify-content-end align-items-center flex-wrap">
-                
-                <!-- Online Application Dropdown -->
-                <div class="button ml-2 dropdown">
-                    <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Online Application
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{ route('student.form') }}">📄 For LKG</a>
-                        <a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Class 1 to 10</a>
-                        <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 For Plus One & Plus Two</a>
-                    </div>
-                </div>
 
-                <!-- Application Form Dropdown -->
-                <div class="button ml-2 dropdown">
-                    <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Application Form
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSchCpl-toWyB0eNfrmxfXvylMEuqx_F5vxSgsLtLAcTdmH8Aw/viewform" target="_blank">📄 For LKG</a>
-                        <a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/application-form-for-i-ix/" target="_blank">📄 Class 1 to 10</a>
-                        <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSdsdaaACy5hvhkYDgl1n98vV-AUTmKRmnKnqqJT7TyR3ggoxQ/viewform" target="_blank">📄 For Plus One & Plus Two</a>
-                    </div>
-                </div>
-
-                <!-- Fee Payment Button -->
-                <div class="button ml-2">
-                    <a href="https://epay.federalbank.co.in/easypayments/" target="_blank" class="main-btn">Fee Payment</a>
-                </div>
-
-                <!-- Disclosure Button -->
-                <div class="button ml-2">
-                    <a href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf" target="_blank" class="main-btn">DISCLOSURE</a>
-                </div>
-            </div>
+    <!-- Buttons section (Desktop) -->
+    <div class="col-lg-10 col-md-9 d-none d-lg-flex justify-content-end align-items-center flex-wrap">
+      <!-- Online Application Dropdown -->
+      <div class="button ml-2 dropdown">
+        <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Online Application
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{{ route('student.form') }}">📄 For LKG</a>
+          <a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Class 1 to 10</a>
+          <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 For Plus One & Plus Two</a>
         </div>
+      </div>
+
+      <!-- Application Form Dropdown -->
+      <div class="button ml-2 dropdown">
+        <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Application Form
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSchCpl-toWyB0eNfrmxfXvylMEuqx_F5vxSgsLtLAcTdmH8Aw/viewform" target="_blank">📄 For LKG</a>
+          <a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/application-form-for-i-ix/" target="_blank">📄 Class 1 to 10</a>
+          <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSdsdaaACy5hvhkYDgl1n98vV-AUTmKRmnKnqqJT7TyR3ggoxQ/viewform" target="_blank">📄 For Plus One & Plus Two</a>
+        </div>
+      </div>
+
+      <!-- Fee Payment Button -->
+      <div class="button ml-2">
+        <a href="https://epay.federalbank.co.in/easypayments/" target="_blank" class="main-btn">Fee Payment</a>
+      </div>
+
+      <!-- Disclosure Button -->
+      <div class="button ml-2">
+        <a href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf" target="_blank" class="main-btn">DISCLOSURE</a>
+      </div>
+    </div>
+
+    <!-- Mobile toggle -->
+    <div class="col-12 d-flex d-lg-none justify-content-end mt-2">
+      <button class="btn btn-outline-primary" id="supportToggle">☰ Options</button>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div class="col-12 d-lg-none">
+      <div class="dropdown mt-2 d-none" id="mobileSupportMenu">
+        <div class="dropdown-menu show p-2">
+          <a class="dropdown-item" href="{{ route('student.form') }}">📄 Online Application - LKG</a>
+          <a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Online Application - Class 1 to 10</a>
+          <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 Online Application - Plus One & Two</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSchCpl-toWyB0eNfrmxfXvylMEuqx_F5vxSgsLtLAcTdmH8Aw/viewform" target="_blank">📄 Application Form - LKG</a>
+          <a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/application-form-for-i-ix/" target="_blank">📄 Application Form - Class 1 to 10</a>
+          <a class="dropdown-item" href="https://docs.google.com/forms/d/e/1FAIpQLSdsdaaACy5hvhkYDgl1n98vV-AUTmKRmnKnqqJT7TyR3ggoxQ/viewform" target="_blank">📄 Application Form - Plus One & Two</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="https://epay.federalbank.co.in/easypayments/" target="_blank">💳 Fee Payment</a>
+          <a class="dropdown-item" href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf" target="_blank">📢 Disclosure</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
     </div> <!-- row -->
 </div> <!-- container -->
 <!-- container -->
 </div>
  <!-- header logo support -->
        <div class="navigation">
-    <div class="container-fluid">
+        <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <nav class="navbar navbar-expand-lg w-100">
@@ -267,7 +280,7 @@
                                     <li><a href="{{ route('academic-calendar.frontend') }}">Upcoming event calendar</a></li>
                                     <li><a href="{{ route('news.index')}}">News</a></li>
                                     <li><a href="{{route('events.list')}}">Events Gallery</a></li>
-                                    <li><a href="newsletter.html">Public updates</a></li>
+                                   
                                 </ul>
                             </li>
 
@@ -339,6 +352,18 @@ document.getElementById('supportToggle').addEventListener('click', function() {
     menu.classList.toggle('d-none');
 });
 </script>
+<script>
+    function updateClock() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds}`;
+        document.getElementById('digital-clock').textContent = timeString;
+    }
 
+    setInterval(updateClock, 1000);
+    updateClock(); // Initial call
+</script>
 </body>
 </html>

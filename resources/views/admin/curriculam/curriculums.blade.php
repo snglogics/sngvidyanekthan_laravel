@@ -1,10 +1,12 @@
 @extends('layouts.layout')
 
 @section('title', 'Curriculums')
-
+@section('hero_title')
+    <i class="fas fa-book-reader text-primary me-2"></i> Our Curriculums
+@endsection
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center text-primary mb-5"><i class="fas fa-book-reader"></i> Our Curriculums</h2>
+   
 
     <div class="row">
         @foreach($curriculums as $curriculum)

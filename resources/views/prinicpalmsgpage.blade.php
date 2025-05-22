@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 
-
+@section('hero_title', 'Principal & Manager Message')
 @section('content')
 
 

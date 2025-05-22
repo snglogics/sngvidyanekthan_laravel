@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 
 @section('title', $program->name)
+@section('hero_title', 'Our Co-Curricular Programs')
 
 @section('content')
 <div class="container py-5">

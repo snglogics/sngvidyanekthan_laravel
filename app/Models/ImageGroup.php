@@ -17,3 +17,4 @@ class ImageGroup extends Model
         return $this->belongsTo(SubGallery::class);
     }
 }
+ 

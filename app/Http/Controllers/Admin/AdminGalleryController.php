@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Gallery;
@@ -86,12 +87,31 @@ class AdminGalleryController extends Controller
         return back()->with('success', 'Image group uploaded.');
     }
 
-    public function gallerylist()
-    {
-        $galleries = Gallery::with('subGalleries.imageGroups.images')->orderBy('id', 'desc')->get();
-        return view('admin.videos.Gallerylist', compact('galleries'));
-    }
+   public function gallerylist()
+{
+    $galleries = Gallery::orderBy('id', 'desc')->get();
+    return view('admin.videos.Gallerylist', compact('galleries'));
+}
 
+public function showSubGalleries(Gallery $gallery)
+{
+    $subGalleries = $gallery->subGalleries()->with('imageGroups')->get();
+    return view('admin.videos.SubGalleryList', compact('gallery', 'subGalleries'));
+}
+
+public function showImageGroups(SubGallery $subGallery)
+{
+    $imageGroups = $subGallery->imageGroups()->with('images')->get();
+
+    // Group ImageGroups by title and flatten their images
+    $groupedImageGroups = $imageGroups->groupBy('title')->map(function ($groups) {
+        // Merge all images from groups with the same title
+        $allImages = $groups->flatMap->images;
+        return $allImages;
+    });
+
+    return view('admin.videos.ImageGroupList', compact('subGallery', 'groupedImageGroups'));
+}
     public function destroyGallery($id)
     {
         $gallery = Gallery::findOrFail($id);
@@ -113,6 +133,78 @@ public function deleteImage($id)
     $image->delete();
 
     return back()->with('success', 'Image deleted successfully.');
+}
+
+public function deleteImageGroup($groupId)
+{
+    $imageGroup = ImageGroup::with('images')->findOrFail($groupId);
+
+    // Delete each image file if stored locally
+    foreach ($imageGroup->images as $image) {
+        if (Storage::exists($image->image_url)) {
+            Storage::delete($image->image_url);
+        }
+        $image->delete(); // deletes DB entry
+    }
+
+    $imageGroup->delete(); // delete the image group itself
+
+    return back()->with('success', 'Image group deleted successfully.');
+}
+
+public function deleteSubGallery($id)
+{
+    $subGallery = SubGallery::with('imageGroups.images')->findOrFail($id);
+
+    foreach ($subGallery->imageGroups as $group) {
+        foreach ($group->images as $image) {
+            // Optional: delete physical image file
+            if ($image->image_url && File::exists(public_path($image->image_url))) {
+                File::delete(public_path($image->image_url));
+            }
+
+            $image->delete();
+        }
+
+        $group->delete();
+    }
+
+    $subGallery->delete();
+
+    return redirect()->back()->with('success', 'Subgallery, its image groups, and all images have been deleted.'); 
+}
+
+public function deleteGallery($id)
+{
+    $gallery = Gallery::with('subGalleries.imageGroups.images')->findOrFail($id);
+
+    // Delete main image if exists
+    if ($gallery->main_image && File::exists(public_path($gallery->main_image))) {
+        File::delete(public_path($gallery->main_image));
+    }
+
+    foreach ($gallery->subGalleries as $sub) {
+        // Delete subgallery image
+        if ($sub->image && File::exists(public_path($sub->image))) {
+            File::delete(public_path($sub->image));
+        }
+
+        foreach ($sub->imageGroups as $group) {
+            foreach ($group->images as $image) {
+                if ($image->image_url && File::exists(public_path($image->image_url))) {
+                    File::delete(public_path($image->image_url));
+                }
+                $image->delete();
+            }
+            $group->delete();
+        }
+
+        $sub->delete();
+    }
+
+    $gallery->delete();
+
+    return redirect()->back()->with('success', 'Gallery and all related data deleted successfully.');
 }
 }
  

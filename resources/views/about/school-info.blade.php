@@ -7,11 +7,11 @@
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
 @endsection
-
+@section('hero_title', 'School Information')
 @section('content')
 <section class="pt-5 pb-5" style="background-color: #f0f4f8;">
     <div class="container">
-        <h2 class="text-center fw-bold text-primary mb-5" data-aos="fade-down">School Information</h2>
+       
         <div class="row g-4">
             @php
                 $infos = [

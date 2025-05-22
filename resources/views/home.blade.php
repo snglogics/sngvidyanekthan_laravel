@@ -168,8 +168,8 @@
     }
 
     .principal-image-container img {
-        width: 120px;
-        height: 120px;
+        width: 200px;
+        height: 200px;
         border-radius: 50%;
         object-fit: cover;
         /* margin-bottom: 15px; */
@@ -673,6 +673,23 @@
             grid-row: span 1;
         }
     }
+.principal-name {
+    font-size: 2rem;
+    color: white;
+    background: linear-gradient(to right, #00f, rgb(0, 255, 191));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 2s infinite linear;
+}
+
+@keyframes shine {
+    from {
+        background-position: 0%;
+    }
+    to {
+        background-position: 100%;
+    }
+}
 
 
 </style>
@@ -825,38 +842,6 @@
 
    <!-- End of Category section -->
   
-  <!-- -- Principal's Message Card -- -->
-  {{-- <div class="container">
-    <div class="principal-card">
-        <div class="row g-4 align-items-center">
-            <!-- Left: Image + Name -->
-            <div class="col-md-4 text-center">
-                <img src="{{ asset($principalMsg->image_url) }}" alt="Principal" class="img-fluid">
-                <p class="principal-name">{{ $principalMsg->image_name }}</p>
-            </div>
-            <!-- Right: Message -->
-            <div class="col-md-8">
-                <h2 class="message-header">{{ $principalMsg->image_header }}</h2>
-                <p id="principal-message" class="message-body">{{ $principalMsg->image_description }}</p>
-                <button id="toggle-button" class="toggle-button" onclick="toggleMessage()" hidden>Read more</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-{{-- <div style="background-color: #f9f9f9">
-    <div class="container principal-section">
-        <div class="principal-image-container">
-            <img src="{{ asset($principalMsg->image_url) }}" alt="Principal">
-            <p>{{ $principalMsg->image_name }}</p>
-        </div>
-        <div class="principal-content">
-            <h2>{{ $principalMsg->image_header }}</h2>
-            <p id="principal-message" class="message-body">{{ $principalMsg->image_description }}</p>
-            <button id="toggle-button" class="toggle-button" hidden onclick="toggleMessage()" hidden>Read more</button>
-        </div>
-    </div>
-</div> --}}
 
 
 <div class="container principal-section">
@@ -907,7 +892,7 @@
                     <i class="fas fa-clock"></i>
                     <h3>Flexible Learning Schedules</h3>
                     <p>Learn at your own pace with our flexible learning options. Balance your education with a busy lifestyle and achieve your goals on your own schedule.</p>
-                    <a href="#" class="cta-btn">Start Free Trial →</a>
+                    <a href="{{route('contact')}}" class="cta-btn">Contact us →</a>
                 </div>
             </div>
         </div>
@@ -966,7 +951,7 @@
                 <div class="event-carousel">
                     @foreach($group as $event)
                     <div class="event-card">
-                        <a href="{{ route('gallery.list') }}">
+                        <a href="{{route('events.list')}}">
                             <img src="{{ $event->image_url }}" alt="event">
                         </a>
                         <div class="card-body">

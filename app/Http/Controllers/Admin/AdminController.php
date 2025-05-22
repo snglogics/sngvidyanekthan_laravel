@@ -50,4 +50,9 @@ class AdminController extends Controller
     {
         return view('admin.event'); 
     }
+    public function adminapplications () 
+    {
+        return view('admin.onlineapplications'); 
+    }
+
 }

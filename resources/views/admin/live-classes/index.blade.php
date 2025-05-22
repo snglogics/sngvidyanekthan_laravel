@@ -3,9 +3,10 @@
 @section('title', 'Live Classes')
  @section('breadcrumb-title', 'Faculty')
 @section('breadcrumb-link', route('admin.faculties'))
+@section('hero_title', 'Upcoming Live Classes')
 @section('content')
 <div class="container py-5">
-    <h2 class="text-center text-primary mb-4">Upcoming Live Classes</h2>
+   
 
     @forelse($classes as $class)
         <div class="card mb-4 shadow-sm">

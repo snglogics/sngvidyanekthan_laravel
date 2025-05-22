@@ -3,6 +3,7 @@
 @section('title', 'Teachers by Department and Subject')
 
 @section('styles')
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <style>
     .filter-container {
         margin-bottom: 30px;
@@ -47,7 +48,7 @@
     .teacher-card {
         background-color: #ffffff;
         border-radius: 15px;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
         overflow: hidden;
         transition: all 0.3s ease-in-out;
         display: flex;
@@ -56,6 +57,7 @@
         width: 100%;
         max-width: 900px;
         margin: 15px auto;
+        background: transparent;
     }
 
     .teacher-card img {
@@ -138,13 +140,75 @@
         background-color: #0056b3;
         text-decoration: none;
     }
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        align-items: end;
+    }
+
+    .filter-container select {
+        padding-left: 2.5rem;
+        background-repeat: no-repeat;
+        background-position: 0.75rem center;
+        background-size: 1rem;
+        border-radius: 6px;
+        min-width: 200px;
+    }
+
+    #department {
+        background-image: url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/building.svg');
+    }
+
+    #subject {
+        background-image: url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/book.svg');
+    }
+
+    .filter-container button {
+        min-width: 120px;
+    }
+</style>
+<style>
+    .parallax-section {
+        background-image: url('/frontend/images/parallel17.jpg');
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 60px 0; /* Optional: control space above and below */
+        position: relative; 
+    overflow: hidden;
+    }
+
+    /* Optional overlay for better text readability */
+    .parallax-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.4); /* Light overlay */
+        z-index: 0;
+    }
+
+    .teacher-list-container {
+        position: relative;
+        z-index: 1;
+    }
 </style>
 @endsection
-
+@section('hero_title', 'Categorized Teachers  & Staffs')
 @section('content')
+
+<div class="parallax-section">
 <section class="teacher-list-container">
     <div class="container">
-        <h2 class="text-center text-primary fw-bold mb-5" data-aos="fade-down">Categorized Teachers</h2>
+    
 
         <!-- Filter Form -->
         <form id="filter-form" method="GET" action="{{ route('teachers.categorized') }}" class="filter-container">
@@ -193,6 +257,7 @@
         </div>
     </div>
 </section>
+</div>
 @endsection
 
 @section('scripts')
