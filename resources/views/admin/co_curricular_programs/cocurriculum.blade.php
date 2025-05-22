@@ -3,6 +3,7 @@
 @section('title', 'Co-Curricular Programs')
 @section('breadcrumb-title', 'Activities')
 @section('breadcrumb-link', route('admin.activities'))
+
 @section('content')
 <div class="container py-5">
     <h2 class="text-center text-primary mb-5"><i class="fas fa-star"></i> Our Co-Curricular Programs</h2>

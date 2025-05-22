@@ -97,11 +97,20 @@ class HigherStudentAdmissionController extends Controller
     }
 
     // List all students
-    public function listStudents()
-    {
-        $students = HigherStudentAdmission::all();
-        return view('admin.higher_student_list', compact('students'));
+    public function listStudents(Request $request)
+{
+    $query = HigherStudentAdmission::query();
+
+    // Search by candidate name
+    if ($request->has('search') && $request->search != '') {
+        $query->where('candidate_name', 'like', '%' . $request->search . '%');
     }
+
+    // Paginate results (10 per page)
+    $students = $query->orderBy('id', 'desc')->paginate(10);
+
+    return view('admin.higher_student_list', compact('students'));
+}
 
     // View a single student
     public function viewStudent($id)

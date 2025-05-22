@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('title', $magazine->title ?? 'Magazine')
-
+@section('hero_title', 'Magazine')
 @section('content')
 <div class="container py-5">
     <h2 class="mb-4 text-center text-primary">{{ $magazine->title }}</h2>

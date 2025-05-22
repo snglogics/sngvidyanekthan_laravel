@@ -118,6 +118,13 @@
             <div class="card-body">
                 @if($gallery->main_image)
                     <img src="{{ $gallery->main_image }}" class="img-fluid rounded mb-3" style="max-width: 200px;">
+                    <form action="{{ route('admin.gallery.delete', $gallery->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this entire gallery?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">
+        <i class="bi bi-trash3"></i> Delete Gallery
+    </button>
+</form>
                 @endif
 
                 @foreach($gallery->subGalleries as $sub)
@@ -125,11 +132,28 @@
                         <h5 class="text-success"><i class="bi bi-tags me-1"></i>{{ $sub->title }}</h5>
                         @if($sub->image)
                             <img src="{{ $sub->image }}" class="img-thumbnail mb-2" style="max-width: 120px;">
+                            <form method="POST" action="{{ route('admin.gallery.subgallery.delete', $sub->id) }}" onsubmit="return confirm('Are you sure you want to delete this subgallery and all its content?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">Delete SubGallery</button>
+</form>
+
                         @endif
 
                         @foreach($sub->imageGroups as $group)
                             <div class="mt-3">
-                                <h6 class="text-muted"><i class="bi bi-images me-1"></i>{{ $group->title }}</h6>
+                                <div class="d-flex justify-content-between align-items-center">
+    <h6 class="text-muted mb-0">
+        <i class="bi bi-images me-1"></i>{{ $group->title }}
+    </h6>
+    <form action="{{ route('admin.gallery.group.delete', $group->id) }}" method="POST" onsubmit="return confirm('Delete this image group and all its images?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-danger">
+            <i class="bi bi-trash"></i> Delete Group
+        </button>
+    </form>
+</div>
                                 <div class="d-flex flex-nowrap overflow-auto pb-2" style="gap: 1rem;">
                                     @foreach($group->images as $img)
                                         <div class="text-center" style="width: 120px; flex: 0 0 auto;">
@@ -137,13 +161,7 @@
                                             @if($img->title)
                                                 <small class="text-muted d-block">{{ $img->title }}</small>
                                             @endif
-                                            <form action="{{ route('admin.gallery.image.delete', $img->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this image?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger mt-1">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+                                           
                                         </div>
                                     @endforeach
                                 </div>
@@ -157,3 +175,4 @@
 
 </div>
 @endsection
+ 

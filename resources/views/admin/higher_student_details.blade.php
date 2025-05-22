@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.admin')
 
 @section('title', 'Student Admission Details')
 

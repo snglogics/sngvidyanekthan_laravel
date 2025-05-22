@@ -18,5 +18,5 @@ class SubGallery extends Model
     public function imageGroups()
 {
     return $this->hasMany(ImageGroup::class);
-}
+} 
 }

@@ -104,11 +104,12 @@ class AcademicCalendarController extends Controller
     return redirect()->route('admin.academic-calendars.index')->with('success', 'Event added successfully!');
 }
 
-    public function show(AcademicCalendar $academicCalendar)
-    {
-        return view('admin.academic_calendars.show', compact('academicCalendar'));
-    }
-
+   
+public function show($id)
+{
+    $event = AcademicCalendar::findOrFail($id); // adjust model name as needed
+    return view('admin.academic_calendars.show', compact('event'));
+}
     public function edit(AcademicCalendar $academicCalendar)
     {
         return view('admin.academic_calendars.edit', compact('academicCalendar'));
@@ -159,7 +160,6 @@ class AcademicCalendarController extends Controller
         $academicCalendar->delete();
         return redirect()->route('admin.academic-calendars.index')->with('success', 'Event deleted successfully!');
     }
-
 
 
 

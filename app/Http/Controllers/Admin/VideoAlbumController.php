@@ -12,8 +12,25 @@ class VideoAlbumController extends Controller
 
     public function frontendVideo()
     {
+        $apiKey = env('YOUTUBE_API_KEY');
+    $channelId = env('YOUTUBE_CHANNEL_ID');
+
+    $url = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={$channelId}&maxResults=6&type=video&key={$apiKey}";
+
+    $json = file_get_contents($url);
+    $youtubeData = json_decode($json, true);
+
+    $youtubeVideos = $youtubeData['items'] ?? [];
+
+    $customVideos = VideoAlbum::all(); 
+    
         $videos = VideoAlbum::latest()->get();
-        return view('media.videolist', compact('videos'));
+        return view('media.videolist', [
+        'videos' => $videos,
+        'youtubeVideos' => $youtubeVideos,
+        'customeVideos' => $customVideos,
+
+    ]);
     }
     
     public function index()
@@ -65,4 +82,8 @@ class VideoAlbumController extends Controller
 
     return redirect()->back()->with('success', 'Video deleted successfully.');
 }
+
+// In your controller method
+
+
 }

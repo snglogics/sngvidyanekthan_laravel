@@ -46,6 +46,7 @@
     ['route' => 'admin.galleries', 'label' => 'Gallery', 'icon' => 'fas fa-image', 'color' => 'info'],
     ['route' => 'admin.studentlife', 'label' => 'Student life', 'icon' => 'fas fa-users', 'color' => 'info'],
     ['route' => 'admin.event', 'label' => 'Events', 'icon' => 'fas fa-calendar-day', 'color' => 'info'],
+    ['route' => 'admin.onlineapplications', 'label' => 'Online Applications', 'icon' => 'fas fa-file-alt', 'color' => 'info'],
 ];
         @endphp
 

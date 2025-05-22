@@ -73,7 +73,8 @@ Route::get('/admin/achievements', [AdminController::class, 'adminachievements'])
 Route::get('/admin/galleries', [AdminController::class, 'admingalleries'])->name('admin.galleries');
 Route::get('/admin/studentlife', [AdminController::class, 'adminstudentlife'])->name('admin.studentlife');
 Route::get('/admin/event', [AdminController::class, 'adminevent'])->name('admin.event');
-
+Route::get('/admin/onlinrapplications', [AdminController::class, 'adminapplications'])->name('admin.onlineapplications');
+ 
 
 
 // Handle Signout (Redirect to FrontEndController home page after logout)
@@ -136,9 +137,17 @@ Route::prefix('admin/gallery')->name('admin.gallery.')->group(function () {
   Route::post('/group/store', [AdminGalleryController::class, 'storeImageGroup'])->name('group.store');
 });
 Route::delete('/admin/gallery/image/{id}', [AdminGalleryController::class, 'deleteImage'])->name('admin.gallery.image.delete');
+Route::delete('/admin/gallery/group/{id}', [AdminGalleryController::class, 'deleteImageGroup'])->name('admin.gallery.group.delete');
+Route::delete('/admin/gallery/subgallery/{id}', [AdminGalleryController::class, 'deleteSubGallery'])->name('admin.gallery.subgallery.delete');
+Route::delete('/admin/gallery/{id}', [AdminGalleryController::class, 'deleteGallery'])->name('admin.gallery.delete');
 
 //frontend gallery
 Route::get('/gallerylist', [AdminGalleryController::class, 'gallerylist'])->name('gallery.list');
+
+Route::get('/gallery/{gallery}', [AdminGalleryController::class, 'showSubGalleries'])->name('gallery.subgalleries');
+
+Route::get('/subgallery/{subGallery}', [AdminGalleryController::class, 'showImageGroups'])->name('subgallery.imagegroups');
+
 
 // Route for the main gallery
 
@@ -222,6 +231,8 @@ Route::prefix('admin')->middleware(['auth'])->as('admin.')->group(function () {
 
 Route::get('/admin/timetablelist', [TimeTableController::class, 'timetableview'])->name('timetable.list');
 require __DIR__.'/auth.php';
+Route::get('/admin/timetable/view', [TimetableController::class, 'timetableview'])->name('admin.timetable.view');
+
 
 //News routes
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -256,7 +267,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 Route::get('/academic-calendar', [AcademicCalendarController::class, 'academicCalendarFrontend'])->name('academic-calendar.frontend');
 Route::get('/academic-calendars/events', [AcademicCalendarController::class, 'academicCalendar'])->name('academic-calendars.events');
-
+Route::get('/academic-calendars/events/{id}', [AcademicCalendarController::class, 'show']);
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
   Route::resource('campus-overviews', CampusOverviewController::class);
   Route::delete('campus-overviews/{campusOverview}/photos/{photoIndex}', [CampusOverviewController::class, 'destroyPhoto'])->name('campus-overviews.delete-photo');

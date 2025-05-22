@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Announcement;
+use Illuminate\Pagination\Paginator;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
             $announcementCount = Announcement::count();
             $view->with('announcementCount', $announcementCount);
         });
+        Paginator::useBootstrapFive();
     }
 }

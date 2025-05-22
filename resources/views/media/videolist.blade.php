@@ -1,8 +1,48 @@
 @extends('layouts.layout')
 
 @section('title', 'Video Gallery')
+@section('hero_title', 'Video Albums')
 
+@section('styles')
+<style>
+    .video-card {
+        background: linear-gradient(to top right, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        position: relative;
+    }
 
+    .video-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .video-title {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        padding: 15px;
+        font-size: 1.25rem;
+        text-align: center;
+    }
+
+    .led-video {
+        border-top: 2px solid #007bff;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+
+    .no-videos {
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #888;
+        padding: 40px 0;
+    }
+</style>
+@endsection
 
 @section('content')
 <section class="pt-5 pb-5 bg-light">
@@ -10,7 +50,7 @@
         <h2 class="text-center fw-bold text-primary mb-5" data-aos="fade-down">Video Albums</h2>
 
         <div class="row">
-            @foreach($videos->where('type', 'album') as $video)
+            @forelse($videos->where('type', 'album') as $video)
                 <div class="col-md-6 mb-4" data-aos="fade-up">
                     <div class="video-card">
                         <div class="video-title">{{ $video->title }}</div>
@@ -20,13 +60,17 @@
                         </video>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="col-12">
+                    <div class="no-videos" data-aos="fade-up">No Video Albums Available</div>
+                </div>
+            @endforelse
         </div>
 
         <h2 class="text-center fw-bold text-primary mt-5 mb-4" data-aos="fade-down">360° Virtual Tours</h2>
 
         <div class="row">
-            @foreach($videos->where('type', 'virtual') as $video)
+            @forelse($videos->where('type', 'virtual') as $video)
                 <div class="col-md-6 mb-4" data-aos="fade-up">
                     <div class="video-card">
                         <div class="video-title">{{ $video->title }}</div>
@@ -35,8 +79,37 @@
                         </video>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="col-12">
+                    <div class="no-videos" data-aos="fade-up">No 360° Virtual Tours Available</div>
+                </div>
+            @endforelse
         </div>
+        <h2 class="text-center fw-bold text-danger mt-5 mb-4" data-aos="fade-down">Our YouTube Channel</h2>
+
+<div class="row">
+    @forelse($youtubeVideos as $video)
+        @if(isset($video['id']['videoId']))
+            <div class="col-md-4 mb-4" data-aos="fade-up">
+                <div class="video-card">
+                    <div class="video-title">{{ $video['snippet']['title'] }}</div>
+                    <iframe class="led-video" width="100%" height="315"
+                        src="https://www.youtube.com/embed/{{ $video['id']['videoId'] }}"
+                        title="YouTube video"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        @endif
+    @empty
+        <div class="col-12">
+            <div class="no-videos" data-aos="fade-up">No YouTube Videos Found</div>
+        </div>
+    @endforelse
+</div>
+
     </div>
 </section>
 @endsection

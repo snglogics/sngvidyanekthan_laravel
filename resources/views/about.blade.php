@@ -1,32 +1,52 @@
 @extends('layouts.layout')
+
+@section('styles')
+<style>
+    .parallax-bg {
+    background-image: url('/frontend/images/aboutusImg.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 30px;
+    border-radius: 10px;
+}
+</style>
+@endsection
+
+@section('hero_title', 'About us')
+
+
+
 @section('content')
+
     
     
 <section id="about-part" class="pt-65">
         <div class="container">
             <div class="row">
                 <div class="col-lg-5">
-                    <div class="section-title mt-50">
-                        <h5>About us</h5>
-                        <h2>Welcome to VidyaNikethan </h2>
-                    </div> <!-- section title -->
-                    <div class="about-cont">
-    {{-- First 2 paragraphs always visible --}}
-    <p>Knowledge, the pathway to freedom, can be attained only through education. Sivagiri Vidyaniketan stands unique by perceiving Guru’s ideal “Achieve freedom through education ” and with the motto “Dream…… Achieve….and Lead…..”</p>
-    <p>Sivagiri Vidyaniketan is at the threshold of its Golden Jubilee in 2023. Commencing its glorious journey in 1973 as “Sadanam” under S N Charities and thereafter headed by Sree Narayana Dharma Sanghom Trust in 1987, the organization was renamed as Sivagiri Vidyaniketan in 1990. Its affiliation in 1992 , made the school the first and foremost one in Aluva to follow Central Board of Secondary Education syllabus. The year 2005 was fortunate to witness its illustrious upgradation to the Higher Secondary level.</p>
+    <div class="about-content-wrapper parallax-bg" style="position: relative; z-index: 1;">
+        <div class="section-title mt-50" style="background-color: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 8px;">
+            <h5>About us</h5>
+            <h2 class="text-primary">Welcome to VidyaNikethan </h2>
+        </div> <!-- section title -->
 
-    {{-- Hidden content --}}
-    <div id="more-content" style="display: none;">
-    <div id="typed-text">
-        <p>Since the day of establishment, Sivagiri Vidyaniketan has been maintaining its multilevel quality provided by supportive administration and devoted teachers. SVN has always been kept distinctive with an open-minded acceptance of booming technologies like smart classrooms and robotics in training its wards to cope up with the changing era.</p>
-        <p>The success of the school has been evolved from its tireless endeavour to help the students climb the academic ladder on the firm footholds of ethical values and discipline. Our ultimate objective is to help in moulding the total personality of a child in the challenging world. 
-        School name is Sivagiri Vidyanikethan.</p>
-</div>
+        <div class="about-cont" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px;">
+            {{-- First 2 paragraphs always visible --}}
+            <p>Knowledge, the pathway to freedom, can be attained only through education...</p>
+            <p>Sivagiri Vidyaniketan is at the threshold of its Golden Jubilee in 2023...</p>
+
+            {{-- Hidden content --}}
+            <div id="more-content" style="display: none;">
+                <div id="typed-text"></div>
+            </div>
+
+            <a href="#" id="toggle-btn" class="main-btn mt-55" onclick="toggleMore(event)">Learn More</a>
+        </div>
     </div>
-
-    <a href="#" id="toggle-btn" class="main-btn mt-55" onclick="toggleMore(event)">Learn More</a>
 </div>
-                </div> <!-- about cont -->
+<!-- about cont -->
 
 
                 <div class="col-lg-6 offset-lg-1">
@@ -56,7 +76,7 @@
 
 
         <div class="about-bg">
-            <img src="frontend/images/bg-1.jpg" alt="About">
+            <img src="frontend/images/parallel15.jpg" alt="About">
         </div>
     </section>
     

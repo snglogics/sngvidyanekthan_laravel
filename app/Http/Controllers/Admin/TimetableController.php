@@ -9,9 +9,19 @@ use Illuminate\Http\Request;
 class TimetableController extends Controller
 {
 
-public function timetableview ()
+public function timetableview(Request $request)
 {
-    $timetables = Timetable::orderBy('classname')
+    $query = Timetable::query();
+
+    if ($request->filled('classname')) {
+        $query->where('classname', $request->classname);
+    }
+
+    if ($request->filled('section')) {
+        $query->where('section', $request->section);
+    }
+
+    $timetables = $query->orderBy('classname')
         ->orderBy('period_number')
         ->get();
 
@@ -23,8 +33,11 @@ public function timetableview ()
             return $group->groupBy('day');
         });
 
-return view('admin.timetable.timetable', compact('groupedTimetables'));
+    // Get unique classes and sections for dropdown
+    $allClasses = Timetable::select('classname')->distinct()->pluck('classname');
+    $allSections = Timetable::select('section')->distinct()->pluck('section');
 
+    return view('admin.timetable.timetable', compact('groupedTimetables', 'allClasses', 'allSections'));
 }
     public function index()
     {

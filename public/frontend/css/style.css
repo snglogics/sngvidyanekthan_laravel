@@ -22,8 +22,8 @@
 11. TEASTIMONIAL
 12. NEWS
 13. FOOTER
-14. CATEGORY 2
-15. COURSE 2
+14. CATEGORY 2 
+15. COURSE 2 
 16. COUNTER
 17. TEACHERS 2
 18. EVENT 2
@@ -55,6 +55,7 @@ body {
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
 img {
@@ -694,6 +695,7 @@ p {
     box-shadow: 0px 0px 191px 0px rgba(0, 0, 0, 0.06);
     -webkit-animation: sticky 2s;
     animation: sticky 2s;
+ 
 }
 
 @-webkit-keyframes sticky {
@@ -4764,8 +4766,8 @@ p.form-message.error {
 /* student council */
 
 .student-council-section {
-    background: linear-gradient(135deg, #1e3a8a, #042772);
-    color: #fff;
+    background: linear-gradient(135deg, #ffffff, #f7dce3);
+    color: #000000;
     padding: 60px 0;
     position: relative;
 }
@@ -4793,7 +4795,7 @@ p.form-message.error {
     text-align: center;
     font-size: 1.2rem;
     line-height: 1.6;
-    color: #f0f0f0;
+    /* color: #f0f0f0; */
 }
 
 .council-section {
@@ -4835,7 +4837,7 @@ p.form-message.error {
 .councldescription p {
     font-size: 1.1rem;
     line-height: 1.6;
-    color: #f0f0f0;
+    color:yellowgreen;
 }
 .council-paragraph {
     font-size: 1.1rem;
@@ -4883,8 +4885,8 @@ p.form-message.error {
 /* House Life Styles */
 /* House Life Styles */
 .house-life-section {
-    background: linear-gradient(135deg, #1e3a8a, #2563eb);
-    color: #fff;
+    /* background: linear-gradient(135deg, #1e3a8a, #2563eb); */
+    color: blue;
     padding: 60px 0;
     position: relative;
     overflow: hidden;
@@ -4914,7 +4916,7 @@ p.form-message.error {
     text-align: center;
     font-size: 1.2rem;
     line-height: 1.6;
-    color: #f0f0f0;
+    color: #fbbf24;
     position: relative;
     z-index: 1;
 }
@@ -4971,7 +4973,7 @@ p.form-message.error {
 }
 
 .house-card:hover .house-info {
-    background-color: #2563eb;
+    /* background-color: #2563eb; */
     color: #f0f0f0;
     border-radius: 0 0 20px 20px;
     
@@ -4996,7 +4998,7 @@ p.form-message.error {
     margin: auto;
     font-size: 1.2rem;
     line-height: 1.6;
-    color: #f0f0f0;
+   
 }
 
 /* Background Layer */
@@ -5016,7 +5018,7 @@ p.form-message.error {
 .hourselifetext{
     font-size: 1.2rem;
     line-height: 1.6;
-    color: #f0f0f0;
+    color: blue;
     
 }
 .houselifeheader{
@@ -5049,6 +5051,7 @@ p.form-message.error {
 
     .mission-section p {
         font-size: 1rem;
+        color:#0077b5
     }
 }
 
