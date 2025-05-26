@@ -2,7 +2,7 @@
 
 @section('title', 'Academic Events')
 @section('hero_title')
-    <i class="bi bi-calendar-event text-primary me-2"></i> Academic Events
+    <i class="bi bi-calendar-event text-primary me-2"></i> Academic Calendar
 @endsection
 
 @section('content')

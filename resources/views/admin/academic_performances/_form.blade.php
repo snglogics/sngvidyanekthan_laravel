@@ -106,7 +106,13 @@
                 <img src="{{ $academicPerformance->image_url }}" alt="Current Image" class="img-thumbnail" style="max-height: 150px;">
             </div>
         @endif
-        <input type="file" name="image_url" id="image_url" class="form-control">
+       <label>Image (optional)</label>
+<input type="file" name="image_file" class="form-control">
+@if(!empty($academicPerformance->image_url))
+  <img src="{{ $academicPerformance->image_url }}" 
+       alt="Current" 
+       style="height:80px; margin-top:8px; object-fit:cover;">
+@endif
         @error('image_url') <small class="text-danger">{{ $message }}</small> @enderror
     </div>
 </div>

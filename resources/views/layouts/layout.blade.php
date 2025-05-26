@@ -55,18 +55,16 @@
     font-size: 3rem;
     font-weight: 700;
     z-index: 1;
-    color: white;
+    color: rgb(190, 174, 174);
 
     /* Gradient fill */
-    background: linear-gradient(to right, rgb(39, 94, 212), #0ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+   
 
     /* Glow effect */
     text-shadow:
-        0 0 5px rgba(0, 140, 255, 0.7),
-        0 0 10px rgba(0, 255, 106, 0.6),
-        0 0 20px rgba(255, 255, 255, 0.5);
+        0 0 5px rgba(255, 255, 255, 0.7),
+        0 0 10px rgba(2, 58, 26, 0.6),
+        0 0 20px rgba(31, 5, 73, 0.5);
 
     animation: shine 2s infinite linear;
 }

@@ -9,6 +9,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+
 
 class StudentApplicationController extends Controller
 {
@@ -124,4 +127,40 @@ class StudentApplicationController extends Controller
 
         return redirect()->back()->with('success', 'Application submitted successfully!');
     }
+public function index(): View
+    {
+        $query = StudentApplication::query();
+
+        if ($search = request('search')) {
+            $query->where('pupil_name', 'like', "%{$search}%");
+        }
+
+        $students = $query->orderBy('id', 'desc')->paginate(10);
+
+        return view('student_application.admissions.primary.primary_students_list', compact('students'));
+    }
+
+    /**
+     * Show the details of a single application.
+     */
+    public function show(int $id): View
+    {
+        $student = StudentApplication::findOrFail($id);
+        return view('student_application.admissions.primary.primary_student_details', compact('student'));
+    }
+
+    /**
+     * Delete an application and stay on the same page.
+     */
+    public function destroy(int $id): RedirectResponse
+    {
+        $student = StudentApplication::findOrFail($id);
+        $student->delete();
+
+        return redirect()
+            ->route('admin.primary-students.list')
+            ->with('success', 'Application deleted successfully.');
+    }
+
 }
+ 

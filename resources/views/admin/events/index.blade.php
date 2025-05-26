@@ -48,9 +48,15 @@
 
 @section('content')
 <div class="container mt-5">
-    <h2 class="mb-4 text-primary">
-        <i class="fa-solid fa-calendar-days me-2"></i>Uploaded Events
-    </h2>
+   <h2 class="mb-4 text-primary">
+    <i class="fa-solid fa-calendar-days me-2"></i>Upcoming Events
+</h2>
+
+<div class="mb-4 text-end">
+    <a href="{{ route('admin.events.create') }}" class="btn btn-primary">
+        <i class="fa-solid fa-circle-plus me-1"></i>Create New Event
+    </a>
+</div>
 
     @if(session('success'))
         <div class="alert alert-success animate__animated animate__fadeInDown">

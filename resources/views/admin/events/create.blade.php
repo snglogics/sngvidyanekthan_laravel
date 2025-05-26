@@ -77,9 +77,15 @@
         <div class="col-lg-10 col-xl-8">
             <div class="card animate__animated animate__fadeInUp">
 
-                <h3 class="section-title mb-4">
-                    <i class="fas fa-calendar-plus me-2 text-primary"></i> Upload New Event
-                </h3>
+               <h3 class="section-title mb-4">
+    <i class="fas fa-calendar-plus me-2 text-primary"></i> Upload New Event
+</h3>
+
+<div class="text-end mb-3">
+    <a href="{{ route('admin.events.index') }}" class="btn btn-outline-primary">
+        <i class="fas fa-list me-1"></i> Show Event List
+    </a>
+</div>
 
                 @if(session('success'))
                     <div class="alert alert-success animate__animated animate__fadeIn">
@@ -87,7 +93,8 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data" class="row g-4">
+                <form id="createForm" action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data" class="row g-4">
+
                     @csrf
 
                     <!-- Heading -->
@@ -140,9 +147,9 @@
 
                     <!-- Submit Button -->
                     <div class="col-12 text-end mt-3">
-                        <button type="submit" id="submitButton" class="btn btn-gradient-primary px-5 py-2 animate__animated animate__pulse animate__infinite">
-                            <i class="fas fa-upload me-2"></i><span id="submitText">Upload Event</span>
-                        </button>
+                        <button type="submit" id="submitBtn" class="btn btn-gradient-primary px-5 py-2">
+    <i class="fas fa-upload me-2"></i>Upload Event
+</button>
                     </div>
                 </form>
             </div>
@@ -153,17 +160,14 @@
 
 @section('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('form');
-        const submitButton = document.getElementById('submitButton');
-        const submitText = document.getElementById('submitText');
-
-        form.addEventListener('submit', function () {
-            submitButton.disabled = true;
-            submitText.textContent = 'Uploading...';
-        });
+    document.getElementById('createForm').addEventListener('submit', function () {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving...';
     });
 </script>
+
+
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

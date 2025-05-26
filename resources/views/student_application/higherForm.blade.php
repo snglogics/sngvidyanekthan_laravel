@@ -25,21 +25,23 @@
             </div>
         @endif
 
-        <form id="admissionForm" action="{{ route('higher-admission.submit') }}" method="POST" enctype="multipart/form-data">
+        <form id="admissionForm" action="{{ route('higher-admission.submit') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
             @csrf
 
             {{-- Photo Upload --}}
-            <div class="mb-3 text-end">
-                <div style="width: 120px; height: 140px; border: 2px solid #000; background-color: #f8f8f8; float: right;">
-                    <label for="headerPhotoInput" style="cursor: pointer; display: block; width: 100%; height: 100%;">
-                        <img id="headerPhotoPreview" 
-                            src="https://via.placeholder.com/120x140?text=Photo" 
-                            alt="Upload Photo" 
-                            style="width: 100%; height: 100%; object-fit: cover;">
-                        <input type="file" id="headerPhotoInput" name="photo" accept="image/*" onchange="previewHeaderPhoto(event)" style="display: none;">
-                    </label>
-                </div>
-            </div>
+           <div class="mb-3 text-end">
+    <div style="width: 120px; height: 140px; border: 2px solid #000; background-color: #f8f8f8; float: right;">
+        <label for="headerPhotoInput" style="cursor: pointer; display: block; width: 100%; height: 100%;">
+            <img id="headerPhotoPreview" 
+                src="https://via.placeholder.com/120x140?text=Photo" 
+                alt="Upload Photo" 
+                style="width: 100%; height: 100%; object-fit: cover;">
+            <input type="file" id="headerPhotoInput" name="photo" accept="image/*" onchange="previewHeaderPhoto(event)" style="display: none;">
+        </label>
+    </div>
+    <small id="photoError" class="text-danger d-block mt-2 text-end"></small>
+</div>
+
 
             {{-- Student Details --}}
             <div class="row g-4">
@@ -195,7 +197,7 @@
            
 
             {{-- Marks Scored in Qualifying Exams --}}
-            <h5 class="mt-5 text-primary">Marks Scored in Qualifying Exams</h5>
+            <h5 class="mt-5 text-primary">Marks Scored in Qualifying Pre-Board Exams</h5>
             <table class="table table-bordered mt-3">
                 <thead>
                     <tr>
@@ -218,7 +220,7 @@
             </table>
 
             {{-- Marks Scored in Qualifying Exams --}}
-            <h5 class="mt-5 text-primary">Marks Scored in Qualifying Exams</h5>
+            <h5 class="mt-5 text-primary">Marks Scored in Qualifying Board Exams</h5>
             <table class="table table-bordered mt-3">
                 <thead>
                     <tr>
@@ -251,8 +253,8 @@
 
             {{-- Preview and Submit Buttons --}}
             <div class="mt-4 d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary" onclick="showPreview()">Preview</button>
-                <button type="submit" class="btn btn-primary">Submit Application</button>
+                <button type="button" class="btn btn-secondary" onclick="handlePreview()">Preview</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary">Submit Application</button>
             </div>
         </form>
     </div>
@@ -279,34 +281,105 @@
     </div>
 </div>
 
+
+@endsection
+@section('scripts')
 <script>
+(() => {
+  'use strict'
+  const form = document.getElementById('admissionForm');
+  const photoInput = document.getElementById('headerPhotoInput');
+  const photoError = document.getElementById('photoError');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', function (e) {
+    // Clear previous error
+    photoError.textContent = '';
+
+    // Check photo input
+    const isPhotoValid = photoInput.files && photoInput.files.length > 0;
+
+    // Check native validation and photo
+    if (!form.checkValidity() || !isPhotoValid) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (!isPhotoValid) {
+        alert('Please upload a photo before submitting the form.');
+      }
+
+      form.classList.add('was-validated');
+      return;
+    }
+
+    // All validations passed — now it's safe to update button
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+  });
+})();
+
+     // Optional: Clear error when user selects a photo
     function previewHeaderPhoto(event) {
-        const input = event.target;
-        const reader = new FileReader();
-        reader.onload = function () {
-            document.getElementById('headerPhotoPreview').src = reader.result;
-        }
-        if (input.files[0]) {
-            reader.readAsDataURL(input.files[0]);
-        }
+        const output = document.getElementById('headerPhotoPreview');
+        const photoError = document.getElementById('photoError');
+        
+        output.src = URL.createObjectURL(event.target.files[0]);
+        photoError.textContent = ''; // Clear error if a new photo is chosen
     }
 
-    function showPreview() {
-        const form = document.getElementById('admissionForm');
-        const previewContent = document.getElementById('previewContent');
-        previewContent.innerHTML = '';
-    Array.from(form.elements).forEach(element => {
-            if (element.name && element.name !== 'photo' && element.type !== 'submit') {
-                previewContent.innerHTML += `
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>${element.previousElementSibling.innerText}</strong></label>
-                        <div class="form-control">${element.value}</div>
-                    </div>
-                `;
-            }
-        });
+function handlePreview() {
+    const form = document.getElementById('admissionForm');
+    const formData = new FormData(form);
+    let previewHtml = "<h5 class='text-primary'>Student Details</h5><ul class='list-group mb-3'>";
 
-        new bootstrap.Modal(document.getElementById('previewModal')).show();
+    const fields = [
+        ['candidate_name', "Candidate's Name"],
+        ['reg_roll_no', "Reg. No & Roll No"],
+        ['year_of_passing', "Year of Passing"],
+        ['board_type', "Board Type"],
+        ['sex', "Sex"],
+        ['date_of_birth', "Date of Birth"],
+        ['father_name', "Father's Name"],
+        ['father_occupation', "Father's Occupation"],
+        ['mother_name', "Mother's Name"],
+        ['mother_occupation', "Mother's Occupation"],
+        ['address', "Address"],
+        ['phone_no', "Phone No"],
+        ['email', "Email"],
+        ['annual_income', "Annual Income"],
+        ['nationality', "Nationality"],
+        ['religion_caste', "Religion & Caste"],
+        ['category', "Category"],
+        ['last_institution', "Last Institution"],
+        ['medium_of_instruction', "Medium of Instruction"],
+        ['mother_tongue', "Mother Tongue"],
+        ['father_education', "Father's Education"],
+        ['mother_education', "Mother's Education"],
+        ['siblings', "Siblings"],
+        ['local_guardian', "Local Guardian"],
+        ['hobbies', "Hobbies"],
+        ['major_games', "Major Games"],
+        ['co_curricular_achievements', "Co-curricular Achievements"],
+    ];
+
+    fields.forEach(([name, label]) => {
+        previewHtml += `<li class="list-group-item"><strong>${label}:</strong> ${formData.get(name) || '-'}</li>`;
+    });
+
+    previewHtml += "</ul>";
+
+    previewHtml += `<h5 class='text-primary'>Pre-Board Exam Marks</h5><table class="table table-bordered"><thead><tr><th>Subject</th><th>% Marks</th><th>Grade</th></tr></thead><tbody>`;
+    const subjects = formData.getAll('subjects[]');
+    const percentages = formData.getAll('percentages[]');
+    const grades = formData.getAll('grades[]');
+    for (let i = 0; i < subjects.length; i++) {
+        previewHtml += `<tr><td>${subjects[i]}</td><td>${percentages[i]}</td><td>${grades[i]}</td></tr>`;
     }
+    previewHtml += `</tbody></table>`;
+
+    document.getElementById('previewContent').innerHTML = previewHtml;
+    new bootstrap.Modal(document.getElementById('previewModal')).show();
+}
 </script>
+
 @endsection

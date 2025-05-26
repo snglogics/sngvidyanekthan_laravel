@@ -693,6 +693,66 @@
 
 
 </style>
+<style>
+    #notification-box {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        background: radial-gradient(ellipse at center, #0f2027, #203a43, #2c5364);
+        opacity: 0.85;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+
+    .blinking-text {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        padding: 16px;
+        background: rgba(0, 255, 255, 0.05);
+        color: #ffffff;
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(6px);
+        animation: pulseGlow 3s infinite ease-in-out;
+        transition: transform 0.3s;
+    }
+
+    .blinking-text:hover {
+        transform: scale(1.02) rotateX(2deg);
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+    }
+
+    .blinking-text strong {
+        font-size: 1.2rem;
+        color: #00ffff;
+        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+
+    .blinking-text p {
+        margin-top: 8px;
+        color: #e0f7fa;
+    }
+
+    .blinking-text a {
+        color: #00e6e6;
+        text-shadow: 0 0 8px #00e6e6;
+    }
+
+    @keyframes pulseGlow {
+        0% {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+        }
+        50% {
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        100% {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+        }
+    }
+</style>
+
 
 <div class="search-box">
         <div class="serach-form">

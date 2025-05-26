@@ -170,6 +170,7 @@
                                     <li><a href="{{ route('principal.msg') }}">Messages</a></li>
                                     <li><a href="{{ route('campus-overviews.frontendIndex') }}">Campus Overview</a></li>
                                     <li><a href="{{ route('school.info') }}">School Info</a></li>
+                                    <li><a href="{{ route('pta-members.index') }}">PTA Members</a></li>
                                 </ul>
                             </li>
 @php
