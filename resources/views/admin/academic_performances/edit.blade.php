@@ -6,12 +6,12 @@
 @section('styles')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 @endsection
-
+ 
 @section('content')
 <div class="container my-5">
     <div class="card shadow-sm p-4">
         <h2 class="mb-4">Edit Academic Performance</h2>
-        <form action="{{ route('admin.academic_performances.update', $academicPerformance->id) }}" method="POST" enctype="multipart/form-data">
+        <form id="submitBtn" action="{{ route('admin.academic_performances.update', $academicPerformance->id) }}" method="POST" enctype="multipart/form-data">
             @method('PUT')
             @include('admin.academic_performances._form', ['academicPerformance' => $academicPerformance])
             <button type="submit" class="btn btn-primary">Update Performance</button>
@@ -59,5 +59,15 @@ document.addEventListener('DOMContentLoaded', function () {
     subjectsContainer.addEventListener('input', updateSubjectsMarks);
 });
 </script>
+@section('scripts')
+<script>
+document.querySelector('form').addEventListener('submit', function(){
+  const btn = document.getElementById('submitBtn');
+  const txt = document.getElementById('submitText');
+  btn.disabled = true;
+  txt.textContent = 'Uploading...';
+});
+</script>
+@endsection
 
 @endsection

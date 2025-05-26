@@ -6,6 +6,7 @@ use App\Models\HigherStudentAdmission;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\RedirectResponse;
 
 class HigherStudentAdmissionController extends Controller
 {
@@ -98,19 +99,19 @@ class HigherStudentAdmissionController extends Controller
 
     // List all students
     public function listStudents(Request $request)
-{
-    $query = HigherStudentAdmission::query();
+    {
+        $query = HigherStudentAdmission::query();
 
     // Search by candidate name
-    if ($request->has('search') && $request->search != '') {
-        $query->where('candidate_name', 'like', '%' . $request->search . '%');
+        if ($request->has('search') && $request->search != '') {
+         $query->where('candidate_name', 'like', '%' . $request->search . '%');
+        }
+
+        // Paginate results (10 per page)
+        $students = $query->orderBy('id', 'desc')->paginate(10);
+
+        return view('admin.higher_student_list', compact('students'));
     }
-
-    // Paginate results (10 per page)
-    $students = $query->orderBy('id', 'desc')->paginate(10);
-
-    return view('admin.higher_student_list', compact('students'));
-}
 
     // View a single student
     public function viewStudent($id)
@@ -125,4 +126,18 @@ class HigherStudentAdmissionController extends Controller
         $student = HigherStudentAdmission::findOrFail($id);
         return view('admin.higher_student_details', compact('student'));
     }
-}
+
+     public function destroy(int $id): RedirectResponse
+    {
+        $student = HigherStudentAdmission::findOrFail($id);
+
+        // Optionally delete the photo and PDF from Cloudinary here
+        // e.g. Cloudinary cleanup if needed
+
+        $student->delete();
+
+        return redirect()
+            ->route('admin.higher-students.list')
+            ->with('success', 'Student record deleted successfully.');
+    }
+} 

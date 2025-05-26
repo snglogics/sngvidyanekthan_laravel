@@ -8,9 +8,9 @@
 
         @php
             $buttons = [
-                ['route' => 'admin.higher-students.list', 'label' => 'Higher Secondary List', 'icon' => 'fas fa-football-ball', 'color' => 'success'],
-                ['route' => 'admin.higher-students.list', 'label' => 'Senior Secondary List', 'icon' => 'fas fa-route', 'color' => 'info'],
-                ['route' => 'admin.higher-students.list', 'label' => 'Primary School List', 'icon' => 'fas fa-route', 'color' => 'info'],
+                ['route' => 'admin.higher-students.list', 'label' => 'Higher Secondary List', 'icon' => 'fas fa-user-graduate', 'color' => 'success'],
+                ['route' => 'admin.senior-students.list', 'label' => 'Senior Secondary List', 'icon' => 'fas fa-graduation-cap', 'color' => 'info'],
+                ['route' => 'admin.primary-students.list', 'label' => 'Primary School List', 'icon' => 'fas fa-school', 'color' => 'info'],
                 ];
         @endphp
 

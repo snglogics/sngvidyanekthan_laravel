@@ -41,7 +41,10 @@ use App\Http\Controllers\Frontend\FrontendBusRouteController;
 use App\Http\Controllers\SeniorStudentAdmissionController;
 use App\Http\Controllers\HigherStudentAdmissionController;
 use App\Http\Controllers\Admin\InterschoolParticipationController;
+use App\Http\Controllers\Admin\ClubActivityController;
 use App\Http\Controllers\Frontend\InterFrontendschoolParticipationController;
+use App\Http\Controllers\Frontend\PTAMemberController;
+
 
 
 
@@ -252,7 +255,19 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
 // Show the admission form
 Route::get('/admissions-senior', [SeniorStudentAdmissionController::class, 'showForm'])->name('admissions.form');
+Route::prefix('admin')->name('admin.')->group(function () {
+    // List all applications
+    Route::get('primary-students', [StudentApplicationController::class, 'index'])
+         ->name('primary-students.list');
 
+    // Show one application’s details
+    Route::get('primary-student/{id}', [StudentApplicationController::class, 'show'])
+         ->name('primary-students.show');
+
+    // Delete an application
+    Route::delete('primary-students/{id}', [StudentApplicationController::class, 'destroy'])
+         ->name('primary-students.destroy');
+});
 // Handle the form submission
 Route::post('/admissions/senior', [SeniorStudentAdmissionController::class, 'submitForm'])->name('admissions.submit');
 // academic performance
@@ -406,6 +421,16 @@ Route::post('/higher-admission', [HigherStudentAdmissionController::class, 'subm
 Route::get('/admin/higher-students', [HigherStudentAdmissionController::class, 'listStudents'])->name('admin.higher-students.list');
 Route::get('/admin/higher-student/{id}', [HigherStudentAdmissionController::class, 'viewStudent'])->name('admin.higher-student.details');
 Route::get('/admin/higher-student/print/{id}', [HigherStudentAdmissionController::class, 'printStudent'])->name('admin.higher-student.print');
+Route::delete('admin/higher-student/{id}', [HigherStudentAdmissionController::class, 'destroy'])
+         ->name('admin.higher-students.destroy');
+
+// senior stuedent application 
+Route::get('/admin/senior-students', [SeniorStudentAdmissionController::class, 'listStudents'])->name('admin.senior-students.list');
+Route::get('/admin/senior-student/{id}', [SeniorStudentAdmissionController::class, 'viewStudent'])->name('admin.senior-student.details');
+Route::get('/admin/senior-student/print/{id}', [SeniorStudentAdmissionController::class, 'printStudent'])->name('admin.senior-student.print');
+
+Route::delete('admin/senior-students/{id}', [SeniorStudentAdmissionController::class, 'destroy'])
+         ->name('admin.senior-students.destroy');
 
 //interschool participation
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
@@ -413,3 +438,20 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 });
 //frontend interschool participation
 Route::get('/interschool-participationslist', [InterFrontendschoolParticipationController::class, 'frontendIndex'])->name('interschool-participations.index');
+// PTA members admin
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('pta-members', App\Http\Controllers\Admin\PTAMemberController::class);
+});
+
+// PTA members frontend
+Route::get('/pta-members', [PTAMemberController::class, 'index'])->name('pta-members.index');
+
+//club activity
+Route::resource('admin/clubs', ClubActivityController::class)->names([
+    'index'   => 'admin.clubs.index',
+    'create'  => 'admin.clubs.create',
+    'store'   => 'admin.clubs.store',
+    'edit'    => 'admin.clubs.edit',
+    'update'  => 'admin.clubs.update',
+    'destroy' => 'admin.clubs.destroy',
+]);

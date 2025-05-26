@@ -8,6 +8,8 @@ use Cloudinary\Cloudinary;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\RedirectResponse;
+
 
 class SeniorStudentAdmissionController extends Controller
 {
@@ -98,5 +100,39 @@ class SeniorStudentAdmissionController extends Controller
           // Delete the local PDF to save space
           unlink($pdfPath);
         return redirect()->back()->with('success', 'Application submitted successfully!');
+    }
+
+
+    public function listStudents()
+    {
+        $query = SeniorStudentAdmission::query();
+
+        if ($search = request('search')) {
+            $query->where('pupil_name', 'like', "%{$search}%");
+        }
+
+        $students = $query->orderBy('id', 'desc')->paginate(10);
+
+        return view('student_application.seniorSecondary.senior_student_list', compact('students'));
+    }
+
+     public function viewStudent($id)
+    {
+        $student = SeniorStudentAdmission::findOrFail($id);
+        return view('student_application.seniorSecondary.senior_student_details', compact('student'));
+    }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        $student = SeniorStudentAdmission::findOrFail($id);
+
+        // Optionally delete the photo and PDF from Cloudinary here
+        // e.g. Cloudinary cleanup if needed
+
+        $student->delete();
+
+        return redirect()
+            ->route('admin.senior-students.list')
+            ->with('success', 'Student record deleted successfully.');
     }
 }

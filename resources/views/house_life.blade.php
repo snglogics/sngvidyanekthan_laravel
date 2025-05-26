@@ -54,42 +54,18 @@
         </div>
 
         <!-- Club Cards Section -->
-        <div class="house-cards">
+        <div class="house-cards" style="margin-top:20px;">
             <!-- Club 1 -->
+             @foreach(\App\Models\ClubActivity::all() as $club)
             <div class="house-card" data-aos="fade-up">
-                <img src="{{ asset('frontend/images/club/club6.jpg') }}" alt="Science Club">
+                <img src="{{ $club->image_url }}" alt="Science Club">
                 <div class="house-info">
-                    <h3>Science Club</h3>
-                    <p>Fueling curiosity through experiments, exhibitions, and innovation, the Science Club inspires young minds to explore and question the world around them.</p>
+                    <h3>{{ $club->title }}</h3>
+                    <p>{{ $club->description }}</p>
                 </div>
             </div>
 
-            <!-- Club 2 -->
-            <div class="house-card" data-aos="fade-up" data-aos-delay="100">
-                <img src="{{ asset('frontend/images/club/club5.jpg') }}" alt="Literary Club">
-                <div class="house-info">
-                    <h3>Literary Club</h3>
-                    <p>Enhancing language and communication skills through debates, creative writing, and elocution, this club nurtures expression and storytelling.</p>
-                </div>
-            </div>
-
-            <!-- Club 3 -->
-            <div class="house-card" data-aos="fade-up" data-aos-delay="200">
-                <img src="{{ asset('frontend/images/club/club4.jpg') }}" alt="Eco Club">
-                <div class="house-info">
-                    <h3>Eco Club</h3>
-                    <p>Promoting environmental awareness and sustainable practices, the Eco Club motivates students to be responsible caretakers of our planet.</p>
-                </div>
-            </div>
-
-            <!-- Club 4 -->
-            <div class="house-card" data-aos="fade-up" data-aos-delay="300">
-                <img src="{{ asset('frontend/images/club/club3.jpg') }}" alt="Art & Culture Club">
-                <div class="house-info">
-                    <h3>Art & Culture Club</h3>
-                    <p>Celebrating creativity through dance, music, painting, and drama, this club allows students to express themselves artistically and culturally.</p>
-                </div>
-            </div>
+          @endforeach
         </div>
 
         <!-- Parallax Section 2 -->
