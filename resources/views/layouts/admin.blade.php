@@ -151,6 +151,9 @@
     <a href="{{ route('admin.event') }}" class="{{ request()->routeIs('admin.event') ? 'active' : '' }}">
         <i class="fa fa-calendar-alt menu-icon"></i> Events
     </a>
+     <a href="{{ route('admin.kinderHome') }}" class="{{ request()->routeIs('admin.kinderHome') ? 'active' : '' }}">
+        <i class="fa fa-calendar-alt menu-icon"></i> Kinder Garden
+    </a>
 </div>
 
 

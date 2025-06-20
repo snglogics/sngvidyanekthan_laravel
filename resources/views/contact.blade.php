@@ -5,6 +5,23 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
+                      @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Oops!</strong> Please correct the following errors:
+            <ul class="mb-0 mt-2">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+                    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
                     <div class="contact-from mt-30">
                         <div class="section-title">
                             <h5>Contact Us</h5>
@@ -44,14 +61,16 @@
                                             <div class="help-block with-errors"></div>
                                         </div> <!-- singel form -->
                                     </div>
-                                    <p class="form-message"></p>
+                                  
                                     <div class="col-md-12">
                                         <div class="singel-form">
-                                            <button type="submit" class="main-btn">Send</button>
+                                            <button type="submit" class="main-btn" id="submitBtn">Send</button>
                                         </div> <!-- singel form -->
                                     </div> 
                                 </div> <!-- row -->
                             </form>
+
+                            
                         </div> <!-- main form -->
                     </div> <!--  contact from -->
                 </div>
@@ -108,4 +127,24 @@
             </div> <!-- row -->
         </div> <!-- container -->
     </section>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('submitBtn');
+        const form = document.getElementById('contact-form');
+
+        if (form && btn) {
+            form.addEventListener('submit', function () {
+                btn.disabled = true;
+                btn.innerText = 'Sending...';
+            });
+
+            @if(session('success'))
+                btn.disabled = false;
+                btn.innerText = 'Send';
+            @endif
+        }
+    });
+</script>
     @endsection 
+
+    

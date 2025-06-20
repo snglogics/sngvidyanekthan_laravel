@@ -2,7 +2,7 @@
 /* --------------------------------------------
 Google Map
 -------------------------------------------- */	
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC3Ip9iVC0nIxC6V14CKLQ1HZNF_65qEQ&callback=initMap"></script>
 function basicmap() {
         // Basic options for a simple Google Map
         // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions

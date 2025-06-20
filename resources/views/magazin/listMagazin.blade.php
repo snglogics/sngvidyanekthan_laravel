@@ -52,15 +52,34 @@
         padding: 0 1rem 1rem;
     }
 
-    .read-button {
-        background-color: #28a745;
-        color: white;
-        border: none;
-        padding: 0.4rem 1rem;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        transition: background-color 0.2s ease;
-    }
+    .download-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    display: inline-block;
+}
+
+.download-button:hover {
+    background-color: #0056b3;
+}
+
+.read-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    display: inline-block;
+}
+
 
     .read-button:hover {
         background-color: #218838;
@@ -78,19 +97,18 @@
 <div class="container my-4">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         @foreach($magazines as $magazine)
-            <div class="col d-flex">
-                <a href="{{ route('magazines.show', $magazine->id) }}" class="w-100 text-decoration-none">
-                    <div class="book-card">
-                        <div class="book-label">Magazine</div>
-                        <div class="book-title">
-                            {{ $magazine->title }}
-                        </div>
-                        <div class="book-footer">
-                            <button class="read-button">Read Now</button>
-                        </div>
-                    </div>
-                </a>
-            </div>
+           <div class="col d-flex">
+    <div class="book-card w-100">
+        <div class="book-label">Magazine</div>
+        <div class="book-title">
+            {{ $magazine->title }}
+        </div>
+        <div class="book-footer d-flex justify-content-between align-items-center">
+            <a href="{{ route('magazines.show', $magazine->id) }}" class="read-button text-decoration-none">Read Now</a>
+            <a href="{{ route('magazines.download', $magazine->id) }}" class="download-button text-decoration-none">Download</a>
+        </div>
+    </div>
+</div>
         @endforeach
     </div>
 </div>

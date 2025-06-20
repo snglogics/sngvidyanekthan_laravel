@@ -75,14 +75,15 @@
     @else
         @foreach($groupedTimetables as $group => $days)
             <div class="card shadow-sm mb-4 border-0">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" 
-                     style="cursor: pointer;"
-                     onclick="toggleDetails('{{ str_replace(' ', '_', $group) }}')">
-                    <span>
-                        <i class="bi bi-building me-2"></i> {{ $group }}
-                    </span>
-                    <i class="bi bi-chevron-down toggle-icon" id="toggle-icon-{{ str_replace(' ', '_', $group) }}"></i>
-                </div>
+               <div class="card-header text-black d-flex justify-content-between align-items-center"
+     style="cursor: pointer; background-color: rgba(136, 138, 141, 0.1); color: #3f4349;"
+     onclick="toggleDetails('{{ str_replace(' ', '_', $group) }}')">
+    <span>
+        <i class="bi bi-building me-2"></i> {{ $group }}
+    </span>
+    <i class="bi bi-chevron-down toggle-icon" id="toggle-icon-{{ str_replace(' ', '_', $group) }}"></i>
+</div>
+
 
                 <div class="card-body timetable-details" id="{{ str_replace(' ', '_', $group) }}" style="display: none;">
                     @foreach($days as $day => $entries)
@@ -95,7 +96,7 @@
                                     <tr>
                                         @foreach($entries as $entry)
                                             <th scope="col">
-                                                <div class="fw-semibold">Period {{ $entry->period_number }}</div>
+                                                <div class="fw-semibold"> {{ $entry->period_number }}</div>
                                                 <div class="text-muted small">
                                                     {{ \Carbon\Carbon::parse($entry->start_time)->format('g:i A') }} - {{ \Carbon\Carbon::parse($entry->end_time)->format('g:i A') }}
                                                 </div>

@@ -2,7 +2,7 @@
 
 @section('title', 'Curriculums')
 @section('hero_title')
-    <i class="fas fa-book-reader text-primary me-2"></i> Our Curriculums
+    <i class="fas fa-book-reader text-primary me-2"></i> Assessment pattern
 @endsection
 @section('content')
 <div class="container py-5">

@@ -44,6 +44,10 @@ use App\Http\Controllers\Admin\InterschoolParticipationController;
 use App\Http\Controllers\Admin\ClubActivityController;
 use App\Http\Controllers\Frontend\InterFrontendschoolParticipationController;
 use App\Http\Controllers\Frontend\PTAMemberController;
+use App\Http\Controllers\Admin\KindergartenSliderController;
+use App\Http\Controllers\Admin\KinderPrincipalMsgController;
+use App\Http\Controllers\Admin\KinderGalleryController;
+
 
 
 
@@ -77,6 +81,7 @@ Route::get('/admin/galleries', [AdminController::class, 'admingalleries'])->name
 Route::get('/admin/studentlife', [AdminController::class, 'adminstudentlife'])->name('admin.studentlife');
 Route::get('/admin/event', [AdminController::class, 'adminevent'])->name('admin.event');
 Route::get('/admin/onlinrapplications', [AdminController::class, 'adminapplications'])->name('admin.onlineapplications');
+Route::get('/admin/kinderHome', [AdminController::class, 'kinderHome'])->name('admin.kinderHome');
  
 
 
@@ -196,6 +201,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
    Route::get('/magazines/{id}/edit', [MagazineController::class, 'edit'])->name('admin.magazines.edit');
     Route::put('/magazines/{id}', [MagazineController::class, 'update'])->name('admin.magazines.update');
     Route::delete('/magazines/{id}', [MagazineController::class, 'destroy'])->name('admin.magazines.destroy');
+    Route::get('/magazines/{id}/download', [MagazineController::class, 'download'])->name('magazines.download');
+
 });
 Route::get('/magazineslist', [MagazineController::class, 'list'])->name('magazines.list');
 Route::get('/magazines/{id}', [MagazineController::class, 'show'])->name('magazines.show');
@@ -455,3 +462,27 @@ Route::resource('admin/clubs', ClubActivityController::class)->names([
     'update'  => 'admin.clubs.update',
     'destroy' => 'admin.clubs.destroy',
 ]);
+// kindergarder Slider
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    Route::resource('kinder-sliders', KindergartenSliderController::class);
+    
+});
+
+Route::get('/kindergarten-sliders', [KindergartenSliderController::class, 'kindergarten'])->name('kindergarten.sliders');
+
+// kinder garder principal message
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/kinder-principal', [KinderPrincipalMsgController::class, 'showForm'])->name('admin.kinderprincipal.form');
+    Route::post('/kinder-principal', [KinderPrincipalMsgController::class, 'upload'])->name('admin.kinderprincipal.upload');
+    Route::put('/kinder-principal/{id}', [KinderPrincipalMsgController::class, 'update'])->name('admin.kinderprincipal.update');
+});
+
+// kindergarden gallery
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/kinder-gallery/upload', [KinderGalleryController::class, 'showUploadForm'])->name('kinder.upload.form');
+    Route::post('/kinder-gallery/upload', [KinderGalleryController::class, 'upload'])->name('kinder.upload');
+    Route::get('/kinder-gallery/list', [KinderGalleryController::class, 'list'])->name('kinder.list');
+    Route::delete('/kinder-gallery/{id}', [KinderGalleryController::class, 'delete'])->name('kinder.delete');
+    Route::post('/kinder-gallery/delete-by-header', [KinderGalleryController::class, 'deleteByHeader'])->name('kinder.deleteByHeader');
+});
+

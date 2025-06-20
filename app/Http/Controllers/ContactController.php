@@ -28,17 +28,24 @@ class ContactController extends Controller {
         ]);
 
         // Example: send to your email (you can use a mailable if needed)
-        Mail::raw("
-    Name: {$request->name}
-    Email: {$request->email}
-    Phone: {$request->phone}
-    Subject: {$request->subject}
-    Message: {$request->messege}
-", function ($message) {
-    $message->to(env('MAIL_FROM_ADDRESS'))
-            ->subject('New Contact Form Submission');
-});
+      try {
+    Mail::raw("
+        Name: {$request->name}
+        Email: {$request->email}
+        Phone: {$request->phone}
+        Subject: {$request->subject}
+        Message: {$request->messege}
+    ", function ($message) {
+        $message->to(env('MAIL_FROM_ADDRESS'))
+                ->subject('New Contact Form Submission');
+    });
 
-        return redirect()->back()->with('success', 'Thank you! Your message has been sent.');
-    }
+    return redirect()->back()->with('success', 'Thank you! Your message has been sent.');
+
+} catch (\Exception $e) {
+    return redirect()->back()->with('error', 'Mail failed to send: ' . $e->getMessage());
+}
+
+
+}
 }

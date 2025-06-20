@@ -47,44 +47,54 @@
 @section('content')
 <section class="pt-5 pb-5 bg-light">
     <div class="container">
-        <h2 class="text-center fw-bold text-primary mb-5" data-aos="fade-down">Video Albums</h2>
+        @if($videos->where('type', 'album')->isNotEmpty())
+    <h2 class="text-center fw-bold text-primary mb-5" data-aos="fade-down">Video Albums</h2>
 
-        <div class="row">
-            @forelse($videos->where('type', 'album') as $video)
-                <div class="col-md-6 mb-4" data-aos="fade-up">
-                    <div class="video-card">
-                        <div class="video-title">{{ $video->title }}</div>
-                        <video controls width="100%" class="led-video">
-                            <source src="{{ $video->video_url }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
+    <div class="row">
+        @foreach($videos->where('type', 'album') as $video)
+            <div class="col-md-6 mb-4" data-aos="fade-up">
+                <div class="video-card">
+                    <div class="video-title">{{ $video->title }}</div>
+                    <video controls width="100%" class="led-video">
+                        <source src="{{ $video->video_url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
-            @empty
-                <div class="col-12">
-                    <div class="no-videos" data-aos="fade-up">No Video Albums Available</div>
-                </div>
-            @endforelse
+            </div>
+        @endforeach
+    </div>
+@else
+    <div class="row">
+        <div class="col-12">
+            <div class="no-videos" data-aos="fade-up">No Video Albums Available</div>
         </div>
+    </div>
+@endif
 
-        <h2 class="text-center fw-bold text-primary mt-5 mb-4" data-aos="fade-down">360° Virtual Tours</h2>
 
-        <div class="row">
-            @forelse($videos->where('type', 'virtual') as $video)
-                <div class="col-md-6 mb-4" data-aos="fade-up">
-                    <div class="video-card">
-                        <div class="video-title">{{ $video->title }}</div>
-                        <video controls width="100%" class="led-video">
-                            <source src="{{ $video->video_url }}" type="video/mp4">
-                        </video>
-                    </div>
+       @if($videos->where('type', 'virtual')->isNotEmpty())
+    <h2 class="text-center fw-bold text-primary mt-5 mb-4" data-aos="fade-down">360° Virtual Tours</h2>
+
+    <div class="row">
+        @foreach($videos->where('type', 'virtual') as $video)
+            <div class="col-md-6 mb-4" data-aos="fade-up">
+                <div class="video-card">
+                    <div class="video-title">{{ $video->title }}</div>
+                    <video controls width="100%" class="led-video">
+                        <source src="{{ $video->video_url }}" type="video/mp4">
+                    </video>
                 </div>
-            @empty
-                <div class="col-12">
-                    <div class="no-videos" data-aos="fade-up">No 360° Virtual Tours Available</div>
-                </div>
-            @endforelse
+            </div>
+        @endforeach
+    </div>
+@else
+    <div class="row">
+        <div class="col-12">
+            <div class="no-videos" data-aos="fade-up">No 360° Virtual Tours Available</div>
         </div>
+    </div>
+@endif
+
         <h2 class="text-center fw-bold text-danger mt-5 mb-4" data-aos="fade-down">Our YouTube Channel</h2>
 
 <div class="row">
@@ -92,7 +102,9 @@
         @if(isset($video['id']['videoId']))
             <div class="col-md-4 mb-4" data-aos="fade-up">
                 <div class="video-card">
-                    <div class="video-title">{{ $video['snippet']['title'] }}</div>
+                    <div class="video-title bg-danger text-white d-flex align-items-center justify-content-center">
+                        <i class="bi bi-youtube me-2 fs-5"></i> {{ $video['snippet']['title'] }}
+                    </div>
                     <iframe class="led-video" width="100%" height="315"
                         src="https://www.youtube.com/embed/{{ $video['id']['videoId'] }}"
                         title="YouTube video"
@@ -109,6 +121,7 @@
         </div>
     @endforelse
 </div>
+
 
     </div>
 </section>

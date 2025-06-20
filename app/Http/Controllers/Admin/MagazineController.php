@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Magazine;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MagazineController extends Controller
 {
@@ -113,6 +115,23 @@ public function destroy($id)
 
     $magazine->delete();
     return redirect()->back()->with('success', 'Magazine deleted.');
+}
+
+public function download($id)
+{
+    $magazine = Magazine::findOrFail($id);
+
+    // If the PDF is stored locally in storage/app/public/magazines/
+    $filePath = str_replace(asset('storage'), 'public', $magazine->pdf_url);
+
+    if (Storage::exists($filePath)) {
+        return Storage::download($filePath, $magazine->title . '.pdf');
+    }
+
+    // For remote URLs, use a streamed response
+    return response()->streamDownload(function () use ($magazine) {
+        echo file_get_contents($magazine->pdf_url);
+    }, $magazine->title . '.pdf');
 }
 
 }

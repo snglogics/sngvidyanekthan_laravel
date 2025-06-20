@@ -1258,8 +1258,7 @@
 <script src="{{ asset('frontend/js/main.js') }}"></script>
 
 <!-- Google Maps and Map Script -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDC3Ip9iVC0nIxC6V14CKLQ1HZNF_65qEQ"></script>
-<script src="{{ asset('frontend/js/map-script.js') }}"></script>
+
 
 </body>
 </html>

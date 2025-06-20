@@ -84,11 +84,25 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-success w-100 py-2 rounded-3">
-                    <i class="bi bi-plus-circle me-1"></i> Add Route
-                </button>
+                <button type="submit" class="btn btn-success w-100 py-2 rounded-3" id="submitBtn">
+    <i class="bi bi-plus-circle me-1"></i> Add Route
+</button>
             </form>
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const submitBtn = document.getElementById("submitBtn");
+
+        form.addEventListener("submit", function () {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Adding Route`;
+        });
+    });
+</script>
 @endsection

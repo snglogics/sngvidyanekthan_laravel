@@ -54,5 +54,9 @@ class AdminController extends Controller
     {
         return view('admin.onlineapplications'); 
     }
+    public function kinderHome () 
+    {
+        return view('admin.kinderHome'); 
+    }
 
 }

@@ -49,7 +49,7 @@
                              alt="Overview Photo"
                              style="height: 200px; object-fit: cover;">
                     @else
-                        <img src="https://via.placeholder.com/400x200?text=No+Image" 
+                        <img src="https://via.placeholder.com/400x200" 
                              class="card-img-top mb-2"
                              alt="No Image">
                     @endif
