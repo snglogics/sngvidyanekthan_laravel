@@ -242,7 +242,7 @@
                             </div>
                             <!-- School Name -->
                             <div class="school-name sparkle-effect small ms-1" style="font-family: 'Algerian'">
-                                <div class="fw-bold">VIDYANIKETHAN</div>
+                                <div class="fw-bold">SN VIDYANIKETHAN</div>
                                 <div class="text-uppercase small">Senior Secondary School, ALUVA</div>
                                 <div class="text-uppercase small">(CBSE AFFILIATION NO,930060)</div>
                             </div>
@@ -260,14 +260,11 @@
                                     Application Form
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item"
-                                        href="https://docs.google.com/forms/d/e/1FAIpQLSchCpl-toWyB0eNfrmxfXvylMEuqx_F5vxSgsLtLAcTdmH8Aw/viewform"
-                                        target="_blank">📄 For LKG</a>
-                                    <a class="dropdown-item"
-                                        href="http://sivagirividyaniketan.edu.in/application-form-for-i-ix/"
-                                        target="_blank">📄 Class 1 to 10</a>
-                                    <a class="dropdown-item"
-                                        href="https://docs.google.com/forms/d/e/1FAIpQLSdsdaaACy5hvhkYDgl1n98vV-AUTmKRmnKnqqJT7TyR3ggoxQ/viewform"
+                                    <a class="dropdown-item" href="{{ route('student.form') }}" target="_blank">📄
+                                        For LKG</a>
+                                    <a class="dropdown-item" href="{{ route('admissions.form') }}" target="_blank">📄
+                                        Class 1 to 10</a>
+                                    <a class="dropdown-item" href="{{ route('higher-admission.form') }}"
                                         target="_blank">📄 For Plus One & Plus Two</a>
                                 </div>
                             </div>
