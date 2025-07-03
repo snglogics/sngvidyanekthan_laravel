@@ -208,32 +208,32 @@
 
         .event-carousel {
             display: flex;
-            gap: 1.5rem;
             overflow-x: auto;
-            padding: 20px 0;
             scroll-behavior: smooth;
-            scrollbar-width: none;
+            gap: 16px;
+            /* spacing between cards */
+            padding-bottom: 8px;
+            /* optional for scrollbar padding */
+        }
+
+        .event-card {
+            flex: 0 0 auto;
+            /* do not shrink, fixed width */
+            width: 280px;
+            /* default card width for desktop */
         }
 
         .event-carousel::-webkit-scrollbar {
             display: none;
         }
 
-        .event-card {
-            flex: 0 0 280px;
-            background-color: #ffffff;
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            border: 1px solid #e0e0e0;
-        }
 
         .event-card:hover {
             transform: translateY(-10px);
             border-color: #0f64af;
             box-shadow: 0 20px 40px rgba(15, 100, 175, 0.15);
         }
+
 
         .event-card img {
             width: 100%;
@@ -261,10 +261,31 @@
             line-height: 1.6;
         }
 
+        @media (max-width: 767px) {
+            .event-section h3 {
+                font-size: 1.5rem;
+                /* adjust as needed */
+            }
+        }
+
+        /* Small screen (mobile) styles */
+        @media (max-width: 767px) {
+            .event-card {
+                width: 60vw;
+                /* full viewport width */
+                scroll-snap-align: start;
+                /* snap to start of card */
+            }
+
+            .event-carousel {
+                scroll-snap-type: x mandatory;
+            }
+        }
+
         .scroll-btn {
             position: absolute;
             top: 50%;
-            transform: translateY(-50%);
+            /* transform: translateY(-50%); */
             background-color: #ffffff;
             border: none;
             color: #0f64af;
@@ -295,13 +316,13 @@
             transform: translateX(4px);
         }
 
-        .scroll-btn.left i {
-            transform: rotate(180deg) !important;
-        }
+        /* .scroll-btn.left i {
+                                                                                                                                                transform: rotate(180deg) !important;
+                                                                                                                                            }
 
-        .scroll-btn.right i {
-            transform: rotate(0deg) !important;
-        }
+                                                                                                                                            .scroll-btn.right i {
+                                                                                                                                                transform: rotate(0deg) !important;
+                                                                                                                                            } */
 
         .scroll-btn.left {
             left: -40px;
@@ -521,7 +542,7 @@
 
         .form-group i {
             position: absolute;
-            top: 50%;
+            top: 30px;
             left: 20px;
             transform: translateY(-50%);
             color: #888;
@@ -570,7 +591,7 @@
         /*  */
 
         .why-choose-section {
-            padding: 80px 20px;
+            padding: 10px 20px;
             background-color: #ffffff;
         }
 
@@ -584,6 +605,13 @@
             font-weight: 700;
             color: #000;
             margin-bottom: 20px;
+        }
+
+        @media (max-width: 767px) {
+            .why-choose-header h2 {
+                font-size: 1.5rem;
+                /* smaller size on small screens */
+            }
         }
 
         .why-card {
@@ -618,6 +646,29 @@
             color: #777;
             font-size: 1rem;
             line-height: 1.8;
+        }
+
+        @media (max-width: 767px) {
+            .icon-title-wrap {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 10px
+                    /* spacing between icon and h3 */
+            }
+
+            .why-card i {
+                font-size: 1.2rem;
+                margin: 0
+                    /* adjust as needed */
+            }
+
+            .why-card h3 {
+                font-size: 1rem;
+                /* adjust as needed */
+                margin: 0;
+                /* remove default margin */
+            }
         }
 
         .cta-card {
@@ -898,19 +949,43 @@
     <!-- End of Category section -->
 
 
-
+    {{-- Principal message section --}}
     <div class="container principal-section">
-        <div class="principal-quote-container">
-            <div class="principal-image-container">
-                <img src="{{ asset($principalMsg->image_url) }}" alt="Principal">
-                <p class="principal-name">{{ $principalMsg->image_name }}</p>
+        <div class="principal-quote-container text-center max-w-xl mx-auto">
+            <div class="principal-image-container mb-4">
+                <img src="{{ asset($principalMsg->image_url) }}" alt="Principal"
+                    class="rounded shadow-md w-full max-w-xs mx-auto">
+                <p class="principal-name font-semibold mt-2 text-lg">{{ $principalMsg->image_name }}</p>
             </div>
-            <p id="principal-message" class="principal-quote">{{ $principalMsg->image_description }}</p>
-            <button id="toggle-button" class="toggle-button" hidden onclick="toggleMessage()" hidden>Read more</button>
+
+            <p id="principal-message" class="principal-quote text-gray-700 text-base leading-relaxed">
+                {{ $principalMsg->image_description }}
+            </p>
+
+            <a href="{{ route('principal.msg') }}">
+                <button
+                    style="
+            background-color: transparent;
+            color: #2563eb; /* blue text */
+            padding: 10px 20px;
+            border: 1px solid #2563eb; /* blue border */
+            border-radius: 5px;
+            margin-top: 16px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        "
+                    onmouseover="this.style.backgroundColor='#2563eb'; this.style.color='white';"
+                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='#2563eb';">
+                    Read More
+                </button>
+            </a>
 
         </div>
     </div>
 
+
+    {{-- Why choose us section --}}
     <section class="why-choose-section">
         <div class="container">
             <div class="why-choose-header">
@@ -921,8 +996,10 @@
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <div class="why-card">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                                <h3>Expert Instructors</h3>
+                                <div class="icon-title-wrap">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <h3>Expert Instructors</h3>
+                                </div>
                                 <p>Learn from top industry professionals who bring years of real-world experience to the
                                     classroom, providing you with the latest tools, techniques, and insights needed to excel
                                     in your field.</p>
@@ -930,16 +1007,20 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="why-card">
-                                <i class="fas fa-certificate"></i>
-                                <h3>Career-Boost Certify</h3>
+                                <div class="icon-title-wrap">
+                                    <i class="fas fa-certificate"></i>
+                                    <h3>Career-Boost Certify</h3>
+                                </div>
                                 <p>Earn certifications that are highly regarded by employers, helping you to enhance your
                                     resume, gain industry recognition, and open doors to new career opportunities.</p>
                             </div>
                         </div>
                         <div class="col-md-12 mb-4">
                             <div class="why-card">
-                                <i class="fas fa-book"></i>
-                                <h3>100+ High Impact Courses</h3>
+                                <div class="icon-title-wrap">
+                                    <i class="fas fa-book"></i>
+                                    <h3>100+ High Impact Courses</h3>
+                                </div>
                                 <p>We offer over 100 courses that cover essential skills in today’s tech industry. Whether
                                     you’re a beginner or an experienced professional, our courses provide hands-on learning
                                     to help you apply your skills immediately.</p>
@@ -949,8 +1030,10 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="cta-card">
-                        <i class="fas fa-clock"></i>
-                        <h3>Flexible Learning Schedules</h3>
+                        <div class="icon-title-wrap">
+                            <i class="fas fa-clock"></i>
+                            <h3>Flexible Learning Schedules</h3>
+                        </div>
                         <p>Learn at your own pace with our flexible learning options. Balance your education with a busy
                             lifestyle and achieve your goals on your own schedule.</p>
                         <a href="{{ route('contact') }}" class="cta-btn">Contact us →</a>
@@ -1071,23 +1154,29 @@
                 </div>
                 <div class="contact-info">
                     <div class="info-card">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <h4>Our Address</h4>
+                        <div class="icon-title-wrap">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h4>Our Address</h4>
+                        </div>
                         Sivagiri Vidyaniketan
                         Vadihira Rd, Keeramkunnu,
                         <p>Keezhmadu, Aluva, <br>Kerala 683105</p>
                     </div>
                     <div class="info-card">
-                        <i class="fas fa-phone-alt"></i>
-                        <h4>Our Contact Info</h4>
+                        <div class="icon-title-wrap">
+                            <i class="fas fa-phone-alt"></i>
+                            <h4>Our Contact Info</h4>
+                        </div>
                         <p>+91 7994573586<br>
                             +0484-2632102, 2626490<br>
                             svidyaaluva@yahoo.com <br>
                             aluvasvidya@gmail.com</p>
                     </div>
                     <div class="info-card">
-                        <i class="fas fa-clock"></i>
-                        <h4>School Timing</h4>
+                        <div class="icon-title-wrap">
+                            <i class="fas fa-clock"></i>
+                            <h4>School Timing</h4>
+                        </div>
                         <p>Monday - Friday: 8:00 AM - 4:00 PM<br>Saturday: 9:00 AM - 1:00 PM<br>Sunday: Closed</p>
                     </div>
                 </div>
@@ -1117,9 +1206,10 @@
                             <input type="text" placeholder="Enter your phone number...">
                         </div>
                     </div>
-                    <div class="form-group mt-4" style="flex: 1 1 calc(50% - 20px);">
+                    <div class="form-group mt-4"
+                        style="flex: 1 1 calc(50% - 20px); display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-comment"></i>
-                        <textarea placeholder="Enter your message..." rows="4"></textarea>
+                        <textarea placeholder="Enter your message..." rows="4" style="flex: 1;"></textarea>
                     </div>
                     <button type="submit" class="submit-btn">Submit</button>
                 </div>
@@ -1262,9 +1352,11 @@
     <!-- Events section Button Click -->
     <script>
         function scrollEvents(button, direction) {
-            const wrapper = button.closest('.position-relative').querySelector('.scroll-wrapper');
-            const scrollAmount = 280; // pixels
-            wrapper.scrollBy({
+            // Find the closest .event-carousel sibling to the button
+            const container = button.parentElement.querySelector('.event-carousel');
+            const scrollAmount = 280; // Adjust this pixel value as needed
+
+            container.scrollBy({
                 left: direction * scrollAmount,
                 behavior: 'smooth'
             });
@@ -1320,4 +1412,4 @@
 
 
 <!-- @section('scripts')
-                <script src="{{ asset('js/principal-message.js') }}"></script> -->
+                                                                                                                                                                                                                <script src="{{ asset('js/principal-message.js') }}"></script> -->

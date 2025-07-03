@@ -37,7 +37,6 @@ use App\Http\Controllers\Frontend\CulturalCompetitionFrontendController;
 use App\Http\Controllers\Frontend\TeacherAccoladeFrontendController;
 use App\Http\Controllers\Admin\TeacherAccoladeController;
 use App\Http\Controllers\Admin\SchoolBusRouteController;
-use App\Http\Controllers\Frontend\FrontendBusRouteController;
 use App\Http\Controllers\SeniorStudentAdmissionController;
 use App\Http\Controllers\HigherStudentAdmissionController;
 use App\Http\Controllers\Admin\InterschoolParticipationController;
@@ -47,6 +46,8 @@ use App\Http\Controllers\Frontend\PTAMemberController;
 use App\Http\Controllers\Admin\KindergartenSliderController;
 use App\Http\Controllers\Admin\KinderPrincipalMsgController;
 use App\Http\Controllers\Admin\KinderGalleryController;
+use App\Http\Controllers\Admin\BusController;
+use App\Http\Controllers\Frontend\BusRouteController;
 
 
 
@@ -59,12 +60,12 @@ Route::get('/footer', [FrontEndController::class, 'footer'])->name('footer');
 
 // Routes for Authentication
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-  // Login page
+// Login page
 Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');  // Registration page
 
 // dashboard route
 Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard'); // Using AdminController for the dashboard
+  Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard'); // Using AdminController for the dashboard
 });
 
 // admin login
@@ -82,13 +83,14 @@ Route::get('/admin/studentlife', [AdminController::class, 'adminstudentlife'])->
 Route::get('/admin/event', [AdminController::class, 'adminevent'])->name('admin.event');
 Route::get('/admin/onlinrapplications', [AdminController::class, 'adminapplications'])->name('admin.onlineapplications');
 Route::get('/admin/kinderHome', [AdminController::class, 'kinderHome'])->name('admin.kinderHome');
- 
+
+
 
 
 // Handle Signout (Redirect to FrontEndController home page after logout)
 Route::post('/logout', function () {
-    auth()->logout();
-    return redirect()->route('home');  // Redirect to the home page of FrontEndController
+  auth()->logout();
+  return redirect()->route('home');  // Redirect to the home page of FrontEndController
 })->name('logout');
 
 // Principal message routes
@@ -103,11 +105,11 @@ Route::post('/upload-image', [ImageUploadController::class, 'upload'])->name('im
 Route::get('/admin/slider-upload', [SliderController::class, 'showSliderUpload'])->name('upload.slider');
 Route::post('/admin/slider-upload', [SliderController::class, 'sliderupload'])->name('slider.upload');
 
- //upload event
+//upload event
 
- Route::get('/admin/uploadevents', [EventController::class, 'showUploadForm'])->name('events.upload');
- Route::post('/admin/uploadevents/upload', [EventController::class, 'eventUpload'])->name('event.upload');
- Route::get('/admin/uploadevents/{id}/edit', [EventController::class, 'edit'])->name('event.edit');
+Route::get('/admin/uploadevents', [EventController::class, 'showUploadForm'])->name('events.upload');
+Route::post('/admin/uploadevents/upload', [EventController::class, 'eventUpload'])->name('event.upload');
+Route::get('/admin/uploadevents/{id}/edit', [EventController::class, 'edit'])->name('event.edit');
 Route::delete('/admin/uploadevents/{id}', [EventController::class, 'delete'])->name('event.delete');
 Route::post('/admin/uploadevents/delete-by-header', [EventController::class, 'deleteByHeader'])->name('event.deleteByHeader');
 //uploaded event frontend
@@ -198,11 +200,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
   Route::get('/magazines', [MagazineController::class, 'index'])->name('admin.magazines.index');
   Route::post('/magazines', [MagazineController::class, 'store'])->name('admin.magazines.store');
 
-   Route::get('/magazines/{id}/edit', [MagazineController::class, 'edit'])->name('admin.magazines.edit');
-    Route::put('/magazines/{id}', [MagazineController::class, 'update'])->name('admin.magazines.update');
-    Route::delete('/magazines/{id}', [MagazineController::class, 'destroy'])->name('admin.magazines.destroy');
-    Route::get('/magazines/{id}/download', [MagazineController::class, 'download'])->name('magazines.download');
-
+  Route::get('/magazines/{id}/edit', [MagazineController::class, 'edit'])->name('admin.magazines.edit');
+  Route::put('/magazines/{id}', [MagazineController::class, 'update'])->name('admin.magazines.update');
+  Route::delete('/magazines/{id}', [MagazineController::class, 'destroy'])->name('admin.magazines.destroy');
+  Route::get('/magazines/{id}/download', [MagazineController::class, 'download'])->name('magazines.download');
 });
 Route::get('/magazineslist', [MagazineController::class, 'list'])->name('magazines.list');
 Route::get('/magazines/{id}', [MagazineController::class, 'show'])->name('magazines.show');
@@ -228,19 +229,17 @@ Route::get('/videolist', [VideoAlbumController::class, 'frontendVideo'])->name('
 Route::get('/admin/facility', [LiveClassController::class, 'facilityHome'])->name('facility.home');
 //zoom meeting
 Route::prefix('admin')
-    ->middleware(['auth'])
-    ->name('admin.') 
-    ->group(function () {
-        Route::resource('live-classes', LiveClassController::class);
-    });
-
+  ->name('admin.')
+  ->group(function () {
+    Route::resource('live-classes', LiveClassController::class);
+  });
 // time table management
 Route::prefix('admin')->middleware(['auth'])->as('admin.')->group(function () {
   Route::resource('timetables', TimeTableController::class);
 });
 
 Route::get('/admin/timetablelist', [TimeTableController::class, 'timetableview'])->name('timetable.list');
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 Route::get('/admin/timetable/view', [TimetableController::class, 'timetableview'])->name('admin.timetable.view');
 
 
@@ -255,7 +254,7 @@ Route::get('/newsShow', [App\Http\Controllers\Admin\NewsController::class, 'inde
 
 
 // Protect routes with authentication
-Route::prefix('admin')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->group(function () {
   Route::get('/admission-form', [StudentApplicationController::class, 'showForm'])->name('student.form');
   Route::post('/admission-form', [StudentApplicationController::class, 'submitForm'])->name('student.submit');
 });
@@ -263,17 +262,17 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 // Show the admission form
 Route::get('/admissions-senior', [SeniorStudentAdmissionController::class, 'showForm'])->name('admissions.form');
 Route::prefix('admin')->name('admin.')->group(function () {
-    // List all applications
-    Route::get('primary-students', [StudentApplicationController::class, 'index'])
-         ->name('primary-students.list');
+  // List all applications
+  Route::get('primary-students', [StudentApplicationController::class, 'index'])
+    ->name('primary-students.list');
 
-    // Show one application’s details
-    Route::get('primary-student/{id}', [StudentApplicationController::class, 'show'])
-         ->name('primary-students.show');
+  // Show one application’s details
+  Route::get('primary-student/{id}', [StudentApplicationController::class, 'show'])
+    ->name('primary-students.show');
 
-    // Delete an application
-    Route::delete('primary-students/{id}', [StudentApplicationController::class, 'destroy'])
-         ->name('primary-students.destroy');
+  // Delete an application
+  Route::delete('primary-students/{id}', [StudentApplicationController::class, 'destroy'])
+    ->name('primary-students.destroy');
 });
 // Handle the form submission
 Route::post('/admissions/senior', [SeniorStudentAdmissionController::class, 'submitForm'])->name('admissions.submit');
@@ -284,7 +283,7 @@ Route::prefix('admin')->middleware(['auth'])->as('admin.')->group(function () {
 });
 Route::middleware(['auth', 'verified'])->group(function () {
   Route::get('/profile', function () {
-      return view('profile.edit');
+    return view('profile.edit');
   })->name('profile.edit');
 });
 Route::get('/academic-calendar', [AcademicCalendarController::class, 'academicCalendarFrontend'])->name('academic-calendar.frontend');
@@ -321,7 +320,7 @@ Route::get('/curriculums', [CurriculumController::class, 'frontend'])->name('cur
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
   Route::resource('co_curricular_programs', CoCurricularProgramController::class)
-      ->parameters(['co_curricular_programs' => 'program']);
+    ->parameters(['co_curricular_programs' => 'program']);
 });
 
 // Frontend Routes
@@ -333,7 +332,7 @@ Route::prefix('co-curricular-programs')->name('frontend.co_curricular_programs.'
 //field trip
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
   Route::resource('field_trips', FieldTripController::class)
-      ->parameters(['field_trips' => 'trip']);
+    ->parameters(['field_trips' => 'trip']);
 });
 
 //frontend field trip
@@ -351,7 +350,7 @@ Route::get('/student-council', function () {
 use App\Http\Controllers\Admin\SportsGameController;
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
-    Route::resource('sports_games', SportsGameController::class);
+  Route::resource('sports_games', SportsGameController::class);
 });
 // Frontend Routes for Sports & Games
 Route::prefix('sports-games')->name('frontend.sports_games.')->group(function () {
@@ -378,7 +377,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 //sports awards
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
-    Route::resource('sports_awards', AdminSportsAwardController::class);
+  Route::resource('sports_awards', AdminSportsAwardController::class);
 });
 
 // Frontend Routes
@@ -415,9 +414,16 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
   Route::resource('school_bus_routes', SchoolBusRouteController::class);
 });
 
+Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
+  Route::resource('buses', BusController::class);
+});
+
 // Frontend Bus Routes
-Route::get('/bus-routes', [FrontendBusRouteController::class, 'index'])->name('frontend.bus_routes');
-Route::get('/bus-routes/{schoolBusRoute}', [FrontendBusRouteController::class, 'show'])->name('frontend.bus_routes.show');
+// Route::get('/bus-routes', [FrontendBusRouteController::class, 'index'])->name('frontend.bus_routes');
+// Route::get('/bus-routes/{schoolBusRoute}', [FrontendBusRouteController::class, 'show'])->name('frontend.bus_routes.show');
+
+Route::get('/bus-route', [BusRouteController::class, 'index'])
+  ->name('frontend.bus_routes');
 
 //higher secondary admission form
 Route::get('/higher-admission', [HigherStudentAdmissionController::class, 'showHigherForm'])->name('higher-admission.form');
@@ -429,7 +435,7 @@ Route::get('/admin/higher-students', [HigherStudentAdmissionController::class, '
 Route::get('/admin/higher-student/{id}', [HigherStudentAdmissionController::class, 'viewStudent'])->name('admin.higher-student.details');
 Route::get('/admin/higher-student/print/{id}', [HigherStudentAdmissionController::class, 'printStudent'])->name('admin.higher-student.print');
 Route::delete('admin/higher-student/{id}', [HigherStudentAdmissionController::class, 'destroy'])
-         ->name('admin.higher-students.destroy');
+  ->name('admin.higher-students.destroy');
 
 // senior stuedent application 
 Route::get('/admin/senior-students', [SeniorStudentAdmissionController::class, 'listStudents'])->name('admin.senior-students.list');
@@ -437,7 +443,7 @@ Route::get('/admin/senior-student/{id}', [SeniorStudentAdmissionController::clas
 Route::get('/admin/senior-student/print/{id}', [SeniorStudentAdmissionController::class, 'printStudent'])->name('admin.senior-student.print');
 
 Route::delete('admin/senior-students/{id}', [SeniorStudentAdmissionController::class, 'destroy'])
-         ->name('admin.senior-students.destroy');
+  ->name('admin.senior-students.destroy');
 
 //interschool participation
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
@@ -447,7 +453,7 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 Route::get('/interschool-participationslist', [InterFrontendschoolParticipationController::class, 'frontendIndex'])->name('interschool-participations.index');
 // PTA members admin
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('pta-members', App\Http\Controllers\Admin\PTAMemberController::class);
+  Route::resource('pta-members', App\Http\Controllers\Admin\PTAMemberController::class);
 });
 
 // PTA members frontend
@@ -455,34 +461,32 @@ Route::get('/pta-members', [PTAMemberController::class, 'index'])->name('pta-mem
 
 //club activity
 Route::resource('admin/clubs', ClubActivityController::class)->names([
-    'index'   => 'admin.clubs.index',
-    'create'  => 'admin.clubs.create',
-    'store'   => 'admin.clubs.store',
-    'edit'    => 'admin.clubs.edit',
-    'update'  => 'admin.clubs.update',
-    'destroy' => 'admin.clubs.destroy',
+  'index'   => 'admin.clubs.index',
+  'create'  => 'admin.clubs.create',
+  'store'   => 'admin.clubs.store',
+  'edit'    => 'admin.clubs.edit',
+  'update'  => 'admin.clubs.update',
+  'destroy' => 'admin.clubs.destroy',
 ]);
 // kindergarder Slider
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
-    Route::resource('kinder-sliders', KindergartenSliderController::class);
-    
+  Route::resource('kinder-sliders', KindergartenSliderController::class);
 });
 
 Route::get('/kindergarten-sliders', [KindergartenSliderController::class, 'kindergarten'])->name('kindergarten.sliders');
 
 // kinder garder principal message
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/kinder-principal', [KinderPrincipalMsgController::class, 'showForm'])->name('admin.kinderprincipal.form');
-    Route::post('/kinder-principal', [KinderPrincipalMsgController::class, 'upload'])->name('admin.kinderprincipal.upload');
-    Route::put('/kinder-principal/{id}', [KinderPrincipalMsgController::class, 'update'])->name('admin.kinderprincipal.update');
+  Route::get('/kinder-principal', [KinderPrincipalMsgController::class, 'showForm'])->name('admin.kinderprincipal.form');
+  Route::post('/kinder-principal', [KinderPrincipalMsgController::class, 'upload'])->name('admin.kinderprincipal.upload');
+  Route::put('/kinder-principal/{id}', [KinderPrincipalMsgController::class, 'update'])->name('admin.kinderprincipal.update');
 });
 
 // kindergarden gallery
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    Route::get('/kinder-gallery/upload', [KinderGalleryController::class, 'showUploadForm'])->name('kinder.upload.form');
-    Route::post('/kinder-gallery/upload', [KinderGalleryController::class, 'upload'])->name('kinder.upload');
-    Route::get('/kinder-gallery/list', [KinderGalleryController::class, 'list'])->name('kinder.list');
-    Route::delete('/kinder-gallery/{id}', [KinderGalleryController::class, 'delete'])->name('kinder.delete');
-    Route::post('/kinder-gallery/delete-by-header', [KinderGalleryController::class, 'deleteByHeader'])->name('kinder.deleteByHeader');
+  Route::get('/kinder-gallery/upload', [KinderGalleryController::class, 'showUploadForm'])->name('kinder.upload.form');
+  Route::post('/kinder-gallery/upload', [KinderGalleryController::class, 'upload'])->name('kinder.upload');
+  Route::get('/kinder-gallery/list', [KinderGalleryController::class, 'list'])->name('kinder.list');
+  Route::delete('/kinder-gallery/{id}', [KinderGalleryController::class, 'delete'])->name('kinder.delete');
+  Route::post('/kinder-gallery/delete-by-header', [KinderGalleryController::class, 'deleteByHeader'])->name('kinder.deleteByHeader');
 });
-

@@ -232,17 +232,20 @@
                 <div class="row align-items-center  ">
                     <div class="col-12 d-flex flex-wrap justify-content-between align-items-center">
                         <!-- Left Section: Logo and School Name -->
-                        <div class="d-flex align-items-center ">
+                        <div class="d-flex align-items-center" style="margin-bottom:10px">
                             <!-- Logo -->
                             <div class="logo">
                                 <a href="#">
-                                    <img src="{{ asset('frontend/images/schoolLogo.png') }}" alt="Logo"
-                                        style="width: 120px; height: auto;">
+                                    <img src="{{ asset('frontend/images/logobgrmved.png') }}" alt="Logo"
+                                        style="width: 100px; height: 100px;">
                                 </a>
                             </div>
+
+
+
                             <!-- School Name -->
-                            <div class="school-name sparkle-effect small ms-1" style="font-family: 'Algerian'">
-                                <div class="fw-bold">SN VIDYANIKETHAN</div>
+                            <div class="school-name sparkle-effect  ms-1" style="font-family: 'Algerian'">
+                                <div class="fw-bold">SIVAGIRI VIDYANIKETHAN</div>
                                 <div class="text-uppercase small">Senior Secondary School, ALUVA</div>
                                 <div class="text-uppercase small">(CBSE AFFILIATION NO,930060)</div>
                             </div>
@@ -260,18 +263,19 @@
                                     Application Form
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{{ route('student.form') }}" target="_blank">📄
+                                    <a class="dropdown-item" href="{{ route('student.form') }}">📄
                                         For LKG</a>
-                                    <a class="dropdown-item" href="{{ route('admissions.form') }}" target="_blank">📄
+                                    <a class="dropdown-item" href="{{ route('admissions.form') }}">📄
                                         Class 1 to 10</a>
-                                    <a class="dropdown-item" href="{{ route('higher-admission.form') }}"
-                                        target="_blank">📄 For Plus One & Plus Two</a>
+                                    <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 For Plus
+                                        One & Plus Two</a>
                                 </div>
                             </div>
 
                             <div class="button me-2">
-                                <a href="https://epay.federalbank.co.in/easypayments/" target="_blank"
-                                    class="main-btn">Fee Payment</a>
+                                <a href="https://epay.federalbank.co.in/easypayments/DIRECTPAYMENT.ASPX?CODE=LIKPELIRD
+1Y"
+                                    target="_blank" class="main-btn">Fee Payment</a>
                             </div>
 
                             <div class="button me-2">
@@ -281,7 +285,7 @@
                         </div>
 
                         <!-- Mobile Toggle Button -->
-                        <div class="d-lg-none mt-2">
+                        <div class="d-lg-none mt-2 mb-2">
                             <button class="btn btn-outline-primary" id="supportToggle">☰ Options</button>
                         </div>
                     </div>
@@ -297,7 +301,9 @@
                                 <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 Online
                                     Application - Plus One & Two</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="https://epay.federalbank.co.in/easypayments/"
+                                <a class="dropdown-item"
+                                    href="https://epay.federalbank.co.in/easypayments/DIRECTPAYMENT.ASPX?CODE=LIKPELIRD
+1Y"
                                     target="_blank">💳 Fee Payment</a>
                                 <a class="dropdown-item"
                                     href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf"
