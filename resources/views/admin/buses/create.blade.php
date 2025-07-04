@@ -13,6 +13,7 @@
             </div>
 
             <div class="card-body">
+
                 <form method="POST"
                     action="{{ isset($bus) ? route('admin.buses.update', $bus) : route('admin.buses.store') }}">
                     @csrf

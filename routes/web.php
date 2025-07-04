@@ -48,6 +48,9 @@ use App\Http\Controllers\Admin\KinderPrincipalMsgController;
 use App\Http\Controllers\Admin\KinderGalleryController;
 use App\Http\Controllers\Admin\BusController;
 use App\Http\Controllers\Frontend\BusRouteController;
+use App\Http\Controllers\Frontend\ViewSliderController;
+use App\Http\Controllers\SlidersViewController;
+use App\Http\Controllers\StudentCouncilController;
 
 
 
@@ -104,6 +107,9 @@ Route::post('/upload-image', [ImageUploadController::class, 'upload'])->name('im
 //upload slider
 Route::get('/admin/slider-upload', [SliderController::class, 'showSliderUpload'])->name('upload.slider');
 Route::post('/admin/slider-upload', [SliderController::class, 'sliderupload'])->name('slider.upload');
+// view slider
+
+Route::get('/sliderView', [SlidersViewController::class, 'viewSlider'])->name('slider');
 
 //upload event
 
@@ -417,11 +423,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
   Route::resource('buses', BusController::class);
 });
+Route::post('/admin/buses/import', [BusController::class, 'import'])->name('admin.buses.import');
 
-// Frontend Bus Routes
-// Route::get('/bus-routes', [FrontendBusRouteController::class, 'index'])->name('frontend.bus_routes');
-// Route::get('/bus-routes/{schoolBusRoute}', [FrontendBusRouteController::class, 'show'])->name('frontend.bus_routes.show');
-
+// Frontend Routes for School Bus Routes
 Route::get('/bus-route', [BusRouteController::class, 'index'])
   ->name('frontend.bus_routes');
 
@@ -490,3 +494,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
   Route::delete('/kinder-gallery/{id}', [KinderGalleryController::class, 'delete'])->name('kinder.delete');
   Route::post('/kinder-gallery/delete-by-header', [KinderGalleryController::class, 'deleteByHeader'])->name('kinder.deleteByHeader');
 });
+
+// student council management
+Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
+  Route::resource('student_council', StudentCouncilController::class);
+});
+
+//student coucil frontend
+Route::get('/student_council', [App\Http\Controllers\Frontend\StudentCouncilController::class, 'index'])->name('student_council.index');

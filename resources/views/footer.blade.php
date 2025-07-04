@@ -103,7 +103,7 @@
                                         <i class="fa fa-envelope-o"></i>
                                     </div>
                                     <div class="cont">
-                                        <p>svidyaaluva@yahoo.com</p>
+                                        <p>aluvasvidya@gmail.com</p>
                                     </div>
                                 </li>
                             </ul>

@@ -2,6 +2,8 @@
 @section('content')
 
 
+
+
     <style>
         #category-part {
             background-color: #ffffff;
@@ -317,12 +319,12 @@
         }
 
         /* .scroll-btn.left i {
-                                                                                                                                                transform: rotate(180deg) !important;
-                                                                                                                                            }
+                                                                                                                                                                    transform: rotate(180deg) !important;
+                                                                                                                                                                }
 
-                                                                                                                                            .scroll-btn.right i {
-                                                                                                                                                transform: rotate(0deg) !important;
-                                                                                                                                            } */
+                                                                                                                                                                .scroll-btn.right i {
+                                                                                                                                                                    transform: rotate(0deg) !important;
+                                                                                                                                                                } */
 
         .scroll-btn.left {
             left: -40px;
@@ -837,12 +839,13 @@
                         <div class="col-xl-7 col-lg-9">
                             <div class="slider-cont">
                                 <h1 data-animation="bounceInLeft" data-delay="1s">{{ $slider['header'] ?? '' }}</h1>
-                                <p data-animation="fadeInUp" data-delay="1.3s">{{ $slider['common_header'] ?? '' }}</p>
+                                <p data-animation="fadeInUp" data-delay="1.3s">
+                                    {{ \Illuminate\Support\Str::limit($slider['common_header'] ?? '', 400, '...') }}</p>
                                 <ul>
                                     <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn"
-                                            href="{{ route('about') }}">Read More</a></li>
-                                    <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2"
-                                            href="#">Get Started</a></li>
+                                            href="{{ route('slider') }}">Read More</a></li>
+                                    {{-- <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2"
+                                            href="#">Get Started</a></li> --}}
                                 </ul>
                             </div>
                         </div>
@@ -1412,4 +1415,4 @@
 
 
 <!-- @section('scripts')
-                                                                                                                                                                                                                <script src="{{ asset('js/principal-message.js') }}"></script> -->
+                                                                                                                                                                                                                                    <script src="{{ asset('js/principal-message.js') }}"></script> -->

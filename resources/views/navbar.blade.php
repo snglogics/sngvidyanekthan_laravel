@@ -211,7 +211,7 @@
                                     <span class="sparkle-text">Bridge Rd, Periyar Nagar, Aluva, Kerala 683101</span>
 
                                     <img src="{{ asset('frontend/images/all-icon/email.png') }}" alt="icon">
-                                    <span class="sparkle-text">svidyaaluva@yahoo.com</span>
+                                    <span class="sparkle-text">aluvasvidya@gmail.com</span>
                                 </li>
                             </ul>
                         </div>
@@ -254,7 +254,7 @@
                         <!-- Right Section: Buttons (Desktop only) -->
                         <div class="d-none d-lg-flex align-items-center flex-wrap">
                             <div class="kinder-button-wrapper me-2">
-                                <a href="{{ route('kindergarten.sliders') }}" class="kinder-button">Kinder Garden</a>
+                                <a href="{{ route('kindergarten.sliders') }}" class="kinder-button">Kinder Garten</a>
                             </div>
 
                             <div class="button dropdown me-2">
@@ -309,7 +309,7 @@
                                     href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf"
                                     target="_blank">📢 Disclosure</a>
                                 <a class="dropdown-item kinder-button"
-                                    href="{{ route('kindergarten.sliders') }}">Kinder Garden</a>
+                                    href="{{ route('kindergarten.sliders') }}">Kinder Garten</a>
                             </div>
                         </div>
                     </div>
@@ -380,7 +380,7 @@
                                             <li><a href="{{ route('curriculums.list') }}">Assessment pattern </a></li>
                                             <li><a href="{{ route('academic-calendar.frontend') }}">Academic
                                                     Calendar</a></li>
-                                            <li><a href="{{ route('syllabus.list') }}">Online syllabus</a></li>
+                                            {{-- <li><a href="{{ route('syllabus.list') }}">Online syllabus</a></li> --}}
                                             <li><a href="{{ route('timetable.list') }}">Exam Timetable</a></li>
                                         </ul>
                                     </li>
@@ -395,8 +395,8 @@
                                         <a class="{{ $isFacultyActive ? 'active' : '' }}"
                                             href="{{ route('admin.live-classes.index') }}">Faculty</a>
                                         <ul class="sub-menu">
-                                            <li><a href="{{ route('admin.live-classes.index') }}">Digital Class
-                                                    Rooms</a></li>
+                                            {{-- <li><a href="{{ route('admin.live-classes.index') }}">Digital Class
+                                                    Rooms</a></li> --}}
                                             <li><a href="{{ route('teachers.categorized') }}">Teachers & Staff</a>
                                             </li>
 
@@ -468,7 +468,8 @@
                                             href="{{ route('student_council') }}">Student Life</a>
                                         <ul class="sub-menu">
 
-                                            <li><a href="{{ route('student_council') }}">Student Council</a></li>
+                                            <li><a href="{{ route('student_council.index') }}">Student Council</a>
+                                            </li>
                                             <li><a href="{{ route('frontend.field_trips.index') }}">Field Trips and
                                                     Tours</a></li>
                                         </ul>
