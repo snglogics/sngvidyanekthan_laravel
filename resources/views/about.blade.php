@@ -36,8 +36,17 @@
                         <div class="about-cont"
                             style="background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px;">
                             {{-- First 2 paragraphs always visible --}}
-                            <p>Knowledge, the pathway to freedom, can be attained only through education...</p>
-                            <p>Sivagiri Vidyaniketan is at the threshold of its Golden Jubilee in 2023...</p>
+                            <p>Knowledge, the pathway to freedom, can be attained only through
+                                education. Sivagiri Vidyaniketan stands unique by perceiving Guru's
+                                ideal"Achieve freedom through education” and with the motto “Dream...
+                                Achieve.…and Lead...”</p>
+                            <p>The school was started its glorious journey in 1973 as "Sadanam"
+                                under SN Charities, and thereafter headed by Sreenarayana Dharma
+                                Sangham Trust since1987, the organization was renamed as Sivagiri
+                                Vidyaniketan in1990. Its affiliation in 1992, made the school the first and
+                                fore most one in Aluva to follow Central Board of Secondary Education
+                                syllabus. The year 2005 was fortunate to witness its illustrious
+                                upgradation to the Higher Secondary level.</p>
 
                             {{-- Hidden content --}}
                             <div id="more-content" style="display: none;">

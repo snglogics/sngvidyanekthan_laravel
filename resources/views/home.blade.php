@@ -319,12 +319,12 @@
         }
 
         /* .scroll-btn.left i {
-                                                                                                                                                                    transform: rotate(180deg) !important;
-                                                                                                                                                                }
+                                                                                                                                                                        transform: rotate(180deg) !important;
+                                                                                                                                                                    }
 
-                                                                                                                                                                .scroll-btn.right i {
-                                                                                                                                                                    transform: rotate(0deg) !important;
-                                                                                                                                                                } */
+                                                                                                                                                                    .scroll-btn.right i {
+                                                                                                                                                                        transform: rotate(0deg) !important;
+                                                                                                                                                                    } */
 
         .scroll-btn.left {
             left: -40px;
@@ -1415,4 +1415,4 @@
 
 
 <!-- @section('scripts')
-                                                                                                                                                                                                                                    <script src="{{ asset('js/principal-message.js') }}"></script> -->
+                                                                                                                                                                                                                                        <script src="{{ asset('js/principal-message.js') }}"></script> -->

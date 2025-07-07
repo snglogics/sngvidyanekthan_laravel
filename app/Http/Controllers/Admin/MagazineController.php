@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Magazine;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Log;
 
 class MagazineController extends Controller
 {
@@ -18,7 +19,7 @@ class MagazineController extends Controller
 
     public function list()
     {
-        $magazines = Magazine::latest()->get();
+        $magazines = Magazine::all()->sortBy('title', SORT_NATURAL);
         return view('magazin.listMagazin', compact('magazines'));
     }
     public function show($id)
@@ -31,30 +32,39 @@ class MagazineController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'pdf' => 'required|mimes:pdf|max:10240',
+            'pdf' => 'required|mimes:pdf|max:20480', // 20MB
         ]);
 
-        $cloudinary = new \Cloudinary\Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ]
-        ]);
+        try {
+            $cloudinary = new \Cloudinary\Cloudinary([
+                'cloud' => [
+                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                    'api_key'    => env('CLOUDINARY_API_KEY'),
+                    'api_secret' => env('CLOUDINARY_API_SECRET'),
+                ]
+            ]);
 
-        $uploaded = $cloudinary->uploadApi()->upload($request->file('pdf')->getRealPath(), [
-            'resource_type' => 'raw',
-            'folder' => 'magazines'
-        ]);
+            Log::info('Starting file upload: ' . $request->file('pdf')->getClientOriginalName());
 
-        Magazine::create([
-            'title' => $request->title,
-            'pdf_url' => $uploaded['secure_url'],
-            'public_id' => $uploaded['public_id']
-        ]);
+            $uploaded = $cloudinary->uploadApi()->upload($request->file('pdf')->getRealPath(), [
+                'resource_type' => 'raw',
+                'folder' => 'magazines'
+            ]);
 
-        return back()->with('success', 'Magazine uploaded successfully!');
+            Magazine::create([
+                'title' => $request->title,
+                'pdf_url' => $uploaded['secure_url'],
+                'public_id' => $uploaded['public_id']
+            ]);
+
+            // Log::info('Magazine uploaded successfully: ' . $request->title);
+            return back()->with('success', 'Magazine uploaded successfully!');
+        } catch (\Exception $e) {
+            // \Log::error('Upload failed: ' . $e->getMessage());
+            return back()->with('error', 'Upload failed: ' . $e->getMessage());
+        }
     }
+
     public function edit($id)
     {
         $magazine = Magazine::findOrFail($id);
@@ -65,7 +75,7 @@ class MagazineController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'pdf' => 'nullable|mimes:pdf|max:153600',
+            'pdf' => 'nullable|mimes:pdf|max:20480',
         ]);
 
         $magazine = Magazine::findOrFail($id);

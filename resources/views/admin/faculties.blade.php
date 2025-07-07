@@ -9,7 +9,7 @@
             @php
                 $buttons = [
                     [
-                        'route' => 'teachers.index',
+                        'route' => 'admin.teachers.index',
                         'label' => 'Employees',
                         'icon' => 'fas fa-users',
                         'color' => 'primary',

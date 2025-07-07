@@ -1,5 +1,16 @@
 @extends('layouts.admin')
 
+@section('styles')
+    <style>
+        .fixed-height-stops {
+            max-height: 150px;
+            /* adjust as needed */
+            overflow-y: auto;
+            padding-right: 4px;
+            /* to avoid hidden scrollbar content */
+        }
+    </style>
+@endsection
 @section('title', 'Bus Routes')
 
 @section('content')
@@ -40,7 +51,7 @@
                                     <i class="fas fa-phone text-muted"></i> {{ $bus->attender_phone }}
                                 </td>
                                 <td>
-                                    <ul class="list-unstyled mb-0">
+                                    <ul class="list-unstyled mb-0 fixed-height-stops">
                                         @foreach ($bus->stops as $stop)
                                             <li class="mb-1">
                                                 <i class="fas fa-map-marker-alt text-danger"></i>

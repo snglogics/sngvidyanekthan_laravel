@@ -174,12 +174,14 @@ Route::get('/contact', [ContactController::class, 'viewContact'])->name('contact
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 // Adding Teacher Routes
-Route::get('admin/teachers', [TeacherController::class, 'index'])->name('teachers.index');
-Route::get('admin/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
-Route::post('admin/teachers', [TeacherController::class, 'store'])->name('teachers.store');
-Route::get('/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('teachers.edit');
-Route::put('/teachers/{teacher}', [TeacherController::class, 'update'])->name('teachers.update');
-Route::delete('/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
+// Adding Teacher Routes (Admin)
+Route::get('admin/teachers', [TeacherController::class, 'index'])->name('admin.teachers.index');
+Route::get('admin/teachers/create', [TeacherController::class, 'create'])->name('admin.teachers.create');
+Route::post('admin/teachers', [TeacherController::class, 'store'])->name('admin.teachers.store');
+Route::get('admin/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('admin.teachers.edit');
+Route::put('admin/teachers/{teacher}', [TeacherController::class, 'update'])->name('admin.teachers.update');
+Route::delete('admin/teachers/{teacher}', [TeacherController::class, 'destroy'])->name('admin.teachers.destroy');
+
 
 //View Teachers
 Route::get('/teacherslist', [TeacherController::class, 'publicList'])->name('teachers.public');

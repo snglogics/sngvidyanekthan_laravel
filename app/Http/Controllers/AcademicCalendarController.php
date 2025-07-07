@@ -15,19 +15,19 @@ class AcademicCalendarController extends Controller
         $academicYears = AcademicCalendar::select('academic_year')->distinct()->pluck('academic_year');
         return view('admin.academic_calendars.frontend', compact('academicYears'));
     }
-    
+
     public function academicCalendar(Request $request)
     {
         $query = AcademicCalendar::query();
-    
+
         if ($request->has('academic_year') && $request->academic_year !== 'all') {
             $query->where('academic_year', $request->academic_year);
         }
-    
+
         if ($request->has('month') && $request->month !== 'all') {
             $query->whereMonth('start_date', $request->month);
         }
-    
+
         $events = $query->get()->map(function ($event) {
             return [
                 'event_name' => $event->event_name,
@@ -35,9 +35,13 @@ class AcademicCalendarController extends Controller
                 'end_date' => $event->end_date,
                 'audience' => $event->audience,
                 'attachment_url' => $event->attachment_url,
+                'event_type' => $event->event_type,
+                'academic_year' => $event->academic_year,
+                'color' => $event->color,
+                'description' => $event->description,
             ];
         });
-    
+
         return response()->json($events);
     }
 
@@ -53,63 +57,64 @@ class AcademicCalendarController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'event_name' => 'required|string|max:255',
-        'start_date' => 'required|date',
-        'end_date' => 'nullable|date|after_or_equal:start_date',
-        'event_type' => 'required|string|max:50',
-        'academic_year' => 'required|string|max:50',
-        'audience' => 'nullable|string|max:100',
-        'color' => 'nullable|string|max:7',
-        'attachment' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048'
-    ]);
-
-    // Initialize Cloudinary
-    $cloudinary = new \Cloudinary\Cloudinary([
-        'cloud' => [
-            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-            'api_key'    => env('CLOUDINARY_API_KEY'),
-            'api_secret' => env('CLOUDINARY_API_SECRET'),
-        ]
-    ]);
-
-    // Handle file upload to Cloudinary
-    $attachmentUrl = null;
-    if ($request->hasFile('attachment')) {
-        $uploadedFile = $cloudinary->uploadApi()->upload($request->file('attachment')->getRealPath(), [
-            'folder' => 'academic_attachments',
-            'public_id' => uniqid(),
-            'overwrite' => true,
-            'resource_type' => 'auto'
+    {
+        $request->validate([
+            'event_name' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'event_type' => 'required|string|max:50',
+            'academic_year' => 'required|string|max:50',
+            'audience' => 'nullable|string|max:100',
+            'color' => 'nullable|string|max:7',
+            'attachment' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
+            'description' => 'nullable|string|max:255',
         ]);
-        
-        // Extract the secure URL
-        $attachmentUrl = $uploadedFile['secure_url'];
+
+        // Initialize Cloudinary
+        $cloudinary = new \Cloudinary\Cloudinary([
+            'cloud' => [
+                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                'api_key'    => env('CLOUDINARY_API_KEY'),
+                'api_secret' => env('CLOUDINARY_API_SECRET'),
+            ]
+        ]);
+
+        // Handle file upload to Cloudinary
+        $attachmentUrl = null;
+        if ($request->hasFile('attachment')) {
+            $uploadedFile = $cloudinary->uploadApi()->upload($request->file('attachment')->getRealPath(), [
+                'folder' => 'academic_attachments',
+                'public_id' => uniqid(),
+                'overwrite' => true,
+                'resource_type' => 'auto'
+            ]);
+
+            // Extract the secure URL
+            $attachmentUrl = $uploadedFile['secure_url'];
+        }
+
+        // Save the event
+        AcademicCalendar::create([
+            'event_name' => $request->event_name,
+            'description' => $request->description,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'event_type' => $request->event_type,
+            'academic_year' => $request->academic_year,
+            'audience' => $request->audience,
+            'color' => $request->color ?? '#007bff',
+            'attachment_url' => $attachmentUrl
+        ]);
+
+        return redirect()->route('admin.academic-calendars.index')->with('success', 'Event added successfully!');
     }
 
-    // Save the event
-    AcademicCalendar::create([
-        'event_name' => $request->event_name,
-        'description' => $request->description,
-        'start_date' => $request->start_date,
-        'end_date' => $request->end_date,
-        'event_type' => $request->event_type,
-        'academic_year' => $request->academic_year,
-        'audience' => $request->audience,
-        'color' => $request->color ?? '#007bff',
-        'attachment_url' => $attachmentUrl
-    ]);
 
-    return redirect()->route('admin.academic-calendars.index')->with('success', 'Event added successfully!');
-}
-
-   
-public function show($id)
-{
-    $event = AcademicCalendar::findOrFail($id); // adjust model name as needed
-    return view('admin.academic_calendars.show', compact('event'));
-}
+    public function show($id)
+    {
+        $event = AcademicCalendar::findOrFail($id); // adjust model name as needed
+        return view('admin.academic_calendars.show', compact('event'));
+    }
     public function edit(AcademicCalendar $academicCalendar)
     {
         return view('admin.academic_calendars.edit', compact('academicCalendar'));
@@ -127,7 +132,7 @@ public function show($id)
             'color' => 'nullable|string|max:7',
             'attachment' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048'
         ]);
-        
+
         $cloudinary = new \Cloudinary\Cloudinary([
             'cloud' => [
                 'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
@@ -143,7 +148,7 @@ public function show($id)
                 'overwrite' => true,
                 'resource_type' => 'auto'
             ]);
-        
+
             // Set the new attachment URL
             $request->merge([
                 'attachment_url' => $uploadedFile['secure_url']
@@ -160,7 +165,4 @@ public function show($id)
         $academicCalendar->delete();
         return redirect()->route('admin.academic-calendars.index')->with('success', 'Event deleted successfully!');
     }
-
-
-
 }

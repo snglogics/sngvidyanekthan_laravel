@@ -17,31 +17,31 @@ class TeacherController extends Controller
 
     public function teacherProfile(Teacher $teacher)
     {
-    $teachers = Teacher::all();
-    return view('about.teacherProfile', compact('teachers'));
+        $teachers = Teacher::all();
+        return view('about.teacherProfile', compact('teachers'));
     }
 
     public function categorizedList(Request $request)
-{
-    $departments = Teacher::distinct()->pluck('department')->sort();
-    $subjects = Teacher::distinct()->pluck('subject')->sort();
+    {
+        $departments = Teacher::distinct()->pluck('department')->sort();
+        $subjects = Teacher::distinct()->pluck('subject')->sort();
 
-    $teachers = Teacher::query();
+        $teachers = Teacher::query();
 
-    if ($request->department) {
-        $teachers->where('department', $request->department);
+        if ($request->department) {
+            $teachers->where('department', $request->department);
+        }
+
+        if ($request->subject) {
+            $teachers->where('subject', $request->subject);
+        }
+
+        return view('about.teachers_categories', [
+            'teachers' => $teachers->get(),
+            'departments' => $departments,
+            'subjects' => $subjects,
+        ]);
     }
-
-    if ($request->subject) {
-        $teachers->where('subject', $request->subject);
-    }
-
-    return view('about.teachers_categories', [
-        'teachers' => $teachers->get(),
-        'departments' => $departments,
-        'subjects' => $subjects,
-    ]);
-}
 
 
     public function index()
@@ -57,15 +57,16 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
-            'experience' => 'required|integer|min:0',
+            'experience' => 'nullable|integer',
             'qualification' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'subject' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'photo' => 'nullable|image|max:5120',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $photoUrl = null;
@@ -96,7 +97,7 @@ class TeacherController extends Controller
             'photo' => $photoUrl,
         ]);
 
-        return redirect()->route('teachers.index')->with('success', 'Teacher added successfully!');
+        return redirect()->route('admin.teachers.index')->with('success', 'Teacher added successfully!');
     }
 
     public function edit(Teacher $teacher)
@@ -109,7 +110,7 @@ class TeacherController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
-            'experience' => 'required|integer|min:0',
+            'experience' => 'nullable|integer|min:0',
             'qualification' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'subject' => 'nullable|string|max:255',
@@ -142,13 +143,12 @@ class TeacherController extends Controller
             'photo' => $photoUrl,
         ]);
 
-        return redirect()->route('teachers.index')->with('success', 'Teacher updated successfully!');
+        return redirect()->route('admin.teachers.index')->with('success', 'Teacher updated successfully!');
     }
 
     public function destroy(Teacher $teacher)
     {
         $teacher->delete();
-        return redirect()->route('teachers.index')->with('success', 'Teacher deleted successfully.');
+        return redirect()->route('admin.teachers.index')->with('success', 'Teacher deleted successfully.');
     }
 }
-

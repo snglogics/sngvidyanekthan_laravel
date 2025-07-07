@@ -218,7 +218,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="header-opening-time text-lg-right text-center sparkle-text">
-                            <p>Opening Hours : Monday to Saturay - 9 Am to 4 Pm
+                            <p>Opening Hours : Monday to Saturay - 8.20 AM to 3.00 PM
                                 <span id="digital-clock" class="font-weight-bold ml-2">
                             </p>
                         </div>

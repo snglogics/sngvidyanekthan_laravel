@@ -25,9 +25,9 @@ class TeacherAccoladeController extends Controller
         $validated = $request->validate([
             'teacher_name' => 'required|string|max:255',
             'title' => 'required|string|max:255',
-            'year' => 'required|string|max:4',
+            'year' => 'nullable|string|max:4',  // Changed to nullable
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:2048', // Already nullable
         ]);
 
         if ($request->hasFile('image')) {
@@ -54,23 +54,14 @@ class TeacherAccoladeController extends Controller
         return redirect()->route('admin.teachers_accolades.index')->with('success', 'Teacher accolade added successfully.');
     }
 
-    public function show(TeacherAccolade $teacherAccolade)
-    {
-        return view('admin.teachers_accolades.edit', compact('teacherAccolade'));
-    }
-
-    public function edit(TeacherAccolade $teacherAccolade)
-{
-    return view('admin.teachers_accolades.edit', compact('teacherAccolade'));
-}
     public function update(Request $request, TeacherAccolade $teacherAccolade)
     {
         $validated = $request->validate([
             'teacher_name' => 'required|string|max:255',
             'title' => 'required|string|max:255',
-            'year' => 'required|string|max:4',
+            'year' => 'nullable|string|max:4',  // Changed to nullable
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:2048', // Already nullable
         ]);
 
         if ($request->hasFile('image')) {

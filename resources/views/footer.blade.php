@@ -40,10 +40,12 @@
                                 (Managed by Sree Narayana Dharma Sanghom Trust)
                             </p>
                             <ul class="mt-20">
-                                <li><a href="#"><i class="fa fa-facebook-f"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                                <li><a href="https://www.facebook.com/profile.php?id=100092597573383" target="_blank"><i
+                                            class="fa fa-facebook-f"></i></a></li>
+                                {{-- <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li> --}}
+                                <li><a href="https://www.instagram.com/sivagirividyaniketan/" target="_blank"><i
+                                            class="fa fa-instagram"></i></a></li>
                             </ul>
                         </div> <!-- footer about -->
                     </div>
