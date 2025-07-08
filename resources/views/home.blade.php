@@ -324,12 +324,12 @@
         }
 
         /* .scroll-btn.left i {
-                                                                                                                                                                                                                                                                    transform: rotate(180deg) !important;
-                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                transform: rotate(180deg) !important;
+                                                                                                                                                                                                                                                                                            }
 
-                                                                                                                                                                                                                                                                .scroll-btn.right i {
-                                                                                                                                                                                                                                                                    transform: rotate(0deg) !important;
-                                                                                                                                                                                                                                                                } */
+                                                                                                                                                                                                                                                                                            .scroll-btn.right i {
+                                                                                                                                                                                                                                                                                                transform: rotate(0deg) !important;
+                                                                                                                                                                                                                                                                                            } */
 
         .scroll-btn.left {
             left: -40px;
@@ -1225,32 +1225,38 @@
                         class="map-frame" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                         title="Google Map Embed"></iframe>
                 </div>
+
+
+                {{-- getin touch --}}
                 <div class="contact-form-container">
                     <h3>Get in Touch</h3>
-                    <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 20px;">
-                        <div class="form-group" style="flex: 1 1 calc(50% - 20px);">
-                            <i class="fas fa-user"></i>
-                            <input type="text" placeholder="Enter your name...">
+                    <form id="contactForm" action="{{ route('contact.getintouch') }}" method="POST">
+                        @csrf <!-- Add CSRF token for Laravel -->
+                        <div class="form-row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                            <div class="form-group" style="flex: 1 1 calc(50% - 20px);">
+                                <i class="fas fa-user"></i>
+                                <input type="text" name="name" placeholder="Enter your name..." required>
+                            </div>
+                            <div class="form-group" style="flex: 1 1 calc(50% - 20px);">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" name="email" placeholder="Enter your email..." required>
+                            </div>
+                            <div class="form-group" style="flex: 1 1 calc(50% - 20px);">
+                                <i class="fas fa-tag"></i>
+                                <input type="text" name="subject" placeholder="Enter your subject..." required>
+                            </div>
+                            <div class="form-group" style="flex: 1 1 calc(50% - 20px);">
+                                <i class="fas fa-phone"></i>
+                                <input type="text" name="phone" placeholder="Enter your phone number..." required>
+                            </div>
                         </div>
-                        <div class="form-group" style="flex: 1 1 calc(50% - 20px);">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" placeholder="Enter your email...">
+                        <div class="form-group mt-4"
+                            style="flex: 1 1 calc(50% - 20px); display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-comment"></i>
+                            <textarea name="messege" placeholder="Enter your message..." rows="4" style="flex: 1;" required></textarea>
                         </div>
-                        <div class="form-group" style="flex: 1 1 calc(50% - 20px);">
-                            <i class="fas fa-tag"></i>
-                            <input type="text" placeholder="Enter your subject...">
-                        </div>
-                        <div class="form-group" style="flex: 1 1 calc(50% - 20px);">
-                            <i class="fas fa-phone"></i>
-                            <input type="text" placeholder="Enter your phone number...">
-                        </div>
-                    </div>
-                    <div class="form-group mt-4"
-                        style="flex: 1 1 calc(50% - 20px); display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-comment"></i>
-                        <textarea placeholder="Enter your message..." rows="4" style="flex: 1;"></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">Submit</button>
+                        <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -1444,11 +1450,59 @@
         });
     </script>
 
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+
+            // Change button to loading state
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = new FormData(this);
+                const response = await fetch(this.action, {
+                    method: this.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(data.message);
+                    this.reset();
+                } else {
+                    // Handle validation errors
+                    if (data.errors) {
+                        let errorMessages = '';
+                        for (const field in data.errors) {
+                            errorMessages += data.errors[field].join('\n') + '\n';
+                        }
+                        alert('Validation errors:\n' + errorMessages);
+                    } else {
+                        alert(data.message || 'There was an error submitting the form.');
+                    }
+                }
+            } catch (error) {
+                alert('There was a problem sending your message. Please try again.');
+                console.error('Error:', error);
+            } finally {
+                // Reset button to original state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 
 @endsection
 
 
 
 <!-- @section('scripts')
-                                                                                                                                                                                                                                                                                                                                    <script src="{{ asset('js/principal-message.js') }}"></script> -->
+                                                                                                                                                                                                                                                                                                                                                                <script src="{{ asset('js/principal-message.js') }}"></script> -->

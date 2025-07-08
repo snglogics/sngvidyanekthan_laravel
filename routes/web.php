@@ -178,6 +178,8 @@ Route::get('/subgallery/{subGallery}', [AdminGalleryController::class, 'showImag
 // contact page
 Route::get('/contact', [ContactController::class, 'viewContact'])->name('contact');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+Route::post('/getintouch', [ContactController::class, 'getintouchSubmit'])->name('contact.getintouch');
+
 
 // Adding Teacher Routes
 // Adding Teacher Routes (Admin)

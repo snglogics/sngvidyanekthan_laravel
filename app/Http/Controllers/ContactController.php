@@ -59,4 +59,38 @@ class ContactController extends Controller
                 : redirect()->back()->with('error', 'Mail failed to send: ' . $e->getMessage());
         }
     }
+
+    public function getintouchSubmit(Request $request)
+    {
+        $validated = $request->validate([
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|email',
+            'subject' => 'required|string|max:255',
+            'phone'   => 'required|string|max:15',
+            'messege' => 'required|string',
+        ]);
+
+        try {
+            Mail::raw("
+            Name: {$validated['name']}
+            Email: {$validated['email']}
+            Phone: {$validated['phone']}
+            Subject: {$validated['subject']}
+            Message: {$validated['messege']}
+        ", function ($message) {
+                $message->to(env('MAIL_FROM_ADDRESS'))
+                    ->subject('New Contact Form Submission');
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Thank you! Your message has been sent.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send message: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
