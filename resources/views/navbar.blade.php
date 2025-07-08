@@ -229,22 +229,20 @@
 
         <div class="header-logo-support pt-7 pb-7" style="background-color: #001f4d; color: white;">
             <div class="container">
-                <div class="row align-items-center  ">
+                <div class="row align-items-center">
                     <div class="col-12 d-flex flex-wrap justify-content-between align-items-center">
                         <!-- Left Section: Logo and School Name -->
-                        <div class="d-flex align-items-center" style="margin-bottom:10px">
+                        <div class="d-flex align-items-center" style="flex: 1; min-width: 300px; margin-bottom: 10px;">
                             <!-- Logo -->
-                            <div class="logo">
+                            <div class="logo" style="flex-shrink: 0;">
                                 <a href="#">
                                     <img src="{{ asset('frontend/images/logobgrmved.png') }}" alt="Logo"
                                         style="width: 100px; height: 100px;">
                                 </a>
                             </div>
-
-
-
                             <!-- School Name -->
-                            <div class="school-name sparkle-effect  ms-1" style="font-family: 'Algerian'">
+                            <div class="school-name sparkle-effect ms-1"
+                                style="font-family: 'Algerian'; flex-shrink: 1;">
                                 <div class="fw-bold">SIVAGIRI VIDYANIKETHAN</div>
                                 <div class="text-uppercase small">Senior Secondary School, ALUVA</div>
                                 <div class="text-uppercase small">(CBSE AFFILIATION NO,930060)</div>
@@ -252,40 +250,37 @@
                         </div>
 
                         <!-- Right Section: Buttons (Desktop only) -->
-                        <div class="d-none d-lg-flex align-items-center flex-wrap">
-                            <div class="kinder-button-wrapper me-2">
+                        <div class="d-none d-lg-flex align-items-center" style="flex-wrap: nowrap; flex-shrink: 0;">
+                            <div class="kinder-button-wrapper me-2" style="flex-shrink: 0;">
                                 <a href="{{ route('kindergarten.sliders') }}" class="kinder-button">Kinder Garten</a>
                             </div>
 
-                            <div class="button dropdown me-2">
+                            <div class="button dropdown me-2" style="flex-shrink: 0;">
                                 <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                     Application Form
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{{ route('student.form') }}">📄
-                                        For LKG</a>
-                                    <a class="dropdown-item" href="{{ route('admissions.form') }}">📄
-                                        Class 1 to 10</a>
+                                    <a class="dropdown-item" href="{{ route('student.form') }}">📄 For LKG</a>
+                                    <a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Class 1 to 10</a>
                                     <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 For Plus
                                         One & Plus Two</a>
                                 </div>
                             </div>
 
-                            <div class="button me-2">
-                                <a href="https://epay.federalbank.co.in/easypayments/DIRECTPAYMENT.ASPX?CODE=LIKPELIRD
-1Y"
+                            <div class="button me-2" style="flex-shrink: 0;">
+                                <a href="https://epay.federalbank.co.in/easypayments/DIRECTPAYMENT.ASPX?CODE=LIKPELIRD1Y"
                                     target="_blank" class="main-btn">Fee Payment</a>
                             </div>
 
-                            <div class="button me-2">
+                            <div class="button me-2" style="flex-shrink: 0;">
                                 <a href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf"
                                     target="_blank" class="main-btn">DISCLOSURE</a>
                             </div>
                         </div>
 
                         <!-- Mobile Toggle Button -->
-                        <div class="d-lg-none mt-2 mb-2">
+                        <div class="d-lg-none mt-2 mb-2" style="flex-shrink: 0;">
                             <button class="btn btn-outline-primary" id="supportToggle">☰ Options</button>
                         </div>
                     </div>
@@ -296,14 +291,13 @@
                             <div class="dropdown-menu show p-2">
                                 <a class="dropdown-item" href="{{ route('student.form') }}">📄 Online Application -
                                     LKG</a>
-                                <a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Online Application -
-                                    Class 1 to 10</a>
+                                <a class="dropdown-item" href="{{ route('admissions.form') }}">📄 Online Application
+                                    - Class 1 to 10</a>
                                 <a class="dropdown-item" href="{{ route('higher-admission.form') }}">📄 Online
                                     Application - Plus One & Two</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item"
-                                    href="https://epay.federalbank.co.in/easypayments/DIRECTPAYMENT.ASPX?CODE=LIKPELIRD
-1Y"
+                                    href="https://epay.federalbank.co.in/easypayments/DIRECTPAYMENT.ASPX?CODE=LIKPELIRD1Y"
                                     target="_blank">💳 Fee Payment</a>
                                 <a class="dropdown-item"
                                     href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf"
@@ -314,8 +308,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
+        </div>
 
         </div> <!-- row -->
         </div> <!-- container -->

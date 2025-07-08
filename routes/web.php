@@ -131,6 +131,12 @@ Route::post('/admin/announcements/{id}/update', [AnnouncementController::class, 
 
 // Delete announcement
 Route::delete('/admin/announcements/{id}', [AnnouncementController::class, 'destroy'])->name('announcement.delete');
+// Download announcement file
+Route::get(
+  '/announcements/{announcementId}/files/{fileId}/download',
+  [AnnouncementController::class, 'downloadFile']
+)
+  ->name('announcements.files.download');
 
 // upcoming events
 Route::prefix('admin/events')->name('admin.events.')->group(function () {

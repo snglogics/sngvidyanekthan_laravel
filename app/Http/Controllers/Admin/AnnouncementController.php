@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Announcement;
 use Cloudinary\Cloudinary;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AnnouncementController extends Controller
 {
@@ -62,5 +64,31 @@ class AnnouncementController extends Controller
         $announcement->delete();
 
         return redirect()->route('announcement.uploadForm')->with('success', 'Announcement deleted successfully.');
+    }
+
+    public function downloadFile($announcementId, $fileId)
+    {
+        $announcement = Announcement::findOrFail($announcementId);
+        $file = $announcement->files()->findOrFail($fileId);
+
+        try {
+            $filename = $file->original_filename ?: 'announcement_file.pdf';
+
+            // Fetch file using Guzzle
+            $response = Http::withOptions(['stream' => true])->get($file->file_url);
+
+            if ($response->successful()) {
+                return response()->streamDownload(function () use ($response) {
+                    $body = $response->body();
+                    echo $body;
+                }, $filename);
+            } else {
+                Log::error("Failed to fetch file from Cloudinary: Status " . $response->status());
+                return back()->with('error', 'Failed to download file.');
+            }
+        } catch (\Exception $e) {
+            Log::error("Download failed: " . $e->getMessage());
+            return back()->with('error', 'Download failed: ' . $e->getMessage());
+        }
     }
 }

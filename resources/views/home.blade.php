@@ -206,23 +206,28 @@
         .event-carousel-container {
             position: relative;
             padding: 0 30px;
+            overflow: hidden;
         }
 
         .event-carousel {
             display: flex;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 16px;
+            gap: 8px;
             /* spacing between cards */
             padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
             /* optional for scrollbar padding */
         }
 
         .event-card {
+            min-width: 250px;
             flex: 0 0 auto;
-            /* do not shrink, fixed width */
-            width: 280px;
-            /* default card width for desktop */
+            margin-right: 16px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .event-carousel::-webkit-scrollbar {
@@ -319,12 +324,12 @@
         }
 
         /* .scroll-btn.left i {
-                                                                                                                                                                        transform: rotate(180deg) !important;
-                                                                                                                                                                    }
+                                                                                                                                                                                                                                                            transform: rotate(180deg) !important;
+                                                                                                                                                                                                                                                        }
 
-                                                                                                                                                                    .scroll-btn.right i {
-                                                                                                                                                                        transform: rotate(0deg) !important;
-                                                                                                                                                                    } */
+                                                                                                                                                                                                                                                        .scroll-btn.right i {
+                                                                                                                                                                                                                                                            transform: rotate(0deg) !important;
+                                                                                                                                                                                                                                                        } */
 
         .scroll-btn.left {
             left: -40px;
@@ -758,6 +763,29 @@
             opacity: 0.85;
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            max-height: 300px;
+            /* Set a maximum height */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+        }
+
+        /* Optional: Style the scrollbar */
+        #notification-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #notification-box::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        #notification-box::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        #notification-box::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 255, 0.5);
         }
 
         .blinking-text {
@@ -772,6 +800,8 @@
             backdrop-filter: blur(6px);
             animation: pulseGlow 3s infinite ease-in-out;
             transition: transform 0.3s;
+            flex-shrink: 0;
+            /* Prevent items from shrinking */
         }
 
         .blinking-text:hover {
@@ -1126,6 +1156,7 @@
         </button>
 
         <!-- Notification Box -->
+
         <div id="notification-box" class="notification-box">
             @foreach ($announcements as $announcement)
                 <div class="blinking-text mb-2"
@@ -1134,9 +1165,14 @@
                     <p>{{ $announcement->description }}</p>
 
                     @foreach ($announcement->files as $file)
-                        <div>
-                            <a href="{{ $file->file_url }}" download class="text-decoration-underline d-block">
-                                📎 Download File
+                        <div class="mb-2">
+                            <a href="{{ route('announcements.files.download', [
+                                'announcementId' => $announcement->id,
+                                'fileId' => $file->id,
+                            ]) }}"
+                                class="btn btn-sm btn-outline-primary" title="Download {{ $file->original_filename }}">
+                                <i class="fas fa-download"></i>
+                                Download {{ strtoupper($file->file_extension) }} File
                             </a>
                         </div>
                     @endforeach
@@ -1415,4 +1451,4 @@
 
 
 <!-- @section('scripts')
-                                                                                                                                                                                                                                        <script src="{{ asset('js/principal-message.js') }}"></script> -->
+                                                                                                                                                                                                                                                                                                                            <script src="{{ asset('js/principal-message.js') }}"></script> -->
