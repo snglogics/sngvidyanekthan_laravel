@@ -324,12 +324,12 @@
         }
 
         /* .scroll-btn.left i {
-                                                                                                                                                                                                                                                            transform: rotate(180deg) !important;
-                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                    transform: rotate(180deg) !important;
+                                                                                                                                                                                                                                                                }
 
-                                                                                                                                                                                                                                                        .scroll-btn.right i {
-                                                                                                                                                                                                                                                            transform: rotate(0deg) !important;
-                                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                                .scroll-btn.right i {
+                                                                                                                                                                                                                                                                    transform: rotate(0deg) !important;
+                                                                                                                                                                                                                                                                } */
 
         .scroll-btn.left {
             left: -40px;
@@ -874,8 +874,8 @@
                                 <ul>
                                     <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn"
                                             href="{{ route('slider') }}">Read More</a></li>
-                                    {{-- <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2"
-                                            href="#">Get Started</a></li> --}}
+                                    <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2"
+                                            href="{{ route('contact') }}">Contact Us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -1451,4 +1451,4 @@
 
 
 <!-- @section('scripts')
-                                                                                                                                                                                                                                                                                                                            <script src="{{ asset('js/principal-message.js') }}"></script> -->
+                                                                                                                                                                                                                                                                                                                                    <script src="{{ asset('js/principal-message.js') }}"></script> -->
