@@ -6,48 +6,49 @@ use App\Http\Controllers\Controller;
 use App\Models\Timetable;
 use Illuminate\Http\Request;
 
-class TimetableController extends Controller
+
+class TimeTableController extends Controller
 {
 
-public function timetableview(Request $request)
-{
-    $query = Timetable::query();
+    public function timetableview(Request $request)
+    {
+        $query = Timetable::query();
 
-    if ($request->filled('classname')) {
-        $query->where('classname', $request->classname);
+        if ($request->filled('classname')) {
+            $query->where('classname', $request->classname);
+        }
+
+        if ($request->filled('section')) {
+            $query->where('section', $request->section);
+        }
+
+        $timetables = $query->orderBy('classname')
+            ->orderBy('period_number')
+            ->get();
+
+        $groupedTimetables = $timetables
+            ->groupBy(function ($item) {
+                return $item->classname . ($item->section ? '-' . $item->section : '');
+            })
+            ->map(function ($group) {
+                return $group->groupBy('day');
+            });
+
+        // Get unique classes and sections for dropdown
+        $allClasses = Timetable::select('classname')->distinct()->pluck('classname');
+        $allSections = Timetable::select('section')->distinct()->pluck('section');
+
+        return view('admin.timetable.timetable', compact('groupedTimetables', 'allClasses', 'allSections'));
     }
-
-    if ($request->filled('section')) {
-        $query->where('section', $request->section);
-    }
-
-    $timetables = $query->orderBy('classname')
-        ->orderBy('period_number')
-        ->get();
-
-    $groupedTimetables = $timetables
-        ->groupBy(function ($item) {
-            return $item->classname . ($item->section ? '-' . $item->section : '');
-        })
-        ->map(function ($group) {
-            return $group->groupBy('day');
-        });
-
-    // Get unique classes and sections for dropdown
-    $allClasses = Timetable::select('classname')->distinct()->pluck('classname');
-    $allSections = Timetable::select('section')->distinct()->pluck('section');
-
-    return view('admin.timetable.timetable', compact('groupedTimetables', 'allClasses', 'allSections'));
-}
     public function index()
     {
         $timetables = Timetable::orderBy('classname')
-    ->orderBy('section')
-    ->orderBy('created_at', 'asc')
-    ->get()
-    ->groupBy(function ($item) {
-        return $item->classname . ' - ' . ($item->section ?? 'No Section');
-    });
+            ->orderBy('section')
+            ->orderBy('created_at', 'asc')
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->classname . ' - ' . ($item->section ?? 'No Section');
+            });
         return view('admin.timetable.index', compact('timetables'));
     }
 
@@ -73,7 +74,7 @@ public function timetableview(Request $request)
         Timetable::create($request->all());
 
         return response()->json(['success' => true, 'message' => 'Timetable entry created successfully.', 'redirect' => route('admin.timetables.index')]);
-        }
+    }
 
     public function edit(Timetable $timetable)
     {
@@ -96,8 +97,8 @@ public function timetableview(Request $request)
 
         $timetable->update($request->all());
 
-       return redirect()->route('admin.timetables.index')
-                 ->with('success', 'Timetable entry created successfully.');
+        return redirect()->route('admin.timetables.index')
+            ->with('success', 'Timetable entry created successfully.');
     }
 
     public function destroy(Timetable $timetable)
@@ -105,6 +106,4 @@ public function timetableview(Request $request)
         $timetable->delete();
         return redirect()->back()->with('success', 'Timetable deleted successfully.');
     }
-
-
 }
