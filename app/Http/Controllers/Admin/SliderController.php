@@ -6,15 +6,27 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Slider;
 use Cloudinary\Cloudinary;
-use Illuminate\Support\Facades\DB;
 
 class SliderController extends Controller
 {
     public function sliderupload(Request $request)
     {
+        // Custom validation for image (required only if no existing image)
         $request->validate([
             'slider' => 'required|in:slider1,slider2,slider3',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'image' => [
+                function ($attribute, $value, $fail) use ($request) {
+                    $slider = Slider::first();
+                    $sliderField = $request->input('slider');
+
+                    if ((!$slider || empty($slider->$sliderField)) && !$request->hasFile('image')) {
+                        $fail("The {$sliderField} image is required.");
+                    }
+                },
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:5120'
+            ],
             'heading' => 'nullable|string|max:555',
             'description' => 'nullable|string',
         ]);
@@ -23,48 +35,37 @@ class SliderController extends Controller
         $heading = $request->input('heading');
         $description = $request->input('description');
 
-        // $cloudinary = new Cloudinary([
-        //     'cloud' => [
-        //         'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-        //         'api_key'    => env('CLOUDINARY_API_KEY'),
-        //         'api_secret' => env('CLOUDINARY_API_SECRET'),
-        //     ],
-        // ]);
         $cloudinary = new Cloudinary(env('CLOUDINARY_URL'));
+        $slider = Slider::first() ?? new Slider();
 
         try {
-            $uploadedFile = $cloudinary->uploadApi()->upload(
-                $request->file('image')->getRealPath(),
-                ['folder' => 'sliders']
-            );
-
-            $imageUrl = $uploadedFile['secure_url'];
-
-            // Update the slider record
-            $slider = Slider::first(); // Only 1 record
-            if (!$slider) {
-                $slider = new Slider();
+            // Only upload new image if provided
+            if ($request->hasFile('image')) {
+                $uploadedFile = $cloudinary->uploadApi()->upload(
+                    $request->file('image')->getRealPath(),
+                    ['folder' => 'sliders']
+                );
+                $slider->$sliderField = $uploadedFile['secure_url'];
             }
-            $slider->$sliderField = $imageUrl;
+
+            // Always update heading and description
             $slider->{$sliderField . '_heading'} = $heading;
             $slider->{$sliderField . '_description'} = $description;
             $slider->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Image uploaded successfully.',
-                'imageUrl' => $imageUrl,
+                'message' => 'Slider updated successfully.',
+                'imageUrl' => $slider->$sliderField ?? null,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Upload failed: ' . $e->getMessage(),
+                'message' => 'Operation failed: ' . $e->getMessage(),
             ], 500);
         }
     }
 
-
-    // show db images in  UI
     public function showSliderUpload()
     {
         $slider = Slider::first();
