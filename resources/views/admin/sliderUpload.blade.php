@@ -163,8 +163,8 @@
                         }
                     } else {
                         const errorText = await response.text();
-                        console.error('Non-JSON response:', errorText);
-                        toastr.error('Unexpected error. Check console.', 'Error');
+                        console.error(errorText);
+                        toastr.error('Unexpected error. ' + errorText, );
                     }
                 } catch (error) {
                     console.error('Upload Error:', error);

@@ -23,13 +23,14 @@ class SliderController extends Controller
         $heading = $request->input('heading');
         $description = $request->input('description');
 
-        $cloudinary = new Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-        ]);
+        // $cloudinary = new Cloudinary([
+        //     'cloud' => [
+        //         'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+        //         'api_key'    => env('CLOUDINARY_API_KEY'),
+        //         'api_secret' => env('CLOUDINARY_API_SECRET'),
+        //     ],
+        // ]);
+        $cloudinary = new Cloudinary(env('CLOUDINARY_URL'));
 
         try {
             $uploadedFile = $cloudinary->uploadApi()->upload(
@@ -54,7 +55,6 @@ class SliderController extends Controller
                 'message' => 'Image uploaded successfully.',
                 'imageUrl' => $imageUrl,
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -65,20 +65,20 @@ class SliderController extends Controller
 
 
     // show db images in  UI
-public function showSliderUpload()
-{
-    $slider = Slider::first();
-    $images = [
-        'slider1' => $slider?->slider1,
-        'slider2' => $slider?->slider2,
-        'slider3' => $slider?->slider3,
-        'slider1_heading' => $slider?->slider1_heading,
-        'slider1_description' => $slider?->slider1_description,
-        'slider2_heading' => $slider?->slider2_heading,
-        'slider2_description' => $slider?->slider2_description,
-        'slider3_heading' => $slider?->slider3_heading,
-        'slider3_description' => $slider?->slider3_description,
-    ];
-    return view('admin.sliderUpload', compact('images'));
-}
+    public function showSliderUpload()
+    {
+        $slider = Slider::first();
+        $images = [
+            'slider1' => $slider?->slider1,
+            'slider2' => $slider?->slider2,
+            'slider3' => $slider?->slider3,
+            'slider1_heading' => $slider?->slider1_heading,
+            'slider1_description' => $slider?->slider1_description,
+            'slider2_heading' => $slider?->slider2_heading,
+            'slider2_description' => $slider?->slider2_description,
+            'slider3_heading' => $slider?->slider3_heading,
+            'slider3_description' => $slider?->slider3_description,
+        ];
+        return view('admin.sliderUpload', compact('images'));
+    }
 }
