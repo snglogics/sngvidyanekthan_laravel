@@ -71,20 +71,32 @@ class ContactController extends Controller
         ]);
 
         try {
+            // ✅ This sends a mail *to the user*
             Mail::raw("
-            Name: {$validated['name']}
-            Email: {$validated['email']}
-            Phone: {$validated['phone']}
-            Subject: {$validated['subject']}
-            Message: {$validated['messege']}
-        ", function ($message) {
-                $message->to(env('MAIL_FROM_ADDRESS'))
-                    ->subject('New Contact Form Submission');
+                Dear {$validated['name']},
+
+                Thank you for getting in touch!
+
+                Here’s what we received:
+                Name: {$validated['name']}
+                Email: {$validated['email']}
+                Phone: {$validated['phone']}
+                Subject: {$validated['subject']}
+                Message: {$validated['messege']}
+
+                We will contact you soon.
+
+                Best regards,
+                Your Site Team
+            ", function ($message) use ($validated) {
+                $message->to($validated['email']) // 👈 Send to the user's email
+                    ->from(config('mail.from.address'), config('mail.from.name')) // 👈 Always set FROM
+                    ->subject('Thank you for contacting us!');
             });
 
             return response()->json([
                 'success' => true,
-                'message' => 'Thank you! Your message has been sent.'
+                'message' => 'Thank you! Your message has been sent and you will receive a confirmation email.'
             ]);
         } catch (\Exception $e) {
             return response()->json([
