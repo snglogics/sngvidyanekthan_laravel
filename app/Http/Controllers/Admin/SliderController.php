@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Slider;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class SliderController extends Controller
 {
@@ -35,7 +36,22 @@ class SliderController extends Controller
         $heading = $request->input('heading');
         $description = $request->input('description');
 
-        $cloudinary = new Cloudinary(env('CLOUDINARY_URL'));
+        /**
+         * ✅ Updated to use config/cloudinary.php
+         */
+        Configuration::instance([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true
+            ]
+        ]);
+
+        $cloudinary = new Cloudinary();
+
         $slider = Slider::first() ?? new Slider();
 
         try {

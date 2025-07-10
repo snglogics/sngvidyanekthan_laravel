@@ -37,28 +37,63 @@ class ContactController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            // Send mail
+            $validated = $validator->validated();
+
+            // ✅ Send acknowledgment to the user
             Mail::raw("
-            Name: {$request->name}
-            Email: {$request->email}
-            Phone: {$request->phone}
-            Subject: {$request->subject}
-            Message: {$request->messege}
+            Dear {$validated['name']},
+
+            Thank you for contacting us! We have received your message and will get back to you shortly.
+
+            Here is a copy of your submission:
+            Name: {$validated['name']}
+            Email: {$validated['email']}
+            Phone: {$validated['phone']}
+            Subject: {$validated['subject']}
+            Message: {$validated['messege']}
+
+            Regards,
+            Your Website Team
+        ", function ($message) use ($validated) {
+                $message->to($validated['email'])
+                    ->from(config('mail.from.address'), config('mail.from.name'))
+                    ->subject('Thank you for contacting us!');
+            });
+
+            // ✅ Optionally: Send a copy to admin
+            Mail::raw("
+            New contact form submission:
+
+            Name: {$validated['name']}
+            Email: {$validated['email']}
+            Phone: {$validated['phone']}
+            Subject: {$validated['subject']}
+            Message: {$validated['messege']}
         ", function ($message) {
-                $message->to(env('MAIL_FROM_ADDRESS'))
+                $message->to(config('mail.from.address'))
+                    ->from(config('mail.from.address'), config('mail.from.name'))
                     ->subject('New Contact Form Submission');
             });
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Thank you! Your message has been sent.'
-            ]);
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Thank you! Your message has been sent, and you will receive a confirmation email.'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Thank you! Your message has been sent, and you will receive a confirmation email.');
         } catch (\Exception $e) {
-            return $request->ajax()
-                ? response()->json(['success' => false, 'message' => 'Mail failed to send.'], 500)
-                : redirect()->back()->with('error', 'Mail failed to send: ' . $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mail failed to send: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'Mail failed to send: ' . $e->getMessage());
         }
     }
+
 
     public function getintouchSubmit(Request $request)
     {
