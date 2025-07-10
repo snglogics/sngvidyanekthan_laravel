@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\InterschoolParticipation;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class InterschoolParticipationController extends Controller
 {
@@ -22,7 +23,7 @@ class InterschoolParticipationController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'student_name' => 'required|string|max:255',
             'event_name' => 'required|string|max:255',
             'event_date' => 'required|date',
@@ -32,31 +33,28 @@ class InterschoolParticipationController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
-        $photoUrl = null;
         if ($request->hasFile('photo')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key'    => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
-                ],
-            ]);
+            $cloudinary = $this->cloudinary();
 
-            $uploadResponse = $cloudinary->uploadApi()->upload($request->file('photo')->getRealPath(), [
-                'folder' => 'interschool_participations',
-                'public_id' => uniqid(),
-                'overwrite' => true,
-                'resource_type' => 'image',
-            ]);
+            $uploadResponse = $cloudinary->uploadApi()->upload(
+                $request->file('photo')->getRealPath(),
+                [
+                    'folder' => 'interschool_participations',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image',
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                ]
+            );
 
-            $photoUrl = $uploadResponse['secure_url'];
+            $validated['photo_url'] = $uploadResponse['secure_url'];
         }
 
-        InterschoolParticipation::create(array_merge($request->all(), [
-            'photo_url' => $photoUrl,
-        ]));
+        InterschoolParticipation::create($validated);
 
-        return redirect()->route('admin.interschool-participations.index')->with('success', 'Participation record added successfully!');
+        return redirect()->route('admin.interschool-participations.index')
+            ->with('success', 'Participation record added successfully!');
     }
 
     public function edit(InterschoolParticipation $interschoolParticipation)
@@ -66,7 +64,7 @@ class InterschoolParticipationController extends Controller
 
     public function update(Request $request, InterschoolParticipation $interschoolParticipation)
     {
-        $request->validate([
+        $validated = $request->validate([
             'student_name' => 'required|string|max:255',
             'event_name' => 'required|string|max:255',
             'event_date' => 'required|date',
@@ -76,37 +74,57 @@ class InterschoolParticipationController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
-        $photoUrl = $interschoolParticipation->photo_url;
         if ($request->hasFile('photo')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key'    => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
-                ],
-            ]);
+            $cloudinary = $this->cloudinary();
 
-            $uploadResponse = $cloudinary->uploadApi()->upload($request->file('photo')->getRealPath(), [
-                'folder' => 'interschool_participations',
-                'public_id' => uniqid(),
-                'overwrite' => true,
-                'resource_type' => 'image',
-            ]);
+            $uploadResponse = $cloudinary->uploadApi()->upload(
+                $request->file('photo')->getRealPath(),
+                [
+                    'folder' => 'interschool_participations',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image',
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                ]
+            );
 
-            $photoUrl = $uploadResponse['secure_url'];
+            $validated['photo_url'] = $uploadResponse['secure_url'];
+        } else {
+            // Preserve existing photo_url if no new photo uploaded
+            $validated['photo_url'] = $interschoolParticipation->photo_url;
         }
 
-        $interschoolParticipation->update(array_merge($request->all(), [
-            'photo_url' => $photoUrl,
-        ]));
+        $interschoolParticipation->update($validated);
 
-        return redirect()->route('admin.interschool-participations.index')->with('success', 'Participation record updated successfully!');
+        return redirect()->route('admin.interschool-participations.index')
+            ->with('success', 'Participation record updated successfully!');
     }
 
     public function destroy(InterschoolParticipation $interschoolParticipation)
     {
         $interschoolParticipation->delete();
-        return redirect()->route('admin.interschool-participations.index')->with('success', 'Participation record deleted successfully!');
+
+        return redirect()->route('admin.interschool-participations.index')
+            ->with('success', 'Participation record deleted successfully!');
+    }
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key' => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
+
+        return new Cloudinary($config);
     }
 }
-

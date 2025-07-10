@@ -6,20 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Models\FieldTrip;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class FieldTripController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $trips = FieldTrip::orderBy('start_date', 'desc')->get();
         return view('admin.field_trips.index', compact('trips'));
     }
 
-    public function create() {
+    public function create()
+    {
         return view('admin.field_trips.create');
     }
 
-    public function store(Request $request) {
-        $request->validate([
+    public function store(Request $request)
+    {
+        $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
             'location' => 'required|string|max:255',
@@ -30,17 +34,8 @@ class FieldTripController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
-
-        // Upload to Cloudinary
         if ($request->hasFile('image')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key' => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET')
-                ]
-            ]);
+            $cloudinary = $this->cloudinary();
 
             $uploadedFile = $cloudinary->uploadApi()->upload(
                 $request->file('image')->getRealPath(),
@@ -50,7 +45,7 @@ class FieldTripController extends Controller
                     'overwrite' => true,
                     'resource_type' => 'image',
                     'quality' => 'auto',
-                    'fetch_format' => 'auto'
+                    'fetch_format' => 'auto',
                 ]
             );
 
@@ -59,15 +54,18 @@ class FieldTripController extends Controller
 
         FieldTrip::create($data);
 
-        return redirect()->route('admin.field_trips.index')->with('success', 'Field Trip created successfully.');
+        return redirect()->route('admin.field_trips.index')
+            ->with('success', 'Field Trip created successfully.');
     }
 
-    public function edit(FieldTrip $trip) {
+    public function edit(FieldTrip $trip)
+    {
         return view('admin.field_trips.edit', compact('trip'));
     }
 
-    public function update(Request $request, FieldTrip $trip) {
-        $request->validate([
+    public function update(Request $request, FieldTrip $trip)
+    {
+        $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
             'location' => 'required|string|max:255',
@@ -78,17 +76,8 @@ class FieldTripController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
-
-        // Upload to Cloudinary (if new image provided)
         if ($request->hasFile('image')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key' => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET')
-                ]
-            ]);
+            $cloudinary = $this->cloudinary();
 
             $uploadedFile = $cloudinary->uploadApi()->upload(
                 $request->file('image')->getRealPath(),
@@ -98,7 +87,7 @@ class FieldTripController extends Controller
                     'overwrite' => true,
                     'resource_type' => 'image',
                     'quality' => 'auto',
-                    'fetch_format' => 'auto'
+                    'fetch_format' => 'auto',
                 ]
             );
 
@@ -107,11 +96,34 @@ class FieldTripController extends Controller
 
         $trip->update($data);
 
-        return redirect()->route('admin.field_trips.index')->with('success', 'Field Trip updated successfully.');
+        return redirect()->route('admin.field_trips.index')
+            ->with('success', 'Field Trip updated successfully.');
     }
 
-    public function destroy(FieldTrip $trip) {
+    public function destroy(FieldTrip $trip)
+    {
         $trip->delete();
-        return redirect()->route('admin.field_trips.index')->with('success', 'Field Trip deleted successfully.');
+
+        return redirect()->route('admin.field_trips.index')
+            ->with('success', 'Field Trip deleted successfully.');
+    }
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key' => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
+
+        return new Cloudinary($config);
     }
 }

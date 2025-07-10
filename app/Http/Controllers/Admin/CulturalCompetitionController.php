@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-
 use App\Http\Controllers\Controller;
 use App\Models\CulturalCompetition;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class CulturalCompetitionController extends Controller
 {
@@ -31,27 +31,27 @@ class CulturalCompetitionController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key' => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
-                ],
-            ]);
+            $cloudinary = $this->cloudinary();
 
-            $uploadResponse = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath(), [
-                'folder' => 'cultural_competitions',
-                'public_id' => uniqid(),
-                'overwrite' => true,
-                'resource_type' => 'image',
-            ]);
+            $uploadResponse = $cloudinary->uploadApi()->upload(
+                $request->file('image')->getRealPath(),
+                [
+                    'folder' => 'cultural_competitions',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image',
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                ]
+            );
 
             $validated['image_url'] = $uploadResponse['secure_url'];
         }
 
         CulturalCompetition::create($validated);
 
-        return redirect()->route('admin.cultural_competitions.index')->with('success', 'Cultural competition added successfully.');
+        return redirect()->route('admin.cultural_competitions.index')
+            ->with('success', 'Cultural competition added successfully.');
     }
 
     public function show(CulturalCompetition $culturalCompetition)
@@ -74,33 +74,53 @@ class CulturalCompetitionController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key' => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
-                ],
-            ]);
+            $cloudinary = $this->cloudinary();
 
-            $uploadResponse = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath(), [
-                'folder' => 'cultural_competitions',
-                'public_id' => uniqid(),
-                'overwrite' => true,
-                'resource_type' => 'image',
-            ]);
+            $uploadResponse = $cloudinary->uploadApi()->upload(
+                $request->file('image')->getRealPath(),
+                [
+                    'folder' => 'cultural_competitions',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image',
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                ]
+            );
 
             $validated['image_url'] = $uploadResponse['secure_url'];
         }
 
         $culturalCompetition->update($validated);
 
-        return redirect()->route('admin.cultural_competitions.index')->with('success', 'Cultural competition updated successfully.');
+        return redirect()->route('admin.cultural_competitions.index')
+            ->with('success', 'Cultural competition updated successfully.');
     }
 
     public function destroy(CulturalCompetition $culturalCompetition)
     {
         $culturalCompetition->delete();
 
-        return redirect()->route('admin.cultural_competitions.index')->with('success', 'Cultural competition deleted successfully.');
+        return redirect()->route('admin.cultural_competitions.index')
+            ->with('success', 'Cultural competition deleted successfully.');
+    }
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key' => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
+
+        return new Cloudinary($config);
     }
 }

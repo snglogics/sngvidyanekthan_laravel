@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KinderGallery;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class KinderGalleryController extends Controller
 {
@@ -23,12 +24,21 @@ class KinderGalleryController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
+        $cloudinary = $this->cloudinary();
+
         foreach ($request->file('images') as $file) {
-            $uploadedUrl = (new Cloudinary())->uploadApi()->upload($file->getRealPath())['secure_url'];
+            $uploadResponse = $cloudinary->uploadApi()->upload($file->getRealPath(), [
+                'folder' => 'kinder_gallery',
+                'public_id' => uniqid(),
+                'overwrite' => true,
+                'resource_type' => 'image',
+                'quality' => 'auto',
+                'fetch_format' => 'auto',
+            ]);
 
             KinderGallery::create([
                 'common_header' => $request->common_header,
-                'image_url' => $uploadedUrl,
+                'image_url' => $uploadResponse['secure_url'],
             ]);
         }
 
@@ -59,5 +69,23 @@ class KinderGalleryController extends Controller
         $groupedGalleries = KinderGallery::orderBy('id', 'desc')->get()->groupBy('common_header');
         return view('admin.kinderGarden.kinderList', compact('groupedGalleries'));
     }
-}
 
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key' => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
+
+        return new Cloudinary($config);
+    }
+}

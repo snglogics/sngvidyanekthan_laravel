@@ -6,20 +6,34 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Announcement;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class AnnouncementController extends Controller
 {
+    private $cloudinary;
+
+    public function __construct()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => ['secure' => true]
+        ]);
+
+        $this->cloudinary = new Cloudinary($config);
+    }
 
     public function showUploadForm()
     {
-        $announcements = Announcement::with('files')->get(); // Fetch announcements with files
-
+        $announcements = Announcement::with('files')->get();
         return view('admin.announcement_upload', compact('announcements'));
     }
-
 
     public function uploadAnnouncement(Request $request)
     {
@@ -36,12 +50,19 @@ class AnnouncementController extends Controller
         ]);
 
         foreach ($request->file('documents') as $doc) {
-            $uploadedUrl = (new Cloudinary())->uploadApi()->upload($doc->getRealPath(), [
-                'resource_type' => 'raw'  // for PDF/DOC files
-            ]);
+            $uploadedFile = $this->cloudinary->uploadApi()->upload(
+                $doc->getRealPath(),
+                [
+                    'resource_type' => 'raw', // for PDF/DOC files
+                    'folder' => 'announcements'
+                ]
+            );
 
             $announcement->files()->create([
-                'file_url' => $uploadedUrl['secure_url'],
+                'file_url' => $uploadedFile['secure_url'],
+                // Optionally store public_id for later deletion:
+                // 'public_id' => $uploadedFile['public_id'],
+                // 'original_filename' => $doc->getClientOriginalName(),
             ]);
         }
 
@@ -52,15 +73,12 @@ class AnnouncementController extends Controller
     {
         $announcement = Announcement::with('files')->findOrFail($id);
 
-        // Delete each attached file record
         foreach ($announcement->files as $file) {
-            // Optional: If you are using Cloudinary and have saved public_id, you can also delete from Cloudinary like this:
-            // (new Cloudinary())->uploadApi()->destroy($file->public_id);
-
-            $file->delete(); // delete file record from database
+            // Optional: delete from Cloudinary using public_id if stored
+            // $this->cloudinary->uploadApi()->destroy($file->public_id, ['resource_type' => 'raw']);
+            $file->delete();
         }
 
-        // Delete the announcement itself
         $announcement->delete();
 
         return redirect()->route('announcement.uploadForm')->with('success', 'Announcement deleted successfully.');
@@ -74,13 +92,11 @@ class AnnouncementController extends Controller
         try {
             $filename = $file->original_filename ?: 'announcement_file.pdf';
 
-            // Fetch file using Guzzle
             $response = Http::withOptions(['stream' => true])->get($file->file_url);
 
             if ($response->successful()) {
                 return response()->streamDownload(function () use ($response) {
-                    $body = $response->body();
-                    echo $body;
+                    echo $response->body();
                 }, $filename);
             } else {
                 Log::error("Failed to fetch file from Cloudinary: Status " . $response->status());
