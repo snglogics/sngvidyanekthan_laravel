@@ -5,30 +5,44 @@ namespace App\Http\Controllers;
 use App\Models\Syllabus;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class SyllabusController extends Controller
 {
-
-    public function publicList()
+    /**
+     * Display public list of syllabuses
+     */
+    public function publicList(): View
     {
         $syllabuses = Syllabus::orderBy('classname')->orderBy('subject')->get();
         return view('admin.syllabuses.syllabus-list', compact('syllabuses'));
     }
 
-    public function index()
+    /**
+     * Display a listing of syllabuses
+     */
+    public function index(): View
     {
         $syllabuses = Syllabus::orderBy('classname')->orderBy('subject')->get();
         return view('admin.syllabuses.index', compact('syllabuses'));
     }
 
-    public function create()
+    /**
+     * Show the form for creating a new syllabus
+     */
+    public function create(): View
     {
         return view('admin.syllabuses.create');
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created syllabus
+     */
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $data = $request->validate([
             'classname' => 'required|string|max:255',
             'section' => 'nullable|string|max:100',
             'subject' => 'required|string|max:255',
@@ -37,94 +51,143 @@ class SyllabusController extends Controller
             'academic_year' => 'required|string|max:50',
         ]);
 
-        // Upload PDF to Cloudinary if provided
-        $pdfUrl = null;
         if ($request->hasFile('pdf')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key'    => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
+            $cloudinary = $this->cloudinary();
+            $uploadResponse = $cloudinary->uploadApi()->upload(
+                $request->file('pdf')->getRealPath(),
+                [
+                    'folder' => 'syllabus_files',
+                    'public_id' => uniqid(),
+                    'resource_type' => 'raw'
                 ]
-            ]);
-
-            $uploadedFile = $cloudinary->uploadApi()->upload($request->file('pdf')->getRealPath(), [
-                'folder' => 'syllabus_files',
-                'public_id' => uniqid(),
-                'resource_type' => 'raw'
-            ]);
-
-            $pdfUrl = $uploadedFile['secure_url'];
+            );
+            $data['pdf_url'] = $uploadResponse['secure_url'];
         }
 
-        // Save syllabus data
-        Syllabus::create([
-            'classname' => $request->classname,
-            'section' => $request->section,
-            'subject' => $request->subject,
-            'description' => $request->description,
-            'pdf_url' => $pdfUrl,
-            'academic_year' => $request->academic_year,
-        ]);
+        Syllabus::create($data);
 
-        return redirect()->route('admin.syllabuses.index')->with('success', 'Syllabus added successfully!');
+        return redirect()->route('admin.syllabuses.index')
+            ->with('success', 'Syllabus added successfully!');
     }
 
-    public function edit($id)
-{
-    $syllabus = Syllabus::findOrFail($id);
-    return view('admin.syllabuses.edit', compact('syllabus'));
-}
+    /**
+     * Show the form for editing a syllabus
+     */
+    public function edit(int $id): View
+    {
+        $syllabus = Syllabus::findOrFail($id);
+        return view('admin.syllabuses.edit', compact('syllabus'));
+    }
 
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'classname' => 'required|string|max:255',
-        'section' => 'nullable|string|max:100',
-        'subject' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'pdf' => 'nullable|file|mimes:pdf|max:10240',
-        'academic_year' => 'required|string|max:50',
-    ]);
+    /**
+     * Update the specified syllabus
+     */
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $data = $request->validate([
+            'classname' => 'required|string|max:255',
+            'section' => 'nullable|string|max:100',
+            'subject' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'pdf' => 'nullable|file|mimes:pdf|max:10240',
+            'academic_year' => 'required|string|max:50',
+        ]);
 
-    $syllabus = Syllabus::findOrFail($id);
-    $pdfUrl = $syllabus->pdf_url;
+        $syllabus = Syllabus::findOrFail($id);
 
-    if ($request->hasFile('pdf')) {
-        $cloudinary = new Cloudinary([
+        if ($request->hasFile('pdf')) {
+            $cloudinary = $this->cloudinary();
+
+            // Delete old PDF if exists
+            if ($syllabus->pdf_url) {
+                $publicId = $this->extractPublicId($syllabus->pdf_url);
+                if ($publicId) {
+                    $cloudinary->uploadApi()->destroy($publicId, ['resource_type' => 'raw']);
+                }
+            }
+
+            $uploadResponse = $cloudinary->uploadApi()->upload(
+                $request->file('pdf')->getRealPath(),
+                [
+                    'folder' => 'syllabus_files',
+                    'public_id' => uniqid(),
+                    'resource_type' => 'raw'
+                ]
+            );
+            $data['pdf_url'] = $uploadResponse['secure_url'];
+        }
+
+        $syllabus->update($data);
+
+        return redirect()->route('admin.syllabuses.index')
+            ->with('success', 'Syllabus updated successfully!');
+    }
+
+    /**
+     * Remove the specified syllabus
+     */
+    public function destroy(int $id): RedirectResponse
+    {
+        $syllabus = Syllabus::findOrFail($id);
+
+        // Delete PDF from Cloudinary if exists
+        if ($syllabus->pdf_url) {
+            $cloudinary = $this->cloudinary();
+            $publicId = $this->extractPublicId($syllabus->pdf_url);
+            if ($publicId) {
+                $cloudinary->uploadApi()->destroy($publicId, ['resource_type' => 'raw']);
+            }
+        }
+
+        $syllabus->delete();
+
+        return redirect()->route('admin.syllabuses.index')
+            ->with('success', 'Syllabus deleted successfully!');
+    }
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary(): Cloudinary
+    {
+        $config = new Configuration([
             'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true
             ]
         ]);
 
-        $uploadedFile = $cloudinary->uploadApi()->upload($request->file('pdf')->getRealPath(), [
-            'folder' => 'syllabus_files',
-            'public_id' => uniqid(),
-            'resource_type' => 'raw'
-        ]);
-
-        $pdfUrl = $uploadedFile['secure_url'];
+        return new Cloudinary($config);
     }
 
-    $syllabus->update([
-        'classname' => $request->classname,
-        'section' => $request->section,
-        'subject' => $request->subject,
-        'description' => $request->description,
-        'pdf_url' => $pdfUrl,
-        'academic_year' => $request->academic_year,
-    ]);
+    /**
+     * Helper method to extract Cloudinary public_id from URL
+     */
+    private function extractPublicId(string $url): ?string
+    {
+        $parsedUrl = parse_url($url);
+        if (!isset($parsedUrl['path'])) {
+            return null;
+        }
 
-    return redirect()->route('admin.syllabuses.index')->with('success', 'Syllabus updated successfully!');
-}
+        $path = $parsedUrl['path'];
+        $pathParts = explode('/', $path);
 
-  public function destroy($id)
-  {
-      $syllabus = Syllabus::findOrFail($id);
-      $syllabus->delete();
+        $uploadIndex = array_search('upload', $pathParts);
+        if ($uploadIndex === false) {
+            return null;
+        }
 
-      return redirect()->route('admin.syllabuses.index')->with('success', 'Syllabus deleted successfully!');
-  }  
+        $publicIdParts = array_slice($pathParts, $uploadIndex + 2);
+        if (empty($publicIdParts)) {
+            return null;
+        }
+
+        $publicIdWithExtension = implode('/', $publicIdParts);
+        return preg_replace('/\.[^.]+$/', '', $publicIdWithExtension);
+    }
 }

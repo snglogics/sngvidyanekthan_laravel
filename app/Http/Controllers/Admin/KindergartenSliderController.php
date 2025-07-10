@@ -8,12 +8,12 @@ use App\Models\KindergartenSlider;
 use App\Models\KinderPrincipalMsg;
 use App\Models\KinderGallery;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class KindergartenSliderController extends Controller
 {
     public function index()
     {
-       
         $sliders = KindergartenSlider::latest()->get();
         return view('admin.kinderGardenSlider.index', compact('sliders'));
     }
@@ -28,20 +28,21 @@ class KindergartenSliderController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg|max:5120',
             'header' => 'nullable|string|max:255',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
         ]);
 
-        $cloudinary = new Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-        ]);
+        $cloudinary = $this->cloudinary();
 
         $uploaded = $cloudinary->uploadApi()->upload(
             $request->file('image')->getRealPath(),
-            ['folder' => 'kindergarten_sliders']
+            [
+                'folder' => 'kindergarten_sliders',
+                'public_id' => uniqid(),
+                'overwrite' => true,
+                'resource_type' => 'image',
+                'quality' => 'auto',
+                'fetch_format' => 'auto',
+            ]
         );
 
         KindergartenSlider::create([
@@ -54,9 +55,9 @@ class KindergartenSliderController extends Controller
     }
 
     public function show(KindergartenSlider $kinder_slider)
-{
-    return view('admin.kinderGardenSlider.show', compact('kinder_slider'));
-}
+    {
+        return view('admin.kinderGardenSlider.show', compact('kinder_slider'));
+    }
 
     public function destroy(KindergartenSlider $kinder_slider)
     {
@@ -65,11 +66,29 @@ class KindergartenSliderController extends Controller
     }
 
     public function kindergarten()
-{
-     $principalMsg = KinderPrincipalMsg::latest()->first();
-    $kinderSliders = KindergartenSlider::latest()->get();
-    $kinderGallery = KinderGallery::orderBy('id', 'desc')->get()->groupBy('common_header');
-    return view('frontend/kindergarten', compact('kinderSliders','principalMsg','kinderGallery'));
-}
+    {
+        $principalMsg = KinderPrincipalMsg::latest()->first();
+        $kinderSliders = KindergartenSlider::latest()->get();
+        $kinderGallery = KinderGallery::orderBy('id', 'desc')->get()->groupBy('common_header');
+        return view('frontend.kindergarten', compact('kinderSliders', 'principalMsg', 'kinderGallery'));
+    }
 
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key' => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
+
+        return new Cloudinary($config);
+    }
 }

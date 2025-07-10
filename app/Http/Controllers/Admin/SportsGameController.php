@@ -9,16 +9,19 @@ use Cloudinary\Cloudinary;
 
 class SportsGameController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $sports = SportsGame::orderBy('title')->get();
         return view('admin.sports_games.index', compact('sports'));
     }
 
-    public function create() {
+    public function create()
+    {
         return view('admin.sports_games.create');
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
@@ -28,19 +31,10 @@ class SportsGameController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->only(['title', 'description', 'category', 'coach_name', 'contact_number']);
 
-        // Upload to Cloudinary
         if ($request->hasFile('image')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key' => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET')
-                ]
-            ]);
-
-            $uploadedFile = $cloudinary->uploadApi()->upload(
+            $upload = $this->cloudinary()->uploadApi()->upload(
                 $request->file('image')->getRealPath(),
                 [
                     'folder' => 'sports_games',
@@ -48,11 +42,12 @@ class SportsGameController extends Controller
                     'overwrite' => true,
                     'resource_type' => 'image',
                     'quality' => 'auto',
-                    'fetch_format' => 'auto'
+                    'fetch_format' => 'auto',
                 ]
             );
 
-            $data['image_url'] = $uploadedFile['secure_url'];
+            $data['image_url'] = $upload['secure_url'];
+            $data['public_id'] = $upload['public_id'];  // If you want to save public_id
         }
 
         SportsGame::create($data);
@@ -60,11 +55,13 @@ class SportsGameController extends Controller
         return redirect()->route('admin.sports_games.index')->with('success', 'Sports/Game created successfully.');
     }
 
-    public function edit(SportsGame $sportsGame) {
+    public function edit(SportsGame $sportsGame)
+    {
         return view('admin.sports_games.edit', compact('sportsGame'));
     }
 
-    public function update(Request $request, SportsGame $sportsGame) {
+    public function update(Request $request, SportsGame $sportsGame)
+    {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required',
@@ -74,19 +71,15 @@ class SportsGameController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->only(['title', 'description', 'category', 'coach_name', 'contact_number']);
 
-        // Upload to Cloudinary
         if ($request->hasFile('image')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key' => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET')
-                ]
-            ]);
+            // Optional: Delete old image from Cloudinary if public_id exists
+            if ($sportsGame->public_id) {
+                $this->cloudinary()->uploadApi()->destroy($sportsGame->public_id);
+            }
 
-            $uploadedFile = $cloudinary->uploadApi()->upload(
+            $upload = $this->cloudinary()->uploadApi()->upload(
                 $request->file('image')->getRealPath(),
                 [
                     'folder' => 'sports_games',
@@ -94,11 +87,12 @@ class SportsGameController extends Controller
                     'overwrite' => true,
                     'resource_type' => 'image',
                     'quality' => 'auto',
-                    'fetch_format' => 'auto'
+                    'fetch_format' => 'auto',
                 ]
             );
 
-            $data['image_url'] = $uploadedFile['secure_url'];
+            $data['image_url'] = $upload['secure_url'];
+            $data['public_id'] = $upload['public_id'];
         }
 
         $sportsGame->update($data);
@@ -106,8 +100,25 @@ class SportsGameController extends Controller
         return redirect()->route('admin.sports_games.index')->with('success', 'Sports/Game updated successfully.');
     }
 
-    public function destroy(SportsGame $sportsGame) {
+    public function destroy(SportsGame $sportsGame)
+    {
+        if ($sportsGame->public_id) {
+            $this->cloudinary()->uploadApi()->destroy($sportsGame->public_id);
+        }
+
         $sportsGame->delete();
         return redirect()->route('admin.sports_games.index')->with('success', 'Sports/Game deleted successfully.');
+    }
+
+
+    private function cloudinary()
+    {
+        return new Cloudinary([
+            'cloud' => [
+                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                'api_key' => env('CLOUDINARY_API_KEY'),
+                'api_secret' => env('CLOUDINARY_API_SECRET'),
+            ],
+        ]);
     }
 }

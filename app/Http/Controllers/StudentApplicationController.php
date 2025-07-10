@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StudentApplication;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
@@ -12,18 +13,22 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-
 class StudentApplicationController extends Controller
 {
-    public function showForm()
+    /**
+     * Show the application form
+     */
+    public function showForm(): View
     {
         return view('student_application.form');
     }
 
-    public function submitForm(Request $request)
+    /**
+     * Handle form submission
+     */
+    public function submitForm(Request $request): RedirectResponse
     {
-        // Validate incoming data
-        $request->validate([
+        $data = $request->validate([
             'class' => 'required|string|max:50',
             'pupil_name' => 'required|string|max:255',
             'gender' => 'required|string|max:10',
@@ -49,85 +54,47 @@ class StudentApplicationController extends Controller
             'hobbies' => 'nullable|string|max:255',
             'blood_group' => 'nullable|string|max:5',
             'boarding_point' => 'nullable|string|max:255',
-            'pdf_url' => 'nullable|string|max:255',
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Upload photo to Cloudinary
-        $cloudinary = new Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key' => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-        ]);
-
-        $uploadResponse = $cloudinary->uploadApi()->upload($request->file('photo')->getRealPath(), [
-            'folder' => 'admission_photos',
-            'public_id' => uniqid(),
-            'overwrite' => true,
-            'resource_type' => 'image'
-        ]);
-
-        // Save student data
-        $student = StudentApplication::create([
-            'class' => $request->class,
-            'pupil_name' => $request->pupil_name,
-            'gender' => $request->gender,
-            'date_of_birth' => $request->date_of_birth,
-            'father_name' => $request->father_name,
-            'mother_name' => $request->mother_name,
-            'address' => $request->address,
-            'mobile_number' => $request->phone_number,
-            'email' => $request->email,
-            'nationality' => $request->nationality,
-            'religion' => $request->religion,
-            'photo_url' => $uploadResponse['secure_url'],
-            'father_occupation' => $request->father_occupation,
-            'mother_occupation' => $request->mother_occupation,
-            'Whatsapp_number' => $request->Whatsapp_number,
-            'aadhar' => $request->aadhar,
-            'annual_income' => $request->annual_income,
-            'mother_toungue' => $request->mother_toungue,
-            'father_education' => $request->father_education,
-            'mother_education' => $request->mother_education,
-            'total_members' => $request->total_members,
-            'siblings' => $request->siblings,
-            'local_guardian' => $request->local_guardian,
-            'hobbies' => $request->hobbies,
-            'blood_group' => $request->blood_group,
-            'boarding_point' => $request->boarding_point,
-            'pdf_url' => $request->pdf_url,
-        ]);
-
-        // Generate PDF
-        // Ensure directory exists
-        Storage::makeDirectory('public/applications');
-
-        // Generate PDF
-        $pdf = Pdf::loadView('student_application.pdf', ['student' => $student]);
-
-        $pdfFilename = 'applications/' . $student->id . '.pdf';
-        Storage::put('public/' . $pdfFilename, $pdf->output());
-
-        // Save PDF path to database
-        $student->update([
-            'pdf_url' => 'storage/' . $pdfFilename
-        ]);
-
-        // Send email with the application PDF
         try {
-            Mail::send('emails.application', ['student' => $student], function ($message) use ($student, $pdfPath) {
-                $message->to($student->email)
-                        ->subject('Application Confirmation')
-                        ->attach($pdfPath);
-            });
-        } catch (\Exception $e) {
-            Log::error('Email Sending Failed: ' . $e->getMessage());
-        }
+            $cloudinary = $this->cloudinary();
 
-        return redirect()->back()->with('success', 'Application submitted successfully!');
+            // Upload photo to Cloudinary
+            $uploadResponse = $cloudinary->uploadApi()->upload(
+                $request->file('photo')->getRealPath(),
+                [
+                    'folder' => 'admission_photos',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image'
+                ]
+            );
+
+            $data['photo_url'] = $uploadResponse['secure_url'];
+
+            // Create student record
+            $student = StudentApplication::create($data);
+
+            // Generate and store PDF
+            $this->generateAndStorePdf($student);
+
+            // Send confirmation email
+            $this->sendConfirmationEmail($student);
+
+            return redirect()->back()
+                ->with('success', 'Application submitted successfully!');
+        } catch (\Exception $e) {
+            Log::error('Student application error: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Failed to submit application: ' . $e->getMessage());
+        }
     }
-public function index(): View
+
+    /**
+     * List all applications with search functionality
+     */
+    public function index(): View
     {
         $query = StudentApplication::query();
 
@@ -141,7 +108,7 @@ public function index(): View
     }
 
     /**
-     * Show the details of a single application.
+     * Show the details of a single application
      */
     public function show(int $id): View
     {
@@ -150,17 +117,119 @@ public function index(): View
     }
 
     /**
-     * Delete an application and stay on the same page.
+     * Delete an application
      */
     public function destroy(int $id): RedirectResponse
     {
         $student = StudentApplication::findOrFail($id);
-        $student->delete();
 
-        return redirect()
-            ->route('admin.primary-students.list')
-            ->with('success', 'Application deleted successfully.');
+        try {
+            // Delete photo from Cloudinary
+            $photoPublicId = $this->extractPublicId($student->photo_url);
+            if ($photoPublicId) {
+                $this->cloudinary()->uploadApi()->destroy($photoPublicId, ['resource_type' => 'image']);
+            }
+
+            // Delete local PDF file if exists
+            if ($student->pdf_url && Storage::exists(str_replace('storage/', 'public/', $student->pdf_url))) {
+                Storage::delete(str_replace('storage/', 'public/', $student->pdf_url));
+            }
+
+            $student->delete();
+
+            return redirect()
+                ->route('admin.primary-students.list')
+                ->with('success', 'Application deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting student application: ' . $e->getMessage());
+            return redirect()
+                ->route('admin.primary-students.list')
+                ->with('error', 'Failed to delete application.');
+        }
     }
 
+    /**
+     * Generate and store PDF for the application
+     */
+    private function generateAndStorePdf(StudentApplication $student): void
+    {
+        Storage::makeDirectory('public/applications');
+
+        $pdf = Pdf::loadView('student_application.pdf', ['student' => $student]);
+        $pdfFilename = 'applications/' . $student->id . '.pdf';
+
+        Storage::put('public/' . $pdfFilename, $pdf->output());
+
+        $student->update([
+            'pdf_url' => 'storage/' . $pdfFilename
+        ]);
+    }
+
+    /**
+     * Send confirmation email with PDF attachment
+     */
+    private function sendConfirmationEmail(StudentApplication $student): void
+    {
+        try {
+            $pdfPath = storage_path('app/public/' . str_replace('storage/', '', $student->pdf_url));
+
+            Mail::send(
+                'emails.application',
+                ['student' => $student],
+                function ($message) use ($student, $pdfPath) {
+                    $message->to($student->email)
+                        ->subject('Application Confirmation')
+                        ->attach($pdfPath);
+                }
+            );
+        } catch (\Exception $e) {
+            Log::error('Email sending failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary(): Cloudinary
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true
+            ]
+        ]);
+
+        return new Cloudinary($config);
+    }
+
+    /**
+     * Helper method to extract Cloudinary public_id from URL
+     */
+    private function extractPublicId(string $url): ?string
+    {
+        $parsedUrl = parse_url($url);
+        if (!isset($parsedUrl['path'])) {
+            return null;
+        }
+
+        $path = $parsedUrl['path'];
+        $pathParts = explode('/', $path);
+
+        $uploadIndex = array_search('upload', $pathParts);
+        if ($uploadIndex === false) {
+            return null;
+        }
+
+        $publicIdParts = array_slice($pathParts, $uploadIndex + 2);
+        if (empty($publicIdParts)) {
+            return null;
+        }
+
+        $publicIdWithExtension = implode('/', $publicIdParts);
+        return preg_replace('/\.[^.]+$/', '', $publicIdWithExtension);
+    }
 }
- 

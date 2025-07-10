@@ -5,105 +5,116 @@ namespace App\Http\Controllers;
 use App\Models\SeniorStudentAdmission;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
-
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 
 class SeniorStudentAdmissionController extends Controller
 {
-    public function showForm()
+    /**
+     * Show the senior admission form
+     */
+    public function showForm(): View
     {
         return view('student_application.seniourForm');
     }
 
-    public function submitForm(Request $request)
+    /**
+     * Handle form submission
+     */
+    public function submitForm(Request $request): RedirectResponse
     {
-        // Validate incoming data
-        $validatedData = $request->validate([
+        $data = $request->validate([
             'admission_class' => 'required|string|max:255',
             'pupil_name' => 'required|string|max:255',
             'gender' => 'required|in:Boy,Girl,Transgender',
             'date_of_birth' => 'required|string|max:255',
             'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'aadhaar_no' => 'nullable|string|max:255',
+            'father_name' => 'nullable|string|max:255',
+            'father_occupation' => 'nullable|string|max:255',
+            'mother_name' => 'nullable|string|max:255',
+            'mother_occupation' => 'nullable|string|max:255',
+            'address' => 'nullable|string',
+            'phone_number' => 'nullable|string|max:255',
+            'whatsapp_number' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255',
+            'annual_income' => 'nullable|string|max:255',
+            'nationality' => 'nullable|string|max:255',
+            'religion_caste' => 'nullable|string|max:255',
+            'last_institution_attended' => 'nullable|string|max:255',
+            'medium_of_instruction' => 'nullable|string|max:255',
+            'mother_tongue' => 'nullable|string|max:255',
+            'parent_education' => 'nullable|string|max:255',
+            'family_members' => 'nullable|string',
+            'siblings' => 'nullable|string',
+            'immunization_status' => 'nullable|string',
+            'local_guardian' => 'nullable|string',
+            'hobbies' => 'nullable|string',
+            'games_played' => 'nullable|string',
+            'cocurricular_achievements' => 'nullable|string',
+            'cca_options' => 'nullable|string',
+            'year_of_passing' => 'nullable|string|max:255',
+            'total_marks' => 'nullable|string|max:255',
         ]);
 
-        // Upload photo to Cloudinary
-        $cloudinary = new Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key' => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-        ]);
+        try {
+            $cloudinary = $this->cloudinary();
 
-        $uploadResponse = $cloudinary->uploadApi()->upload($request->file('photo')->getRealPath(), [
-            'folder' => 'admission_photos',
-            'public_id' => uniqid(),
-            'overwrite' => true,
-            'resource_type' => 'image'
-        ]);
+            // Upload photo to Cloudinary
+            $photoResponse = $cloudinary->uploadApi()->upload(
+                $request->file('photo')->getRealPath(),
+                [
+                    'folder' => 'admission_photos',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image'
+                ]
+            );
 
-        // Save student data
-        $student = SeniorStudentAdmission::create(array_merge($validatedData, [
-            'photo_url' => $uploadResponse['secure_url'],
-            'aadhaar_no' => $request->aadhaar_no,
-            'father_name' => $request->father_name,
-            'father_occupation' => $request->father_occupation,
-            'mother_name' => $request->mother_name,
-            'mother_occupation' => $request->mother_occupation,
-            'address' => $request->address,
-            'phone_number' => $request->phone_number,
-            'whatsapp_number' => $request->whatsapp_number,
-            'email' => $request->email,
-            'annual_income' => $request->annual_income,
-            'nationality' => $request->nationality,
-            'religion_caste' => $request->religion_caste,
-            'last_institution_attended' => $request->last_institution_attended,
-            'medium_of_instruction' => $request->medium_of_instruction,
-            'mother_tongue' => $request->mother_tongue,
-            'parent_education' => $request->parent_education,
-            'family_members' => $request->family_members,
-            'siblings' => $request->siblings,
-            'immunization_status' => $request->immunization_status,
-            'local_guardian' => $request->local_guardian,
-            'hobbies' => $request->hobbies,
-            'games_played' => $request->games_played,
-            'cocurricular_achievements' => $request->cocurricular_achievements,
-            'cca_options' => $request->cca_options,
-            'year_of_passing' => $request->year_of_passing,
-            'total_marks' => $request->total_marks,
-        ]));
+            $data['photo_url'] = $photoResponse['secure_url'];
 
-        // Generate and Save PDF
-          // Generate the PDF
-          $pdf = Pdf::loadView('student_application.admissions.pdf', compact('student'));
-          $pdfPath = storage_path('app/public/admissions/' . $student->id . '.pdf');
-          $pdf->save($pdfPath);
-  
-          // Upload the PDF to Cloudinary
-          $pdfResponse = $cloudinary->uploadApi()->upload($pdfPath, [
-              'folder' => 'student_admissions',
-              'public_id' => 'admission_' . $student->id,
-              'resource_type' => 'raw',
-              'format' => 'pdf'
-          ]);
-  
-          $downloadUrl = $pdfResponse['secure_url'] . '?fl_attachment=admission_form';
+            // Create student record
+            $student = SeniorStudentAdmission::create($data);
 
-          // Save the Cloudinary PDF URL in the database
-          $student->update([
-              'pdf_url' => $downloadUrl
-          ]);
-  
-          // Delete the local PDF to save space
-          unlink($pdfPath);
-        return redirect()->back()->with('success', 'Application submitted successfully!');
+            // Generate and upload PDF
+            $pdf = Pdf::loadView('student_application.admissions.pdf', compact('student'));
+            $pdfPath = storage_path('app/public/admissions/' . $student->id . '.pdf');
+            $pdf->save($pdfPath);
+
+            $pdfResponse = $cloudinary->uploadApi()->upload(
+                $pdfPath,
+                [
+                    'folder' => 'student_admissions',
+                    'public_id' => 'admission_' . $student->id,
+                    'resource_type' => 'raw',
+                    'format' => 'pdf'
+                ]
+            );
+
+            $downloadUrl = $pdfResponse['secure_url'] . '?fl_attachment=admission_form';
+            $student->update(['pdf_url' => $downloadUrl]);
+
+            // Clean up local file
+            if (file_exists($pdfPath)) {
+                unlink($pdfPath);
+            }
+
+            return redirect()->back()
+                ->with('success', 'Application submitted successfully!');
+        } catch (\Exception $e) {
+            Log::error('Senior student admission error: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Failed to submit application: ' . $e->getMessage());
+        }
     }
 
-
-    public function listStudents()
+    /**
+     * List all students with search functionality
+     */
+    public function listStudents(): View
     {
         $query = SeniorStudentAdmission::query();
 
@@ -116,23 +127,93 @@ class SeniorStudentAdmissionController extends Controller
         return view('student_application.seniorSecondary.senior_student_list', compact('students'));
     }
 
-     public function viewStudent($id)
+    /**
+     * View a single student
+     */
+    public function viewStudent(int $id): View
     {
         $student = SeniorStudentAdmission::findOrFail($id);
         return view('student_application.seniorSecondary.senior_student_details', compact('student'));
     }
 
+    /**
+     * Delete a student record
+     */
     public function destroy(int $id): RedirectResponse
     {
         $student = SeniorStudentAdmission::findOrFail($id);
 
-        // Optionally delete the photo and PDF from Cloudinary here
-        // e.g. Cloudinary cleanup if needed
+        try {
+            $cloudinary = $this->cloudinary();
 
-        $student->delete();
+            // Delete photo from Cloudinary
+            $photoPublicId = $this->extractPublicId($student->photo_url);
+            if ($photoPublicId) {
+                $cloudinary->uploadApi()->destroy($photoPublicId, ['resource_type' => 'image']);
+            }
 
-        return redirect()
-            ->route('admin.senior-students.list')
-            ->with('success', 'Student record deleted successfully.');
+            // Delete PDF from Cloudinary
+            $pdfPublicId = $this->extractPublicId($student->pdf_url);
+            if ($pdfPublicId) {
+                $cloudinary->uploadApi()->destroy($pdfPublicId, ['resource_type' => 'raw']);
+            }
+
+            $student->delete();
+
+            return redirect()
+                ->route('admin.senior-students.list')
+                ->with('success', 'Student record deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting senior student: ' . $e->getMessage());
+            return redirect()
+                ->route('admin.senior-students.list')
+                ->with('error', 'Failed to delete student record.');
+        }
+    }
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary(): Cloudinary
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true
+            ]
+        ]);
+
+        return new Cloudinary($config);
+    }
+
+    /**
+     * Helper method to extract Cloudinary public_id from URL
+     */
+    private function extractPublicId(string $url): ?string
+    {
+        $parsedUrl = parse_url($url);
+        if (!isset($parsedUrl['path'])) {
+            return null;
+        }
+
+        $path = $parsedUrl['path'];
+        $pathParts = explode('/', $path);
+
+        $uploadIndex = array_search('upload', $pathParts);
+        if ($uploadIndex === false) {
+            return null;
+        }
+
+        $publicIdParts = array_slice($pathParts, $uploadIndex + 2);
+        if (empty($publicIdParts)) {
+            return null;
+        }
+
+        $publicIdWithExtension = implode('/', $publicIdParts);
+        return preg_replace('/\.[^.]+$/', '', $publicIdWithExtension);
     }
 }

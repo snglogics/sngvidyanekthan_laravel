@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\AcademicCalendar;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class AcademicCalendarController extends Controller
 {
@@ -58,7 +56,7 @@ class AcademicCalendarController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'event_name' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -70,51 +68,33 @@ class AcademicCalendarController extends Controller
             'description' => 'nullable|string|max:255',
         ]);
 
-        // Initialize Cloudinary
-        $cloudinary = new \Cloudinary\Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ]
-        ]);
-
-        // Handle file upload to Cloudinary
-        $attachmentUrl = null;
         if ($request->hasFile('attachment')) {
-            $uploadedFile = $cloudinary->uploadApi()->upload($request->file('attachment')->getRealPath(), [
-                'folder' => 'academic_attachments',
-                'public_id' => uniqid(),
-                'overwrite' => true,
-                'resource_type' => 'auto'
-            ]);
+            $cloudinary = $this->cloudinary();
 
-            // Extract the secure URL
-            $attachmentUrl = $uploadedFile['secure_url'];
+            $uploadedFile = $cloudinary->uploadApi()->upload(
+                $request->file('attachment')->getRealPath(),
+                [
+                    'folder' => 'academic_attachments',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'auto',
+                ]
+            );
+
+            $data['attachment_url'] = $uploadedFile['secure_url'];
         }
 
-        // Save the event
-        AcademicCalendar::create([
-            'event_name' => $request->event_name,
-            'description' => $request->description,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'event_type' => $request->event_type,
-            'academic_year' => $request->academic_year,
-            'audience' => $request->audience,
-            'color' => $request->color ?? '#007bff',
-            'attachment_url' => $attachmentUrl
-        ]);
+        AcademicCalendar::create($data);
 
         return redirect()->route('admin.academic-calendars.index')->with('success', 'Event added successfully!');
     }
 
-
     public function show($id)
     {
-        $event = AcademicCalendar::findOrFail($id); // adjust model name as needed
+        $event = AcademicCalendar::findOrFail($id);
         return view('admin.academic_calendars.show', compact('event'));
     }
+
     public function edit(AcademicCalendar $academicCalendar)
     {
         return view('admin.academic_calendars.edit', compact('academicCalendar'));
@@ -122,7 +102,7 @@ class AcademicCalendarController extends Controller
 
     public function update(Request $request, AcademicCalendar $academicCalendar)
     {
-        $request->validate([
+        $data = $request->validate([
             'event_name' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -130,32 +110,26 @@ class AcademicCalendarController extends Controller
             'academic_year' => 'required|string|max:50',
             'audience' => 'nullable|string|max:100',
             'color' => 'nullable|string|max:7',
-            'attachment' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048'
+            'attachment' => 'nullable|file|mimes:pdf,jpeg,png,jpg|max:2048',
         ]);
 
-        $cloudinary = new \Cloudinary\Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ]
-        ]);
-        // Update file if provided
         if ($request->hasFile('attachment')) {
-            $uploadedFile =  $cloudinary->uploadApi()->upload($request->file('attachment')->getRealPath(), [
-                'folder' => 'academic_attachments',
-                'public_id' => uniqid(),
-                'overwrite' => true,
-                'resource_type' => 'auto'
-            ]);
+            $cloudinary = $this->cloudinary();
 
-            // Set the new attachment URL
-            $request->merge([
-                'attachment_url' => $uploadedFile['secure_url']
-            ]);
+            $uploadedFile = $cloudinary->uploadApi()->upload(
+                $request->file('attachment')->getRealPath(),
+                [
+                    'folder' => 'academic_attachments',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'auto',
+                ]
+            );
+
+            $data['attachment_url'] = $uploadedFile['secure_url'];
         }
-        // Update other fields
-        $academicCalendar->update($request->except(['attachment']));
+
+        $academicCalendar->update($data);
 
         return redirect()->route('admin.academic-calendars.index')->with('success', 'Event updated successfully!');
     }
@@ -164,5 +138,24 @@ class AcademicCalendarController extends Controller
     {
         $academicCalendar->delete();
         return redirect()->route('admin.academic-calendars.index')->with('success', 'Event deleted successfully!');
+    }
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        return new \Cloudinary\Cloudinary(
+            new \Cloudinary\Configuration\Configuration([
+                'cloud' => [
+                    'cloud_name' => config('cloudinary.cloud_name'),
+                    'api_key' => config('cloudinary.api_key'),
+                    'api_secret' => config('cloudinary.api_secret'),
+                ],
+                'url' => [
+                    'secure' => true,
+                ],
+            ])
+        );
     }
 }

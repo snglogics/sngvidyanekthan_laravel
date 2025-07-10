@@ -5,22 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\HigherStudentAdmission;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 
 class HigherStudentAdmissionController extends Controller
 {
-    // Show the higher admission form
-    public function showHigherForm()
+    /**
+     * Show the higher admission form
+     */
+    public function showHigherForm(): View
     {
         return view('student_application.higherForm');
     }
 
-    // Handle form submission
-    public function submitHigherForm(Request $request)
+    /**
+     * Handle form submission
+     */
+    public function submitHigherForm(Request $request): RedirectResponse
     {
-        // Validate incoming data
-        $validatedData = $request->validate([
+        $data = $request->validate([
             'candidate_name' => 'required|string|max:255',
             'reg_roll_no' => 'required|string|max:255',
             'year_of_passing' => 'required|string|max:255',
@@ -57,87 +63,159 @@ class HigherStudentAdmissionController extends Controller
         ]);
 
         try {
-            // Initialize Cloudinary
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key' => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
-                ],
-            ]);
+            $cloudinary = $this->cloudinary();
 
-            // Upload Marks Table Image to Cloudinary
-            $marksTableResponse = $cloudinary->uploadApi()->upload($request->file('marks_table_image')->getRealPath(), [
-                'folder' => 'higher_student_marks_tables',
-                'public_id' => uniqid(),
-                'overwrite' => true,
-                'resource_type' => 'image'
-            ]);
+            // Upload Marks Table Image
+            $marksTableResponse = $cloudinary->uploadApi()->upload(
+                $request->file('marks_table_image')->getRealPath(),
+                [
+                    'folder' => 'higher_student_marks_tables',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image'
+                ]
+            );
 
-            // Upload Student Photo to Cloudinary
-            $photoResponse = $cloudinary->uploadApi()->upload($request->file('photo')->getRealPath(), [
-                'folder' => 'higher_student_photos',
-                'public_id' => uniqid(),
-                'overwrite' => true,
-                'resource_type' => 'image'
-            ]);
+            // Upload Student Photo
+            $photoResponse = $cloudinary->uploadApi()->upload(
+                $request->file('photo')->getRealPath(),
+                [
+                    'folder' => 'higher_student_photos',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image'
+                ]
+            );
 
-            // Save student data
-            $student = HigherStudentAdmission::create(array_merge($validatedData, [
-                'marks_table_image_url' => $marksTableResponse['secure_url'],
-                'photo_url' => $photoResponse['secure_url'],
-                'subjects' => $request->subjects ?? [],
-                'percentages' => $request->percentages ?? [],
-                'grades' => $request->grades ?? [],
-            ]));
-            
-            return redirect()->back()->with('success', 'Application submitted successfully!');
+            $data['marks_table_image_url'] = $marksTableResponse['secure_url'];
+            $data['photo_url'] = $photoResponse['secure_url'];
+            $data['subjects'] = $request->subjects ?? [];
+            $data['percentages'] = $request->percentages ?? [];
+            $data['grades'] = $request->grades ?? [];
+
+            HigherStudentAdmission::create($data);
+
+            return redirect()->back()
+                ->with('success', 'Application submitted successfully!');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to upload files: ' . $e->getMessage());
+            Log::error('Higher student admission error: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Failed to submit application: ' . $e->getMessage());
         }
     }
 
-    // List all students
-    public function listStudents(Request $request)
+    /**
+     * List all students
+     */
+    public function listStudents(Request $request): View
     {
         $query = HigherStudentAdmission::query();
 
-    // Search by candidate name
         if ($request->has('search') && $request->search != '') {
-         $query->where('candidate_name', 'like', '%' . $request->search . '%');
+            $query->where('candidate_name', 'like', '%' . $request->search . '%');
         }
 
-        // Paginate results (10 per page)
         $students = $query->orderBy('id', 'desc')->paginate(10);
 
         return view('admin.higher_student_list', compact('students'));
     }
 
-    // View a single student
-    public function viewStudent($id)
+    /**
+     * View a single student
+     */
+    public function viewStudent(int $id): View
     {
         $student = HigherStudentAdmission::findOrFail($id);
         return view('admin.higher_student_details', compact('student'));
     }
 
-    // Print a single student (optional)
-    public function printStudent($id)
+    /**
+     * Print a single student
+     */
+    public function printStudent(int $id): View
     {
         $student = HigherStudentAdmission::findOrFail($id);
         return view('admin.higher_student_details', compact('student'));
     }
 
-     public function destroy(int $id): RedirectResponse
+    /**
+     * Delete a student record
+     */
+    public function destroy(int $id): RedirectResponse
     {
         $student = HigherStudentAdmission::findOrFail($id);
 
-        // Optionally delete the photo and PDF from Cloudinary here
-        // e.g. Cloudinary cleanup if needed
+        try {
+            $cloudinary = $this->cloudinary();
 
-        $student->delete();
+            // Delete marks table image
+            $marksTablePublicId = $this->extractPublicId($student->marks_table_image_url);
+            if ($marksTablePublicId) {
+                $cloudinary->uploadApi()->destroy($marksTablePublicId, ['resource_type' => 'image']);
+            }
 
-        return redirect()
-            ->route('admin.higher-students.list')
-            ->with('success', 'Student record deleted successfully.');
+            // Delete student photo
+            $photoPublicId = $this->extractPublicId($student->photo_url);
+            if ($photoPublicId) {
+                $cloudinary->uploadApi()->destroy($photoPublicId, ['resource_type' => 'image']);
+            }
+
+            $student->delete();
+
+            return redirect()
+                ->route('admin.higher-students.list')
+                ->with('success', 'Student record deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting student: ' . $e->getMessage());
+            return redirect()
+                ->route('admin.higher-students.list')
+                ->with('error', 'Failed to delete student record.');
+        }
     }
-} 
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary(): Cloudinary
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true
+            ]
+        ]);
+
+        return new Cloudinary($config);
+    }
+
+    /**
+     * Helper method to extract Cloudinary public_id from URL
+     */
+    private function extractPublicId(string $url): ?string
+    {
+        $parsedUrl = parse_url($url);
+        if (!isset($parsedUrl['path'])) {
+            return null;
+        }
+
+        $path = $parsedUrl['path'];
+        $pathParts = explode('/', $path);
+
+        $uploadIndex = array_search('upload', $pathParts);
+        if ($uploadIndex === false) {
+            return null;
+        }
+
+        $publicIdParts = array_slice($pathParts, $uploadIndex + 2);
+        if (empty($publicIdParts)) {
+            return null;
+        }
+
+        $publicIdWithExtension = implode('/', $publicIdParts);
+        return preg_replace('/\.[^.]+$/', '', $publicIdWithExtension);
+    }
+}

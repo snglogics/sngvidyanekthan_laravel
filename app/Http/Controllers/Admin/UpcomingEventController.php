@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\upcoming_events;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class UpcomingEventController extends Controller
 {
@@ -22,7 +23,7 @@ class UpcomingEventController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'event_date' => 'required|date',
             'heading' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -31,16 +32,25 @@ class UpcomingEventController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
-        $imageUrl = (new Cloudinary())->uploadApi()->upload($request->file('image')->getRealPath())['secure_url'];
+        if ($request->hasFile('image')) {
+            $cloudinary = $this->cloudinary();
 
-        upcoming_events::create([
-            'event_date' => $request->event_date,
-            'heading' => $request->heading,
-            'description' => $request->description,
-            'time_interval' => $request->time_interval,
-            'venue' => $request->venue,
-            'image_url' => $imageUrl,
-        ]);
+            $uploadResult = $cloudinary->uploadApi()->upload(
+                $request->file('image')->getRealPath(),
+                [
+                    'folder' => 'upcoming_events',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image',
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                ]
+            );
+
+            $data['image_url'] = $uploadResult['secure_url'];
+        }
+
+        upcoming_events::create($data);
 
         return redirect()->route('admin.events.index')->with('success', 'Event uploaded successfully.');
     }
@@ -49,7 +59,26 @@ class UpcomingEventController extends Controller
     {
         $event = upcoming_events::findOrFail($id);
         $event->delete();
+
         return back()->with('success', 'Event deleted.');
     }
+
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
+
+        return new Cloudinary($config);
+    }
 }
- 

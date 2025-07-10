@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KinderPrincipalMsg;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class KinderPrincipalMsgController extends Controller
 {
@@ -23,17 +25,18 @@ class KinderPrincipalMsgController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
-        $cloudinary = new Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-        ]);
+        $cloudinary = $this->cloudinary();
 
         $uploadedFile = $cloudinary->uploadApi()->upload(
             $request->file('image')->getRealPath(),
-            ['folder' => 'kinder_principal']
+            [
+                'folder' => 'kinder_principal',
+                'public_id' => uniqid(),
+                'overwrite' => true,
+                'resource_type' => 'image',
+                'quality' => 'auto',
+                'fetch_format' => 'auto',
+            ]
         );
 
         KinderPrincipalMsg::create([
@@ -59,17 +62,18 @@ class KinderPrincipalMsgController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key'    => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
-                ],
-            ]);
+            $cloudinary = $this->cloudinary();
 
             $uploadedFile = $cloudinary->uploadApi()->upload(
                 $request->file('image')->getRealPath(),
-                ['folder' => 'kinder_principal']
+                [
+                    'folder' => 'kinder_principal',
+                    'public_id' => uniqid(),
+                    'overwrite' => true,
+                    'resource_type' => 'image',
+                    'quality' => 'auto',
+                    'fetch_format' => 'auto',
+                ]
             );
 
             $msg->image_url = $uploadedFile['secure_url'];
@@ -84,5 +88,22 @@ class KinderPrincipalMsgController extends Controller
         return redirect()->back()->with('success', 'Message updated successfully!');
     }
 
-    
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key' => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
+
+        return new Cloudinary($config);
+    }
 }

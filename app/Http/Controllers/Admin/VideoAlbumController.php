@@ -5,34 +5,33 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use App\Models\VideoAlbum;
 
 class VideoAlbumController extends Controller
 {
-
     public function frontendVideo()
     {
         $apiKey = env('YOUTUBE_API_KEY');
-    $channelId = env('YOUTUBE_CHANNEL_ID');
+        $channelId = env('YOUTUBE_CHANNEL_ID');
 
-    $url = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={$channelId}&maxResults=6&type=video&key={$apiKey}";
+        $url = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={$channelId}&maxResults=6&type=video&key={$apiKey}";
 
-    $json = file_get_contents($url);
-    $youtubeData = json_decode($json, true);
+        $json = file_get_contents($url);
+        $youtubeData = json_decode($json, true);
 
-    $youtubeVideos = $youtubeData['items'] ?? [];
+        $youtubeVideos = $youtubeData['items'] ?? [];
+        $customVideos = VideoAlbum::all();
 
-    $customVideos = VideoAlbum::all(); 
-    
         $videos = VideoAlbum::latest()->get();
-        return view('media.videolist', [
-        'videos' => $videos,
-        'youtubeVideos' => $youtubeVideos,
-        'customeVideos' => $customVideos,
 
-    ]);
+        return view('media.videolist', [
+            'videos' => $videos,
+            'youtubeVideos' => $youtubeVideos,
+            'customeVideos' => $customVideos,
+        ]);
     }
-    
+
     public function index()
     {
         $videos = VideoAlbum::latest()->get();
@@ -52,13 +51,14 @@ class VideoAlbumController extends Controller
             'type' => 'required|in:album,virtual',
         ]);
 
-        $cloudinary = new Cloudinary();
+        $cloudinary = $this->cloudinary();
+
         $upload = $cloudinary->uploadApi()->upload(
             $request->file('video')->getRealPath(),
             [
                 'resource_type' => 'video',
                 'folder' => 'video_albums',
-                'eager' => [['quality' => 'auto']]
+                'eager' => [['quality' => 'auto']],
             ]
         );
 
@@ -71,19 +71,35 @@ class VideoAlbumController extends Controller
 
         return redirect()->back()->with('success', 'Video uploaded.');
     }
+
     public function destroy($id)
-{
-    $video = VideoAlbum::findOrFail($id);
+    {
+        $video = VideoAlbum::findOrFail($id);
 
-    // Optionally delete from Cloudinary (if you stored public_id)
-    // (new \Cloudinary\Cloudinary())->uploadApi()->destroy($video->cloudinary_public_id);
+        // Optionally delete from Cloudinary (if you stored public_id)
+        // $this->cloudinary()->uploadApi()->destroy($video->public_id, ['resource_type' => 'video']);
 
-    $video->delete();
+        $video->delete();
 
-    return redirect()->back()->with('success', 'Video deleted successfully.');
-}
+        return redirect()->back()->with('success', 'Video deleted successfully.');
+    }
 
-// In your controller method
+    /**
+     * DRY helper for Cloudinary initialization
+     */
+    private function cloudinary()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true,
+            ],
+        ]);
 
-
+        return new Cloudinary($config);
+    }
 }
