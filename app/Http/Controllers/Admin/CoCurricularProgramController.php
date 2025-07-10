@@ -9,6 +9,7 @@ use Cloudinary\Cloudinary;
 use Cloudinary\Configuration\Configuration;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 
 class CoCurricularProgramController extends Controller
 {
@@ -26,35 +27,49 @@ class CoCurricularProgramController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required',
-            'category' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required',
+                'category' => 'required|string|max:255',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
 
-        if ($request->hasFile('image')) {
-            $cloudinary = $this->cloudinary();
+            Log::info('Store Request Validated Data:', $validated);
 
-            $uploadResponse = $cloudinary->uploadApi()->upload(
-                $request->file('image')->getRealPath(),
-                [
-                    'folder' => 'programs',
-                    'public_id' => uniqid(),
-                    'overwrite' => true,
-                    'resource_type' => 'image',
-                    'quality' => 'auto',
-                    'fetch_format' => 'auto',
-                ]
-            );
+            if ($request->hasFile('image')) {
+                $cloudinary = $this->cloudinary();
 
-            $validated['image_url'] = $uploadResponse['secure_url'];
+                $uploadResponse = $cloudinary->uploadApi()->upload(
+                    $request->file('image')->getRealPath(),
+                    [
+                        'folder' => 'programs',
+                        'public_id' => uniqid(),
+                        'overwrite' => true,
+                        'resource_type' => 'image',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto',
+                    ]
+                );
+
+                Log::info('Cloudinary Upload Response:', $uploadResponse);
+
+                $validated['image_url'] = $uploadResponse['secure_url'];
+            }
+
+            $program = CoCurricularProgram::create($validated);
+
+            Log::info('Program created successfully:', $program->toArray());
+
+            return redirect()->route('admin.co_curricular_programs.index')
+                ->with('success', 'Program created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error in CoCurricularProgramController@store:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return back()->with('error', 'An error occurred while creating the program.');
         }
-
-        CoCurricularProgram::create($validated);
-
-        return redirect()->route('admin.co_curricular_programs.index')
-            ->with('success', 'Program created successfully.');
     }
 
     public function edit(CoCurricularProgram $program): View
