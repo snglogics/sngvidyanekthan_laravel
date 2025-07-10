@@ -330,6 +330,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
   Route::delete('/curriculums/{curriculum}', [CurriculumController::class, 'destroy'])->name('curriculums.destroy');
   Route::resource('curriculums', CurriculumController::class)->except(['show']);
 });
+Route::get('/admin/curriculums/{id}/download', [CurriculumController::class, 'download'])->name('admin.curriculums.download');
+
 Route::get('/curriculums', [CurriculumController::class, 'frontend'])->name('curriculums.list');
 
 //co-curricular programs

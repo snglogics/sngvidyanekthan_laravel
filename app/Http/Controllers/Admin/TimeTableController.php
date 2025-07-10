@@ -59,21 +59,24 @@ class TimeTableController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'classname' => 'required|string|max:255',
-            'section' => 'nullable|string|max:100',
-            'day' => 'required|string|max:50',
-            'period_number' => 'required|integer|min:1',
-            'subject' => 'required|string|max:255',
-            'teacher_name' => 'required|string|max:255',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'room_number' => 'nullable|string|max:100',
-        ]);
+        try {
+            $request->validate([
+                // your validation rules
+            ]);
 
-        Timetable::create($request->all());
+            Timetable::create($request->all());
 
-        return response()->json(['success' => true, 'message' => 'Timetable entry created successfully.', 'redirect' => route('admin.timetables.index')]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Timetable entry created successfully.',
+                'redirect' => route('admin.timetables.index')
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage() // More detailed error
+            ], 500);
+        }
     }
 
     public function edit(Timetable $timetable)
