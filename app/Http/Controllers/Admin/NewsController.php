@@ -6,6 +6,7 @@ use App\Models\News;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
@@ -19,7 +20,7 @@ class NewsController extends Controller
     public function create()
     {
         $allNews = News::latest()->get();
-        $news = null; // for form binding
+        $news = null;
         return view('admin.news.create', compact('allNews', 'news'));
     }
 
@@ -28,32 +29,36 @@ class NewsController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
-            'image' => 'nullable|image|max:5120',
-            'youtube_link' => 'nullable|url'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'youtube_link' => 'nullable|url|max:255'
         ]);
 
-        $imageUrl = null;
-
         try {
+            $data = $request->only(['title', 'content', 'youtube_link']);
+
             if ($request->hasFile('image')) {
-                $uploaded = $this->cloudinary()->uploadApi()->upload(
+                $cloudinary = $this->cloudinary();
+                $uploaded = $cloudinary->uploadApi()->upload(
                     $request->file('image')->getRealPath(),
-                    ['folder' => 'news']
+                    [
+                        'folder' => 'news',
+                        'public_id' => 'news_' . uniqid(),
+                        'overwrite' => true,
+                        'resource_type' => 'image',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
                 );
-                $imageUrl = $uploaded['secure_url'];
+
+                $data['image_url'] = $uploaded['secure_url'];
+                $data['public_id'] = $uploaded['public_id'];
             }
 
-            News::create([
-                'title' => $request->title,
-                'content' => $request->content,
-                'image_url' => $imageUrl,
-                'youtube_link' => $request->youtube_link
-            ]);
-
-            return redirect()->route('news.create')->with('success', 'News uploaded successfully!');
+            News::create($data);
+            return redirect()->route('admin.news.create')->with('success', 'News created successfully.');
         } catch (\Exception $e) {
-            Log::error('News upload failed: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Upload failed: ' . $e->getMessage());
+            Log::error('News creation failed: ' . $e->getMessage());
+            return back()->with('error', 'News creation failed: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -67,49 +72,77 @@ class NewsController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
-            'image' => 'nullable|image|max:5120',
-            'youtube_link' => 'nullable|url'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'youtube_link' => 'nullable|url|max:255'
         ]);
 
         try {
+            $data = $request->only(['title', 'content', 'youtube_link']);
+
             if ($request->hasFile('image')) {
-                $uploaded = $this->cloudinary()->uploadApi()->upload(
+                $cloudinary = $this->cloudinary();
+
+                // Delete old image if exists
+                if ($news->public_id) {
+                    $cloudinary->uploadApi()->destroy($news->public_id);
+                }
+
+                $uploaded = $cloudinary->uploadApi()->upload(
                     $request->file('image')->getRealPath(),
-                    ['folder' => 'news']
+                    [
+                        'folder' => 'news',
+                        'public_id' => 'news_' . uniqid(),
+                        'overwrite' => true,
+                        'resource_type' => 'image',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
                 );
-                $news->image_url = $uploaded['secure_url'];
+
+                $data['image_url'] = $uploaded['secure_url'];
+                $data['public_id'] = $uploaded['public_id'];
             }
 
-            $news->update([
-                'title' => $request->title,
-                'content' => $request->content,
-                'youtube_link' => $request->youtube_link
-            ]);
-
-            return redirect()->route('news.create')->with('success', 'News updated successfully!');
+            $news->update($data);
+            return redirect()->route('admin.news.create')->with('success', 'News updated successfully.');
         } catch (\Exception $e) {
             Log::error('News update failed: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Update failed: ' . $e->getMessage());
+            return back()->with('error', 'News update failed: ' . $e->getMessage())->withInput();
         }
     }
 
     public function destroy(News $news)
     {
-        $news->delete();
-        return redirect()->back()->with('success', 'News deleted successfully.');
+        try {
+            if ($news->public_id) {
+                $cloudinary = $this->cloudinary();
+                $cloudinary->uploadApi()->destroy($news->public_id);
+            }
+
+            $news->delete();
+            return redirect()->back()->with('success', 'News deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('News deletion failed: ' . $e->getMessage());
+            return back()->with('error', 'News deletion failed: ' . $e->getMessage());
+        }
     }
 
     /**
-     * DRY Cloudinary initialization
+     * DRY helper for consistent Cloudinary initialization
      */
     private function cloudinary()
     {
-        return new Cloudinary([
+        $config = new Configuration([
             'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
             ],
+            'url' => [
+                'secure' => true
+            ]
         ]);
+
+        return new Cloudinary($config);
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\SportsGame;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
+use Illuminate\Support\Facades\Log;
 
 class SportsGameController extends Controller
 {
@@ -31,28 +33,37 @@ class SportsGameController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only(['title', 'description', 'category', 'coach_name', 'contact_number']);
+        try {
+            $data = $request->all();
 
-        if ($request->hasFile('image')) {
-            $upload = $this->cloudinary()->uploadApi()->upload(
-                $request->file('image')->getRealPath(),
-                [
-                    'folder' => 'sports_games',
-                    'public_id' => uniqid(),
-                    'overwrite' => true,
-                    'resource_type' => 'image',
-                    'quality' => 'auto',
-                    'fetch_format' => 'auto',
-                ]
-            );
+            if ($request->hasFile('image')) {
+                $cloudinary = $this->cloudinary();
 
-            $data['image_url'] = $upload['secure_url'];
-            $data['public_id'] = $upload['public_id'];  // If you want to save public_id
+                $uploadedFile = $cloudinary->uploadApi()->upload(
+                    $request->file('image')->getRealPath(),
+                    [
+                        'folder' => 'sports_games',
+                        'public_id' => 'sport_' . uniqid(),
+                        'overwrite' => true,
+                        'resource_type' => 'image',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
+                );
+
+                $data['image_url'] = $uploadedFile['secure_url'];
+                $data['public_id'] = $uploadedFile['public_id'];
+            }
+
+            SportsGame::create($data);
+
+            return redirect()->route('admin.sports_games.index')
+                ->with('success', 'Sports/Game created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Sports Game creation failed: ' . $e->getMessage());
+            return back()->with('error', 'Sports/Game creation failed: ' . $e->getMessage())
+                ->withInput();
         }
-
-        SportsGame::create($data);
-
-        return redirect()->route('admin.sports_games.index')->with('success', 'Sports/Game created successfully.');
     }
 
     public function edit(SportsGame $sportsGame)
@@ -71,54 +82,78 @@ class SportsGameController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only(['title', 'description', 'category', 'coach_name', 'contact_number']);
+        try {
+            $data = $request->all();
 
-        if ($request->hasFile('image')) {
-            // Optional: Delete old image from Cloudinary if public_id exists
-            if ($sportsGame->public_id) {
-                $this->cloudinary()->uploadApi()->destroy($sportsGame->public_id);
+            if ($request->hasFile('image')) {
+                $cloudinary = $this->cloudinary();
+
+                // Delete old image if exists
+                if ($sportsGame->public_id) {
+                    $cloudinary->uploadApi()->destroy($sportsGame->public_id);
+                }
+
+                $uploadedFile = $cloudinary->uploadApi()->upload(
+                    $request->file('image')->getRealPath(),
+                    [
+                        'folder' => 'sports_games',
+                        'public_id' => 'sport_' . uniqid(),
+                        'overwrite' => true,
+                        'resource_type' => 'image',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
+                );
+
+                $data['image_url'] = $uploadedFile['secure_url'];
+                $data['public_id'] = $uploadedFile['public_id'];
             }
 
-            $upload = $this->cloudinary()->uploadApi()->upload(
-                $request->file('image')->getRealPath(),
-                [
-                    'folder' => 'sports_games',
-                    'public_id' => uniqid(),
-                    'overwrite' => true,
-                    'resource_type' => 'image',
-                    'quality' => 'auto',
-                    'fetch_format' => 'auto',
-                ]
-            );
+            $sportsGame->update($data);
 
-            $data['image_url'] = $upload['secure_url'];
-            $data['public_id'] = $upload['public_id'];
+            return redirect()->route('admin.sports_games.index')
+                ->with('success', 'Sports/Game updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Sports Game update failed: ' . $e->getMessage());
+            return back()->with('error', 'Sports/Game update failed: ' . $e->getMessage())
+                ->withInput();
         }
-
-        $sportsGame->update($data);
-
-        return redirect()->route('admin.sports_games.index')->with('success', 'Sports/Game updated successfully.');
     }
 
     public function destroy(SportsGame $sportsGame)
     {
-        if ($sportsGame->public_id) {
-            $this->cloudinary()->uploadApi()->destroy($sportsGame->public_id);
-        }
+        try {
+            if ($sportsGame->public_id) {
+                $cloudinary = $this->cloudinary();
+                $cloudinary->uploadApi()->destroy($sportsGame->public_id);
+            }
 
-        $sportsGame->delete();
-        return redirect()->route('admin.sports_games.index')->with('success', 'Sports/Game deleted successfully.');
+            $sportsGame->delete();
+
+            return redirect()->route('admin.sports_games.index')
+                ->with('success', 'Sports/Game deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Sports Game deletion failed: ' . $e->getMessage());
+            return back()->with('error', 'Sports/Game deletion failed: ' . $e->getMessage());
+        }
     }
 
-
+    /**
+     * DRY helper for consistent Cloudinary initialization
+     */
     private function cloudinary()
     {
-        return new Cloudinary([
+        $config = new Configuration([
             'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key' => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
             ],
+            'url' => [
+                'secure' => true
+            ]
         ]);
+
+        return new Cloudinary($config);
     }
 }
