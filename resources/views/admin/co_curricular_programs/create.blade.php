@@ -25,8 +25,8 @@
         </div>
 
         <!-- Program Create Form -->
-        <form action="{{ route('admin.co_curricular_programs.store') }}" method="POST" enctype="multipart/form-data"
-            class="bg-light p-4 rounded shadow-sm mb-5">
+        <form id="program-upload-form" action="{{ route('admin.co_curricular_programs.store') }}" method="POST"
+            enctype="multipart/form-data" class="bg-light p-4 rounded shadow-sm mb-5">
             @csrf
 
             <div class="mb-3">
@@ -60,7 +60,7 @@
                 <img id="image-preview" class="mt-3 rounded shadow-sm d-none" style="max-width: 200px;">
             </div>
 
-            <button type="submit" class="btn btn-success w-100 fw-semibold">
+            <button type="submit" id="submit-button" class="btn btn-success w-100 fw-semibold">
                 <i class="bi bi-check-circle-fill me-1"></i>Add Program
             </button>
         </form>
@@ -133,4 +133,15 @@
             }
         }
     </script>
+    <script>
+        const form = document.getElementById('program-upload-form');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('submit', function() {
+            submitButton.disabled = true;
+            submitButton.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Uploading...';
+        });
+    </script>
+
 @endsection
