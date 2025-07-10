@@ -9,16 +9,34 @@ use App\Models\Gallery;
 use App\Models\SubGallery;
 use App\Models\GalleryImage;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use App\Models\ImageGroup;
 
 class AdminGalleryController extends Controller
 {
+    private $cloudinary;
+
+    public function __construct()
+    {
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => [
+                'secure' => true
+            ]
+        ]);
+
+        $this->cloudinary = new Cloudinary($config);
+    }
+
     public function mediahome()
     {
         return view('media.adminmedia');
     }
 
-    
     public function index()
     {
         $galleries = Gallery::with('subGalleries.imageGroups.images')->get();
@@ -35,7 +53,10 @@ class AdminGalleryController extends Controller
 
         $url = null;
         if ($request->hasFile('main_image')) {
-            $url = (new Cloudinary())->uploadApi()->upload($request->file('main_image')->getRealPath())['secure_url'];
+            $url = $this->cloudinary->uploadApi()->upload(
+                $request->file('main_image')->getRealPath(),
+                ['folder' => 'galleries/main']
+            )['secure_url'];
         }
 
         Gallery::create(['title' => $request->title, 'main_image' => $url]);
@@ -52,11 +73,19 @@ class AdminGalleryController extends Controller
 
         $url = null;
         if ($request->hasFile('image')) {
-            $url = (new Cloudinary())->uploadApi()->upload($request->file('image')->getRealPath())['secure_url'];
+            $url = $this->cloudinary->uploadApi()->upload(
+                $request->file('image')->getRealPath(),
+                ['folder' => 'galleries/sub']
+            )['secure_url'];
         }
 
-        SubGallery::create(['gallery_id' => $request->gallery_id, 'title' => $request->title, 'image' => $url]);
-        return back()->with('success', 'Subcategory added.');
+        SubGallery::create([
+            'gallery_id' => $request->gallery_id,
+            'title' => $request->title,
+            'image' => $url
+        ]);
+
+        return back()->with('success', 'Subgallery created.');
     }
 
     public function storeImageGroup(Request $request)
@@ -75,7 +104,10 @@ class AdminGalleryController extends Controller
         ]);
 
         foreach ($request->file('images') as $i => $image) {
-            $url = (new Cloudinary())->uploadApi()->upload($image->getRealPath())['secure_url'];
+            $url = $this->cloudinary->uploadApi()->upload(
+                $image->getRealPath(),
+                ['folder' => 'galleries/images']
+            )['secure_url'];
 
             GalleryImage::create([
                 'image_group_id' => $group->id,
@@ -87,124 +119,85 @@ class AdminGalleryController extends Controller
         return back()->with('success', 'Image group uploaded.');
     }
 
-   public function gallerylist()
-{
-    $galleries = Gallery::orderBy('id', 'desc')->get();
-    return view('admin.videos.Gallerylist', compact('galleries'));
-}
+    public function gallerylist()
+    {
+        $galleries = Gallery::orderBy('id', 'desc')->get();
+        return view('admin.videos.Gallerylist', compact('galleries'));
+    }
 
-public function showSubGalleries(Gallery $gallery)
-{
-    $subGalleries = $gallery->subGalleries()->with('imageGroups')->get();
-    return view('admin.videos.SubGalleryList', compact('gallery', 'subGalleries'));
-}
+    public function showSubGalleries(Gallery $gallery)
+    {
+        $subGalleries = $gallery->subGalleries()->with('imageGroups')->get();
+        return view('admin.videos.SubGalleryList', compact('gallery', 'subGalleries'));
+    }
 
-public function showImageGroups(SubGallery $subGallery)
-{
-    $imageGroups = $subGallery->imageGroups()->with('images')->get();
+    public function showImageGroups(SubGallery $subGallery)
+    {
+        $imageGroups = $subGallery->imageGroups()->with('images')->get();
 
-    // Group ImageGroups by title and flatten their images
-    $groupedImageGroups = $imageGroups->groupBy('title')->map(function ($groups) {
-        // Merge all images from groups with the same title
-        $allImages = $groups->flatMap->images;
-        return $allImages;
-    });
+        $groupedImageGroups = $imageGroups->groupBy('title')->map(function ($groups) {
+            return $groups->flatMap->images;
+        });
 
-    return view('admin.videos.ImageGroupList', compact('subGallery', 'groupedImageGroups'));
-}
+        return view('admin.videos.ImageGroupList', compact('subGallery', 'groupedImageGroups'));
+    }
+
     public function destroyGallery($id)
     {
         $gallery = Gallery::findOrFail($id);
         $gallery->delete();
         return back()->with('success', 'Gallery deleted successfully.');
     }
-    
-    
-public function deleteImage($id)
-{
-    $image = GalleryImage::findOrFail($id);
 
-    // Optional: If you are storing file URLs and not paths, you might skip this
-    // However, if you want to delete from Cloudinary, use their API
-    // For example:
-    // (new Cloudinary())->uploadApi()->destroy(public_id)
-
-    // Delete from database
-    $image->delete();
-
-    return back()->with('success', 'Image deleted successfully.');
-}
-
-public function deleteImageGroup($groupId)
-{
-    $imageGroup = ImageGroup::with('images')->findOrFail($groupId);
-
-    // Delete each image file if stored locally
-    foreach ($imageGroup->images as $image) {
-        if (Storage::exists($image->image_url)) {
-            Storage::delete($image->image_url);
-        }
-        $image->delete(); // deletes DB entry
+    public function deleteImage($id)
+    {
+        $image = GalleryImage::findOrFail($id);
+        $image->delete();
+        return back()->with('success', 'Image deleted successfully.');
     }
 
-    $imageGroup->delete(); // delete the image group itself
+    public function deleteImageGroup($groupId)
+    {
+        $imageGroup = ImageGroup::with('images')->findOrFail($groupId);
 
-    return back()->with('success', 'Image group deleted successfully.');
-}
-
-public function deleteSubGallery($id)
-{
-    $subGallery = SubGallery::with('imageGroups.images')->findOrFail($id);
-
-    foreach ($subGallery->imageGroups as $group) {
-        foreach ($group->images as $image) {
-            // Optional: delete physical image file
-            if ($image->image_url && File::exists(public_path($image->image_url))) {
-                File::delete(public_path($image->image_url));
-            }
-
+        foreach ($imageGroup->images as $image) {
             $image->delete();
         }
 
-        $group->delete();
+        $imageGroup->delete();
+        return back()->with('success', 'Image group deleted successfully.');
     }
 
-    $subGallery->delete();
+    public function deleteSubGallery($id)
+    {
+        $subGallery = SubGallery::with('imageGroups.images')->findOrFail($id);
 
-    return redirect()->back()->with('success', 'Subgallery, its image groups, and all images have been deleted.'); 
-}
-
-public function deleteGallery($id)
-{
-    $gallery = Gallery::with('subGalleries.imageGroups.images')->findOrFail($id);
-
-    // Delete main image if exists
-    if ($gallery->main_image && File::exists(public_path($gallery->main_image))) {
-        File::delete(public_path($gallery->main_image));
-    }
-
-    foreach ($gallery->subGalleries as $sub) {
-        // Delete subgallery image
-        if ($sub->image && File::exists(public_path($sub->image))) {
-            File::delete(public_path($sub->image));
-        }
-
-        foreach ($sub->imageGroups as $group) {
+        foreach ($subGallery->imageGroups as $group) {
             foreach ($group->images as $image) {
-                if ($image->image_url && File::exists(public_path($image->image_url))) {
-                    File::delete(public_path($image->image_url));
-                }
                 $image->delete();
             }
             $group->delete();
         }
 
-        $sub->delete();
+        $subGallery->delete();
+        return back()->with('success', 'Subgallery and all related data deleted successfully.');
     }
 
-    $gallery->delete();
+    public function deleteGallery($id)
+    {
+        $gallery = Gallery::with('subGalleries.imageGroups.images')->findOrFail($id);
 
-    return redirect()->back()->with('success', 'Gallery and all related data deleted successfully.');
+        foreach ($gallery->subGalleries as $sub) {
+            foreach ($sub->imageGroups as $group) {
+                foreach ($group->images as $image) {
+                    $image->delete();
+                }
+                $group->delete();
+            }
+            $sub->delete();
+        }
+
+        $gallery->delete();
+        return back()->with('success', 'Gallery and all related data deleted successfully.');
+    }
 }
-}
- 
