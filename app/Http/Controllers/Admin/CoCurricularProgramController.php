@@ -7,24 +7,26 @@ use App\Models\CoCurricularProgram;
 use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
 use Cloudinary\Configuration\Configuration;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CoCurricularProgramController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $programs = CoCurricularProgram::orderBy('name')->get();
         return view('admin.co_curricular_programs.index', compact('programs'));
     }
 
-    public function create()
+    public function create(): View
     {
         $programs = CoCurricularProgram::orderBy('name')->get();
         return view('admin.co_curricular_programs.create', compact('programs'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required',
             'category' => 'required|string|max:255',
@@ -34,7 +36,7 @@ class CoCurricularProgramController extends Controller
         if ($request->hasFile('image')) {
             $cloudinary = $this->cloudinary();
 
-            $uploadedFile = $cloudinary->uploadApi()->upload(
+            $uploadResponse = $cloudinary->uploadApi()->upload(
                 $request->file('image')->getRealPath(),
                 [
                     'folder' => 'programs',
@@ -42,27 +44,27 @@ class CoCurricularProgramController extends Controller
                     'overwrite' => true,
                     'resource_type' => 'image',
                     'quality' => 'auto',
-                    'fetch_format' => 'auto'
+                    'fetch_format' => 'auto',
                 ]
             );
 
-            $data['image_url'] = $uploadedFile['secure_url'];
+            $validated['image_url'] = $uploadResponse['secure_url'];
         }
 
-        CoCurricularProgram::create($data);
+        CoCurricularProgram::create($validated);
 
         return redirect()->route('admin.co_curricular_programs.index')
             ->with('success', 'Program created successfully.');
     }
 
-    public function edit(CoCurricularProgram $program)
+    public function edit(CoCurricularProgram $program): View
     {
         return view('admin.co_curricular_programs.edit', compact('program'));
     }
 
-    public function update(Request $request, CoCurricularProgram $program)
+    public function update(Request $request, CoCurricularProgram $program): RedirectResponse
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required',
             'category' => 'required|string|max:255',
@@ -72,7 +74,15 @@ class CoCurricularProgramController extends Controller
         if ($request->hasFile('image')) {
             $cloudinary = $this->cloudinary();
 
-            $uploadedFile = $cloudinary->uploadApi()->upload(
+            // Delete old image from Cloudinary if exists
+            if ($program->image_url) {
+                $publicId = $this->extractPublicId($program->image_url);
+                if ($publicId) {
+                    $cloudinary->uploadApi()->destroy($publicId, ['resource_type' => 'image']);
+                }
+            }
+
+            $uploadResponse = $cloudinary->uploadApi()->upload(
                 $request->file('image')->getRealPath(),
                 [
                     'folder' => 'programs',
@@ -80,42 +90,78 @@ class CoCurricularProgramController extends Controller
                     'overwrite' => true,
                     'resource_type' => 'image',
                     'quality' => 'auto',
-                    'fetch_format' => 'auto'
+                    'fetch_format' => 'auto',
                 ]
             );
 
-            $data['image_url'] = $uploadedFile['secure_url'];
+            $validated['image_url'] = $uploadResponse['secure_url'];
         }
 
-        $program->update($data);
+        $program->update($validated);
 
-        return redirect()->route('admin.co_curricular_programs.create')
+        return redirect()->route('admin.co_curricular_programs.index')
             ->with('success', 'Program updated successfully.');
     }
 
-    public function destroy(CoCurricularProgram $program)
+    public function destroy(CoCurricularProgram $program): RedirectResponse
     {
+        if ($program->image_url) {
+            $cloudinary = $this->cloudinary();
+            $publicId = $this->extractPublicId($program->image_url);
+            if ($publicId) {
+                $cloudinary->uploadApi()->destroy($publicId, ['resource_type' => 'image']);
+            }
+        }
+
         $program->delete();
-        return redirect()->route('admin.co_curricular_programs.create')
+
+        return redirect()->route('admin.co_curricular_programs.index')
             ->with('success', 'Program deleted successfully.');
     }
 
     /**
      * DRY helper for Cloudinary initialization
      */
-    private function cloudinary()
+    private function cloudinary(): Cloudinary
     {
         $config = new Configuration([
             'cloud' => [
                 'cloud_name' => config('cloudinary.cloud_name'),
-                'api_key'    => config('cloudinary.api_key'),
+                'api_key' => config('cloudinary.api_key'),
                 'api_secret' => config('cloudinary.api_secret'),
             ],
             'url' => [
-                'secure' => true
-            ]
+                'secure' => true,
+            ],
         ]);
 
         return new Cloudinary($config);
+    }
+
+    /**
+     * Helper to extract public_id from a Cloudinary URL for deletion
+     */
+    private function extractPublicId(string $url): ?string
+    {
+        $parsedUrl = parse_url($url);
+        if (!isset($parsedUrl['path'])) {
+            return null;
+        }
+
+        $path = $parsedUrl['path'];
+        $pathParts = explode('/', $path);
+
+        $uploadIndex = array_search('upload', $pathParts);
+        if ($uploadIndex === false) {
+            return null;
+        }
+
+        $publicIdParts = array_slice($pathParts, $uploadIndex + 2);
+        if (empty($publicIdParts)) {
+            return null;
+        }
+
+        $publicIdWithExtension = implode('/', $publicIdParts);
+        return preg_replace('/\.[^.]+$/', '', $publicIdWithExtension);
     }
 }
