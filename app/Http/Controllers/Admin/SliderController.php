@@ -39,7 +39,7 @@ class SliderController extends Controller
         /**
          * ✅ Updated to use config/cloudinary.php
          */
-        Configuration::instance([
+        $config = new Configuration([
             'cloud' => [
                 'cloud_name' => config('cloudinary.cloud_name'),
                 'api_key'    => config('cloudinary.api_key'),
@@ -50,7 +50,7 @@ class SliderController extends Controller
             ]
         ]);
 
-        $cloudinary = new Cloudinary();
+        $cloudinary = new Cloudinary($config);
 
         $slider = Slider::first() ?? new Slider();
 
