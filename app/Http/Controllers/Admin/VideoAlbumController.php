@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
 use Cloudinary\Configuration\Configuration;
 use App\Models\VideoAlbum;
+use Illuminate\Validation\ValidationException;
+
 
 class VideoAlbumController extends Controller
 {
     public function frontendVideo()
     {
-        $apiKey = env('YOUTUBE_API_KEY');
-        $channelId = env('YOUTUBE_CHANNEL_ID');
+        $apiKey = config('services.youtube.api_key');
+        $channelId = config('services.youtube.channel_id');
 
         $url = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={$channelId}&maxResults=6&type=video&key={$apiKey}";
 
@@ -22,7 +24,6 @@ class VideoAlbumController extends Controller
 
         $youtubeVideos = $youtubeData['items'] ?? [];
         $customVideos = VideoAlbum::all();
-
         $videos = VideoAlbum::latest()->get();
 
         return view('media.videolist', [
@@ -45,11 +46,21 @@ class VideoAlbumController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'video' => 'required|mimetypes:video/mp4,video/avi,video/mov|max:51200', // max ~50MB
-            'type' => 'required|in:album,virtual',
-        ]);
+
+        try {
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'video' => 'required|mimetypes:video/mp4,video/avi,video/mov,video/quicktime|max:51200',
+                'type' => 'required|in:album,virtual',
+                'description' => 'nullable|string',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $e->errors()
+            ], 422);
+        }
 
         $cloudinary = $this->cloudinary();
 
@@ -58,34 +69,49 @@ class VideoAlbumController extends Controller
             [
                 'resource_type' => 'video',
                 'folder' => 'video_albums',
-                'eager' => [['quality' => 'auto']],
+                'public_id' => uniqid(),
+                'eager' => [
+                    ['quality' => 'auto', 'fetch_format' => 'auto']
+                ],
+                'eager_async' => true,
+                'overwrite' => true,
             ]
         );
 
         VideoAlbum::create([
             'title' => $request->title,
             'type' => $request->type,
+            'description' => $request->description,
             'video_url' => $upload['secure_url'],
             'public_id' => $upload['public_id'],
+            'duration' => $upload['duration'] ?? null,
+            'format' => $upload['format'] ?? null,
         ]);
 
-        return redirect()->back()->with('success', 'Video uploaded.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Video uploaded successfully.'
+        ]);
     }
 
     public function destroy($id)
     {
         $video = VideoAlbum::findOrFail($id);
 
-        // Optionally delete from Cloudinary (if you stored public_id)
-        // $this->cloudinary()->uploadApi()->destroy($video->public_id, ['resource_type' => 'video']);
+        // Delete from Cloudinary if public_id exists
+        if ($video->public_id) {
+            $this->cloudinary()->uploadApi()->destroy($video->public_id, [
+                'resource_type' => 'video'
+            ]);
+        }
 
         $video->delete();
 
-        return redirect()->back()->with('success', 'Video deleted successfully.');
+        return redirect()->route('admin.videos.index')->with('success', 'Video deleted successfully.');
     }
 
     /**
-     * DRY helper for Cloudinary initialization
+     * DRY helper for consistent Cloudinary initialization.
      */
     private function cloudinary()
     {
@@ -96,8 +122,8 @@ class VideoAlbumController extends Controller
                 'api_secret' => config('cloudinary.api_secret'),
             ],
             'url' => [
-                'secure' => true,
-            ],
+                'secure' => true
+            ]
         ]);
 
         return new Cloudinary($config);
