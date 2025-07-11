@@ -48,6 +48,7 @@
         }
 
         .route-card .route-details {
+
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -75,7 +76,10 @@
         }
 
         .route-card .stops-list li {
-            background-color: rgba(255, 255, 255, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.05);
             padding: 8px 12px;
             margin-bottom: 8px;
             border-radius: 8px;
@@ -84,6 +88,30 @@
             font-size: 14px;
             color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+
+        .stop-name {
+            font-weight: 500;
+            color: #fbfcf9;
+        }
+
+        .stop-times {
+            display: flex;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .stop-times .morning {
+            background-color: #03380f;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .stop-times .evening {
+            background-color: #886904;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         .route-card .stops-list li i {
@@ -178,23 +206,23 @@
                                 <ul class="stops-list">
                                     @foreach ($bus->stops as $stop)
                                         <li>
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            {{ $stop->stop_name }} :
-                                            <small>
-                                                <span
-                                                    style="background-color: #03380f; padding: 2px 6px; border-radius: 4px;">
-                                                    <i class="fas fa-sun"></i> {{ $stop->morning_time }} AM
+                                            <span class="stop-name">
+                                                <i class="fas fa-map-marker-alt" style="color: red;"></i>
+                                                {{ $stop->stop_name }}
+                                            </span>
+                                            <span class="stop-times">
+                                                <span class="morning">
+                                                    <i class="fas fa-sun"></i> {{ $stop->morning_time }}
                                                 </span>
                                                 |
-                                                <span
-                                                    style="background-color: #886904; padding: 2px 6px; border-radius: 4px;">
-                                                    <i class="fas fa-moon"></i> {{ $stop->evening_time }} PM
+                                                <span class="evening">
+                                                    <i class="fas fa-moon"></i> {{ $stop->evening_time }}
                                                 </span>
-                                            </small>
-
+                                            </span>
                                         </li>
                                     @endforeach
                                 </ul>
+
                             </div>
                         </div>
                     </div>
