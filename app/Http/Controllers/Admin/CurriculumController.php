@@ -71,7 +71,7 @@ class CurriculumController extends Controller
                     'overwrite' => true,
                 ]
             );
-            Log::info('Cloudinary response:', $upload);
+            Log::info('Cloudinary response: ' . json_encode($upload));
             Curriculum::create([
                 'class_group' => $request->class_group,
                 'subject' => $request->subject,
