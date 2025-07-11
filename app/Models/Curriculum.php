@@ -13,7 +13,8 @@ class Curriculum extends Model
         'description',
         'term',
         'academic_year',
-        'document_url'
+        'document_url',
+        'original_filename',
+        'public_id',
     ];
 }
-

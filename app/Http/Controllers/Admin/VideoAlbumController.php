@@ -17,18 +17,18 @@ class VideoAlbumController extends Controller
         $apiKey = config('services.youtube.api_key');
         $channelId = config('services.youtube.channel_id');
 
-        $url = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={$channelId}&maxResults=6&type=video&key={$apiKey}";
+        // $url = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={$channelId}&maxResults=6&type=video&key={$apiKey}";
 
-        $json = file_get_contents($url);
-        $youtubeData = json_decode($json, true);
+        // $json = file_get_contents($url);
+        // $youtubeData = json_decode($json, true);
 
-        $youtubeVideos = $youtubeData['items'] ?? [];
+        // $youtubeVideos = $youtubeData['items'] ?? [];
         $customVideos = VideoAlbum::all();
         $videos = VideoAlbum::latest()->get();
 
         return view('media.videolist', [
             'videos' => $videos,
-            'youtubeVideos' => $youtubeVideos,
+            // 'youtubeVideos' => $youtubeVideos,
             'customeVideos' => $customVideos,
         ]);
     }

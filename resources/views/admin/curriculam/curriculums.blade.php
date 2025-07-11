@@ -22,8 +22,8 @@
                                 {{ Str::limit($curriculum->description, 100) }}</p>
 
                             @if (route('admin.curriculums.download', $curriculum->id))
-                                <a href="{{ $curriculum->document_url }}" class="btn btn-outline-primary btn-sm mb-2"
-                                    target="_blank">
+                                <a href="{{ route('admin.curriculums.download', $curriculum->id) }}"
+                                    class="btn btn-outline-primary btn-sm mb-2">
                                     <i class="fas fa-file-pdf"></i> Download Syllabus
                                 </a>
                             @else
