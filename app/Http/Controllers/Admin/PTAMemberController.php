@@ -6,10 +6,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PTAMember;
 use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 use Illuminate\Support\Facades\Log;
 
 class PTAMemberController extends Controller
 {
+    private $cloudinary;
+
+    public function __construct()
+    {
+        $this->cloudinary = new Cloudinary(new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => ['secure' => true],
+        ]));
+    }
+
     public function index()
     {
         $members = PTAMember::latest()->get();
@@ -33,7 +48,7 @@ class PTAMemberController extends Controller
 
         try {
             if ($request->hasFile('image')) {
-                $uploadedFile = $this->cloudinary()->uploadApi()->upload(
+                $uploadedFile = $this->cloudinary->uploadApi()->upload(
                     $request->file('image')->getRealPath(),
                     [
                         'folder' => 'pta_members',
@@ -76,10 +91,10 @@ class PTAMemberController extends Controller
         try {
             if ($request->hasFile('image')) {
                 if ($ptaMember->public_id) {
-                    $this->cloudinary()->uploadApi()->destroy($ptaMember->public_id);
+                    $this->cloudinary->uploadApi()->destroy($ptaMember->public_id);
                 }
 
-                $uploadedFile = $this->cloudinary()->uploadApi()->upload(
+                $uploadedFile = $this->cloudinary->uploadApi()->upload(
                     $request->file('image')->getRealPath(),
                     [
                         'folder' => 'pta_members',
@@ -108,7 +123,7 @@ class PTAMemberController extends Controller
     {
         try {
             if ($ptaMember->public_id) {
-                $this->cloudinary()->uploadApi()->destroy($ptaMember->public_id);
+                $this->cloudinary->uploadApi()->destroy($ptaMember->public_id);
             }
 
             $ptaMember->delete();
@@ -120,20 +135,14 @@ class PTAMemberController extends Controller
         }
     }
 
+    public function show(PTAMember $ptaMember)
+    {
+        return redirect()->route('admin.pta-members.index');
+    }
+
     public function showPTAPage()
     {
         $members = PTAMember::all()->groupBy('position');
         return view('frontend.pta', compact('members'));
-    }
-
-    private function cloudinary()
-    {
-        return new Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key' => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-        ]);
     }
 }
