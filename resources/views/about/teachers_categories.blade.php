@@ -240,7 +240,9 @@
                 <div class="teacher-card-wrapper">
                     @forelse($teachers as $teacher)
                         <div class="teacher-card" data-aos="fade-up">
-                            <img src="{{ $teacher->photo }}" alt="{{ $teacher->name }}">
+                            <img src="{{ $teacher->photo ?? asset('frontend/images/dummyhead.jpg') }}"
+                                alt="{{ $teacher->name }}">
+
                             <div class="card-body">
                                 <h3>{{ $teacher->name }}</h3>
                                 <h5>{{ $teacher->designation }}</h5>
@@ -253,8 +255,8 @@
                                     {{-- <li><i class="fas fa-book"></i> <strong>Subject:</strong> {{ $teacher->subject }}</li> --}}
                                 </ul>
                                 <!-- <a href="#" class="view-profile-btn">
-                                <i class="fas fa-eye"></i> View Profile
-                            </a> -->
+                                                <i class="fas fa-eye"></i> View Profile
+                                            </a> -->
                             </div>
                         </div>
                     @empty
