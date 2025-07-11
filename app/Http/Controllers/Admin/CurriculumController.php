@@ -43,10 +43,9 @@ class CurriculumController extends Controller
 
         try {
             $cloudinary = $this->cloudinary();
-
             $file = $request->file('syllabus_file');
             $originalName = $file->getClientOriginalName();
-            $publicId = 'curriculums/' . pathinfo($originalName, PATHINFO_FILENAME) . '_' . uniqid();
+            $publicId = 'curriculum_' . uniqid();
 
             $upload = $cloudinary->uploadApi()->upload(
                 $file->getRealPath(),
@@ -54,8 +53,6 @@ class CurriculumController extends Controller
                     'resource_type' => 'raw',
                     'public_id' => $publicId,
                     'folder' => 'curriculums',
-                    'use_filename' => true,
-                    'unique_filename' => false,
                     'overwrite' => true,
                 ]
             );
@@ -68,13 +65,15 @@ class CurriculumController extends Controller
                 'academic_year' => $request->academic_year,
                 'document_url' => $upload['secure_url'],
                 'original_filename' => $originalName,
-                'public_id' => $publicId,
+                'public_id' => $upload['public_id'],
             ]);
 
-            return redirect()->route('admin.curriculums.index')->with('success', 'Curriculum created successfully!');
+            return redirect()->route('admin.curriculums.index')
+                ->with('success', 'Curriculum created successfully!');
         } catch (\Exception $e) {
             Log::error('Curriculum creation failed: ' . $e->getMessage());
-            return back()->with('error', 'Failed to create curriculum. Please try again.')->withInput();
+            return back()->with('error', 'Failed to create curriculum: ' . $e->getMessage())
+                ->withInput();
         }
     }
 
@@ -96,21 +95,23 @@ class CurriculumController extends Controller
         ]);
 
         try {
-            $cloudinary = $this->cloudinary();
             $data = $request->only(['class_group', 'subject', 'description', 'term', 'academic_year']);
 
             if ($request->hasFile('syllabus_file')) {
+                $cloudinary = $this->cloudinary();
+
+                // Delete old file if exists
                 if ($curriculum->public_id) {
                     try {
                         $cloudinary->uploadApi()->destroy($curriculum->public_id, ['resource_type' => 'raw']);
                     } catch (\Exception $e) {
-                        Log::error('Cloudinary delete failed: ' . $e->getMessage());
+                        Log::error('Failed to delete old file: ' . $e->getMessage());
                     }
                 }
 
                 $file = $request->file('syllabus_file');
                 $originalName = $file->getClientOriginalName();
-                $publicId = 'curriculums/' . pathinfo($originalName, PATHINFO_FILENAME) . '_' . uniqid();
+                $publicId = 'curriculum_' . uniqid();
 
                 $upload = $cloudinary->uploadApi()->upload(
                     $file->getRealPath(),
@@ -118,23 +119,23 @@ class CurriculumController extends Controller
                         'resource_type' => 'raw',
                         'public_id' => $publicId,
                         'folder' => 'curriculums',
-                        'use_filename' => true,
-                        'unique_filename' => false,
                         'overwrite' => true,
                     ]
                 );
 
                 $data['document_url'] = $upload['secure_url'];
                 $data['original_filename'] = $originalName;
-                $data['public_id'] = $publicId;
+                $data['public_id'] = $upload['public_id'];
             }
 
             $curriculum->update($data);
 
-            return redirect()->route('admin.curriculums.index')->with('success', 'Curriculum updated successfully.');
+            return redirect()->route('admin.curriculums.index')
+                ->with('success', 'Curriculum updated successfully.');
         } catch (\Exception $e) {
             Log::error('Curriculum update failed: ' . $e->getMessage());
-            return back()->with('error', 'Failed to update curriculum. Please try again.')->withInput();
+            return back()->with('error', 'Failed to update curriculum: ' . $e->getMessage())
+                ->withInput();
         }
     }
 
@@ -142,19 +143,21 @@ class CurriculumController extends Controller
     {
         try {
             if ($curriculum->public_id) {
+                $cloudinary = $this->cloudinary();
                 try {
-                    $this->cloudinary()->uploadApi()->destroy($curriculum->public_id, ['resource_type' => 'raw']);
+                    $cloudinary->uploadApi()->destroy($curriculum->public_id, ['resource_type' => 'raw']);
                 } catch (\Exception $e) {
-                    Log::error('Cloudinary delete failed: ' . $e->getMessage());
+                    Log::error("Cloudinary delete failed: " . $e->getMessage());
                 }
             }
 
             $curriculum->delete();
 
-            return redirect()->route('admin.curriculums.index')->with('success', 'Curriculum deleted successfully.');
+            return redirect()->route('admin.curriculums.index')
+                ->with('success', 'Curriculum deleted successfully.');
         } catch (\Exception $e) {
             Log::error('Curriculum deletion failed: ' . $e->getMessage());
-            return back()->with('error', 'Failed to delete curriculum. Please try again.');
+            return back()->with('error', 'Failed to delete curriculum: ' . $e->getMessage());
         }
     }
 
@@ -167,35 +170,35 @@ class CurriculumController extends Controller
         }
 
         try {
-            $filename = $curriculum->original_filename ?? 'syllabus.pdf';
-            $response = Http::withOptions(['stream' => true])->get($curriculum->document_url);
+            $filename = $curriculum->original_filename ?? 'syllabus_' . $curriculum->id . '.pdf';
 
-            if ($response->successful()) {
-                return response()->streamDownload(function () use ($response) {
-                    echo $response->body();
-                }, $filename);
-            } else {
-                Log::error("Download failed with status " . $response->status());
-                return back()->with('error', 'Failed to download file.');
-            }
+            return response()->streamDownload(function () use ($curriculum) {
+                echo file_get_contents($curriculum->document_url);
+            }, $filename, [
+                'Content-Type' => 'application/pdf',
+            ]);
         } catch (\Exception $e) {
             Log::error("Download error: " . $e->getMessage());
-            return back()->with('error', 'Download failed. Try again later.');
+            return back()->with('error', 'Download failed: ' . $e->getMessage());
         }
     }
 
     /**
-     * Centralized Cloudinary configuration.
+     * DRY helper for consistent Cloudinary initialization
      */
-    private function cloudinary(): Cloudinary
+    private function cloudinary()
     {
-        return new Cloudinary(new Configuration([
+        $config = new Configuration([
             'cloud' => [
                 'cloud_name' => config('cloudinary.cloud_name'),
-                'api_key' => config('cloudinary.api_key'),
+                'api_key'    => config('cloudinary.api_key'),
                 'api_secret' => config('cloudinary.api_secret'),
             ],
-            'url' => ['secure' => true],
-        ]));
+            'url' => [
+                'secure' => true
+            ]
+        ]);
+
+        return new Cloudinary($config);
     }
 }
