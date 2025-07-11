@@ -12,20 +12,6 @@ use Cloudinary\Configuration\Configuration;
 
 class CurriculumController extends Controller
 {
-    private $cloudinary;
-
-    public function __construct()
-    {
-        $this->cloudinary = new Cloudinary(new Configuration([
-            'cloud' => [
-                'cloud_name' => config('cloudinary.cloud_name'),
-                'api_key' => config('cloudinary.api_key'),
-                'api_secret' => config('cloudinary.api_secret'),
-            ],
-            'url' => ['secure' => true],
-        ]));
-    }
-
     public function index()
     {
         $curriculums = Curriculum::orderBy('class_group')->get();
@@ -56,11 +42,13 @@ class CurriculumController extends Controller
         ]);
 
         try {
+            $cloudinary = $this->cloudinary();
+
             $file = $request->file('syllabus_file');
             $originalName = $file->getClientOriginalName();
             $publicId = 'curriculums/' . pathinfo($originalName, PATHINFO_FILENAME) . '_' . uniqid();
 
-            $upload = $this->cloudinary->uploadApi()->upload(
+            $upload = $cloudinary->uploadApi()->upload(
                 $file->getRealPath(),
                 [
                     'resource_type' => 'raw',
@@ -108,14 +96,15 @@ class CurriculumController extends Controller
         ]);
 
         try {
+            $cloudinary = $this->cloudinary();
             $data = $request->only(['class_group', 'subject', 'description', 'term', 'academic_year']);
 
             if ($request->hasFile('syllabus_file')) {
                 if ($curriculum->public_id) {
                     try {
-                        $this->cloudinary->uploadApi()->destroy($curriculum->public_id, ['resource_type' => 'raw']);
+                        $cloudinary->uploadApi()->destroy($curriculum->public_id, ['resource_type' => 'raw']);
                     } catch (\Exception $e) {
-                        Log::error('Failed to delete old file: ' . $e->getMessage());
+                        Log::error('Cloudinary delete failed: ' . $e->getMessage());
                     }
                 }
 
@@ -123,7 +112,7 @@ class CurriculumController extends Controller
                 $originalName = $file->getClientOriginalName();
                 $publicId = 'curriculums/' . pathinfo($originalName, PATHINFO_FILENAME) . '_' . uniqid();
 
-                $upload = $this->cloudinary->uploadApi()->upload(
+                $upload = $cloudinary->uploadApi()->upload(
                     $file->getRealPath(),
                     [
                         'resource_type' => 'raw',
@@ -154,9 +143,9 @@ class CurriculumController extends Controller
         try {
             if ($curriculum->public_id) {
                 try {
-                    $this->cloudinary->uploadApi()->destroy($curriculum->public_id, ['resource_type' => 'raw']);
+                    $this->cloudinary()->uploadApi()->destroy($curriculum->public_id, ['resource_type' => 'raw']);
                 } catch (\Exception $e) {
-                    Log::error("Cloudinary delete failed: " . $e->getMessage());
+                    Log::error('Cloudinary delete failed: ' . $e->getMessage());
                 }
             }
 
@@ -186,12 +175,27 @@ class CurriculumController extends Controller
                     echo $response->body();
                 }, $filename);
             } else {
-                Log::error("Download failed: Cloudinary responded with status " . $response->status());
+                Log::error("Download failed with status " . $response->status());
                 return back()->with('error', 'Failed to download file.');
             }
         } catch (\Exception $e) {
             Log::error("Download error: " . $e->getMessage());
             return back()->with('error', 'Download failed. Try again later.');
         }
+    }
+
+    /**
+     * Centralized Cloudinary configuration.
+     */
+    private function cloudinary(): Cloudinary
+    {
+        return new Cloudinary(new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key' => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => ['secure' => true],
+        ]));
     }
 }
