@@ -135,14 +135,21 @@ class PTAMemberController extends Controller
         }
     }
 
-    public function show(PTAMember $ptaMember)
-    {
-        return redirect()->route('admin.pta-members.index');
-    }
-
     public function showPTAPage()
     {
-        $members = PTAMember::all()->groupBy('position');
-        return view('frontend.pta', compact('members'));
+        $members = PTAMember::all();
+
+        // Group by lowercase trimmed key
+        $grouped = $members->groupBy(function ($member) {
+            return strtolower(trim($member->position));
+        });
+
+        // Force consistent heading for each group (avoid case duplication)
+        $ptaMembers = $grouped->mapWithKeys(function ($group) {
+            $displayKey = ucfirst(strtolower(trim($group->first()->position))); // Always "President"
+            return [$displayKey => $group];
+        });
+
+        return view('frontend.pta', compact('ptaMembers'));
     }
 }
