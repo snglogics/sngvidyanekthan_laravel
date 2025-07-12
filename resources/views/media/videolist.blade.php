@@ -95,7 +95,7 @@
                 </div>
             @endif
 
-            {{-- <h2 class="text-center fw-bold text-danger mt-5 mb-4" data-aos="fade-down">Our YouTube Channel</h2>
+            <h2 class="text-center fw-bold text-danger mt-5 mb-4" data-aos="fade-down">Our YouTube Channel</h2>
 
             <div class="row">
                 @forelse($youtubeVideos as $video)
@@ -120,7 +120,7 @@
                         <div class="no-videos" data-aos="fade-up">No YouTube Videos Found</div>
                     </div>
                 @endforelse
-            </div> --}}
+            </div>
 
 
         </div>
