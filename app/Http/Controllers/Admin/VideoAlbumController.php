@@ -50,7 +50,7 @@ class VideoAlbumController extends Controller
         try {
             $request->validate([
                 'title' => 'required|string|max:255',
-                'video' => 'required|mimetypes:video/mp4,video/avi,video/mov,video/quicktime|max:51200',
+                'video' => 'required|mimetypes:video/mp4,video/avi,video/mov,video/quicktime|max:204800',
                 'type' => 'required|in:album,virtual',
                 'description' => 'nullable|string',
             ]);
