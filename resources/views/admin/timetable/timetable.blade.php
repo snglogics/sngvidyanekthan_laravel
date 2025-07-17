@@ -15,6 +15,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .toggle-header:hover {
+            background-color: rgba(0, 123, 255, 0.1);
         }
 
         .timetable-pdf {
@@ -26,11 +31,37 @@
             margin-bottom: 1.5rem;
         }
 
-        iframe {
+        .pdf-viewer {
             width: 100%;
             height: 600px;
             border: 1px solid #ccc;
             border-radius: 0.5rem;
+        }
+
+        .pdf-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .pdf-option-btn {
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pdf-option-btn.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .alert-pdf {
+            padding: 15px;
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 15px;
         }
     </style>
 @endsection
@@ -47,7 +78,13 @@
             @foreach ($timetables as $timetable)
                 @php
                     $id = 'class_' . preg_replace('/\s+/', '_', strtolower($timetable->classname));
-                    $inlineUrl = $timetable->pdf_url . '?fl_attachment=false'; // critical for Cloudinary PDFs
+                    // Cloudinary direct PDF URL
+                    $directUrl = $timetable->pdf_url;
+                    // Cloudinary PDF with forced inline display
+                    $inlineUrl = $timetable->pdf_url . '?fl_attachment=false';
+                    // Google Docs Viewer URL
+                    $googleViewerUrl =
+                        'https://docs.google.com/gview?url=' . urlencode($timetable->pdf_url) . '&embedded=true';
                 @endphp
 
                 <div class="mb-3">
@@ -57,9 +94,25 @@
                     </div>
 
                     <div class="timetable-pdf" id="{{ $id }}" style="display: none;">
-                        {{-- <iframe src="{{ $inlineUrl }}" allow="autoplay"></iframe> --}}
-                        <iframe src="https://docs.google.com/gview?url={{ urlencode($timetable->pdf_url) }}&embedded=true"
-                            width="100%" height="600px" frameborder="0"></iframe>
+                        <div class="alert-pdf">
+                            <i class="bi bi-info-circle me-2"></i>
+                            If the PDF doesn't load, try a different viewer option below.
+                        </div>
+
+                        <div class="pdf-options">
+                            <button class="pdf-option-btn active"
+                                onclick="changeViewer('{{ $id }}_viewer', 'direct', '{{ $inlineUrl }}')">Direct
+                                View</button>
+                            <button class="pdf-option-btn"
+                                onclick="changeViewer('{{ $id }}_viewer', 'google', '{{ $googleViewerUrl }}')">Google
+                                Viewer</button>
+                            <button class="pdf-option-btn"
+                                onclick="changeViewer('{{ $id }}_viewer', 'download')">Download Instead</button>
+                        </div>
+
+                        <div id="{{ $id }}_viewer">
+                            <iframe class="pdf-viewer" src="{{ $inlineUrl }}" allow="autoplay"></iframe>
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -79,6 +132,37 @@
             content.style.display = isVisible ? "none" : "block";
             icon.classList.toggle("bi-chevron-down", isVisible);
             icon.classList.toggle("bi-chevron-up", !isVisible);
+        }
+
+        function changeViewer(containerId, type, url = null) {
+            const container = document.getElementById(containerId);
+            const buttons = container.parentElement.querySelectorAll('.pdf-option-btn');
+
+            // Update active button
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(type)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Change viewer based on type
+            if (type === 'download') {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <p class="mb-3">The timetable will download automatically.</p>
+                        <a href="${url || container.querySelector('iframe').src}" 
+                           class="btn btn-primary" 
+                           download target="_blank">
+                            <i class="bi bi-download me-2"></i>Download Now
+                        </a>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <iframe class="pdf-viewer" src="${url}" allow="autoplay"></iframe>
+                `;
+            }
         }
     </script>
 @endsection
