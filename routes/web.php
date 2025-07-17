@@ -258,6 +258,7 @@ Route::get('/admin/timetablelist', [TimeTableController::class, 'timetableview']
 require __DIR__ . '/auth.php';
 Route::get('/admin/timetable/view', [TimetableController::class, 'timetableview'])->name('admin.timetable.view');
 Route::get('/timetable/{id}/download', [TimeTableController::class, 'download'])->name('admin.timetables.download');
+Route::get('/admin/timetables/{id}', [TimeTableController::class, 'view'])->name('admin.timetables.view');
 
 
 //News routes

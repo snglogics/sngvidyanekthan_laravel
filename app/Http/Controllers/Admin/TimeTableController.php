@@ -178,4 +178,10 @@ class TimeTableController extends Controller
             echo file_get_contents($timetable->pdf_url);
         }, $filename, $headers);
     }
+    // Add this method to your TimeTableController
+    public function show($id)
+    {
+        $timetable = Timetable::findOrFail($id);
+        return view('admin.timetable.show', compact('timetable'));
+    }
 }
