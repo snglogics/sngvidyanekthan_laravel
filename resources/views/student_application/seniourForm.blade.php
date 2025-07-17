@@ -6,7 +6,7 @@
             <div class="text-center mb-4 mb-md-5">
                 <h5 class="text-uppercase fw-bold mb-1" style="font-size: clamp(14px, 3vw, 18px);">"One Caste One Religion One
                     God for Man"</h5>
-                <h2 class="fw-bold text-primary mb-1" style="font-size: clamp(1.5rem, 4vw, 2rem);">SREENARAYANA VIDYANIKETAN
+                <h2 class="fw-bold text-primary mb-1" style="font-size: clamp(1.5rem, 4vw, 2rem);">SIVAGIRI VIDYANIKETAN
                 </h2>
                 <h5 class="text-uppercase" style="font-size: clamp(1rem, 2.5vw, 1.25rem);">Student Admission Form</h5>
                 <p class="mb-1" style="font-size: clamp(12px, 2.5vw, 14px);">(Managed by Sree Narayana Dharma Mangalam
