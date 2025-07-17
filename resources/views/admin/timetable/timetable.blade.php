@@ -52,14 +52,14 @@
 
                 <div class="mb-3">
                     <div class="toggle-header" onclick="togglePDF('{{ $id }}')">
-                        <span><i class="bi bi-building me-2"></i>Class {{ $timetable->classname }}</span>
+                        <span><i class="bi bi-building me-2"></i>{{ $timetable->classname }}</span>
                         <i class="bi bi-chevron-down toggle-icon" id="icon-{{ $id }}"></i>
                     </div>
 
                     <div class="timetable-pdf" id="{{ $id }}" style="display: none;">
                         {{-- <iframe src="{{ $inlineUrl }}" allow="autoplay"></iframe> --}}
                         <iframe src="https://docs.google.com/gview?url={{ urlencode($timetable->pdf_url) }}&embedded=true"
-                            width="100%" height="600px" frameborder="0" allow="autoplay"></iframe>
+                            width="100%" height="600px" frameborder="0"></iframe>
                     </div>
                 </div>
             @endforeach

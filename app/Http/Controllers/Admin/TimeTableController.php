@@ -58,7 +58,7 @@ class TimeTableController extends Controller
                     'folder' => 'timetables',
                     'public_id' => 'timetable_' . uniqid() . '.pdf',
                     'overwrite' => true,
-                    'resource_type' => 'raw' // for PDF
+                    'resource_type' => 'auto' // for PDF
                 ]
             );
 
@@ -117,7 +117,7 @@ class TimeTableController extends Controller
                         'folder' => 'timetables',
                         'public_id' => 'timetable_' . uniqid() . '.pdf',
                         'overwrite' => true,
-                        'resource_type' => 'raw'
+                        'resource_type' => 'auto'
                     ]
                 );
 
