@@ -355,7 +355,8 @@
                                             <li><a href="{{ route('campus-overviews.frontendIndex') }}">Campus
                                                     Overview</a></li>
                                             <li><a href="{{ route('school.info') }}">School Info</a></li>
-                                            <li><a href="{{ route('pta-members.index') }}">PTA Members</a></li>
+                                            {{-- <li><a href="{{ route('pta-members.index') }}">PTA Members</a></li> --}}
+                                            <li><a href="{{ route('frontend.bus_routes') }}">Bus Route</a></li>
 
                                         </ul>
                                     </li>
@@ -392,105 +393,106 @@
                                             {{-- <li><a href="{{ route('admin.live-classes.index') }}">Digital Class
                                                     Rooms</a></li> --}}
                                             <li><a href="{{ route('teachers.categorized') }}">Teachers & Staff</a>
-                                            <li><a href="{{ route('frontend.bus_routes') }}">Bus Route</a></li>
+
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                    @php
+                                        $isActivitiesActive = in_array(Route::currentRouteName(), [
+                                            'frontend.co_curricular_programs.index',
+                                            'house_life',
+                                            'interschool-participations.index',
+                                            'frontend.sports_games.index',
+                                        ]);
+                                    @endphp
+                                    <li class="nav-item dropdown">
+                                        <a class="{{ $isActivitiesActive ? 'active' : '' }}"
+                                            href="{{ route('frontend.co_curricular_programs.index') }}">Activities</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="{{ route('frontend.co_curricular_programs.index') }}">Co-Curricular
+                                                    Activities</a></li>
+                                            <li><a href="{{ route('house_life') }}">Club activities </a></li>
+                                            <li><a href="{{ route('interschool-participations.index') }}">Inter-school
+                                                    participation & results</a></li>
+                                            <li><a href="{{ route('frontend.sports_games.index') }}">Sports</a></li>
+                                        </ul>
+                                    </li>
+                                    @php
+                                        $isAchievementsActive = in_array(Route::currentRouteName(), [
+                                            'frontend.academic_performances.index',
+                                            'frontend.sports_awards.index',
+                                            'frontend.cultural_competitions.index',
+                                        ]);
+                                    @endphp
+                                    <li class="nav-item dropdown">
+                                        <a class="{{ $isAchievementsActive ? 'active' : '' }}"
+                                            href="{{ route('frontend.academic_performances.index') }}">Achievements</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="{{ route('frontend.academic_performances.index') }}">Academic
+                                                    performance</a></li>
+                                            <li><a href="{{ route('frontend.sports_awards.index') }}">Sports
+                                                    awards</a></li>
+                                            <li><a href="{{ route('frontend.cultural_competitions.index') }}">Cultural
+                                                    competition recognitions </a></li>
+                                        </ul>
+                                    </li>
+                                    @php
+                                        $isGalleryActive = in_array(Route::currentRouteName(), [
+                                            'magazines.list',
+                                            'gallery.list',
+                                            'videos.list',
+                                        ]);
+                                    @endphp
+                                    <li class="nav-item dropdown">
+                                        <a class="{{ $isGalleryActive ? 'active' : '' }}"
+                                            href="{{ route('magazines.list') }}">Gallery</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="{{ route('magazines.list') }}">Magazine</a></li>
+                                            <li><a href="{{ route('gallery.list') }}">Photo Gallery</a></li>
+                                            <li><a href="{{ route('videos.list') }}">Videos</a></li>
+                                        </ul>
+                                    </li>
+                                    @php
+                                        $isStudentLifeActive = in_array(Route::currentRouteName(), [
+                                            'student_council',
+                                            'frontend.field_trips.index',
+                                        ]);
+                                    @endphp
+                                    <li class="nav-item dropdown">
+                                        <a class="{{ $isStudentLifeActive ? 'active' : '' }}"
+                                            href="{{ route('student_council') }}">Student Life</a>
+                                        <ul class="sub-menu">
+
+                                            <li><a href="{{ route('student_council.index') }}">Student Council</a>
+                                            </li>
+                                            <li><a href="{{ route('frontend.field_trips.index') }}">Field Trips and
+                                                    Tours</a></li>
+                                        </ul>
+                                    </li>
+                                    @php
+                                        $isEventsActive = in_array(Route::currentRouteName(), [
+                                            'academic-calendar.frontend',
+                                            'news.index',
+                                            'events.list',
+                                            'newsletter.html',
+                                        ]);
+                                    @endphp
+                                    <li class="nav-item dropdown">
+                                        <a class="{{ $isEventsActive ? 'active' : '' }}"
+                                            href="{{ route('academic-calendar.frontend') }}">Events</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="{{ route('academic-calendar.frontend') }}">Upcoming event
+                                                    calendar</a></li>
+                                            <li><a href="{{ route('news.index') }}">News</a></li>
+                                            <li><a href="{{ route('events.list') }}">Events Gallery</a></li>
+
+                                        </ul>
                                     </li>
 
-                                </ul>
-                                </li>
-                                @php
-                                    $isActivitiesActive = in_array(Route::currentRouteName(), [
-                                        'frontend.co_curricular_programs.index',
-                                        'house_life',
-                                        'interschool-participations.index',
-                                        'frontend.sports_games.index',
-                                    ]);
-                                @endphp
-                                <li class="nav-item dropdown">
-                                    <a class="{{ $isActivitiesActive ? 'active' : '' }}"
-                                        href="{{ route('frontend.co_curricular_programs.index') }}">Activities</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="{{ route('frontend.co_curricular_programs.index') }}">Co-Curricular
-                                                Activities</a></li>
-                                        <li><a href="{{ route('house_life') }}">Club activities </a></li>
-                                        <li><a href="{{ route('interschool-participations.index') }}">Inter-school
-                                                participation & results</a></li>
-                                        <li><a href="{{ route('frontend.sports_games.index') }}">Sports</a></li>
-                                    </ul>
-                                </li>
-                                @php
-                                    $isAchievementsActive = in_array(Route::currentRouteName(), [
-                                        'frontend.academic_performances.index',
-                                        'frontend.sports_awards.index',
-                                        'frontend.cultural_competitions.index',
-                                    ]);
-                                @endphp
-                                <li class="nav-item dropdown">
-                                    <a class="{{ $isAchievementsActive ? 'active' : '' }}"
-                                        href="{{ route('frontend.academic_performances.index') }}">Achievements</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="{{ route('frontend.academic_performances.index') }}">Academic
-                                                performance</a></li>
-                                        <li><a href="{{ route('frontend.sports_awards.index') }}">Sports
-                                                awards</a></li>
-                                        <li><a href="{{ route('frontend.cultural_competitions.index') }}">Cultural
-                                                competition recognitions </a></li>
-                                    </ul>
-                                </li>
-                                @php
-                                    $isGalleryActive = in_array(Route::currentRouteName(), [
-                                        'magazines.list',
-                                        'gallery.list',
-                                        'videos.list',
-                                    ]);
-                                @endphp
-                                <li class="nav-item dropdown">
-                                    <a class="{{ $isGalleryActive ? 'active' : '' }}"
-                                        href="{{ route('magazines.list') }}">Gallery</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="{{ route('magazines.list') }}">Magazine</a></li>
-                                        <li><a href="{{ route('gallery.list') }}">Photo Gallery</a></li>
-                                        <li><a href="{{ route('videos.list') }}">Videos</a></li>
-                                    </ul>
-                                </li>
-                                @php
-                                    $isStudentLifeActive = in_array(Route::currentRouteName(), [
-                                        'student_council',
-                                        'frontend.field_trips.index',
-                                    ]);
-                                @endphp
-                                <li class="nav-item dropdown">
-                                    <a class="{{ $isStudentLifeActive ? 'active' : '' }}"
-                                        href="{{ route('student_council') }}">Student Life</a>
-                                    <ul class="sub-menu">
-
-                                        <li><a href="{{ route('student_council.index') }}">Student Council</a>
-                                        </li>
-                                        <li><a href="{{ route('frontend.field_trips.index') }}">Field Trips and
-                                                Tours</a></li>
-                                    </ul>
-                                </li>
-                                @php
-                                    $isEventsActive = in_array(Route::currentRouteName(), [
-                                        'academic-calendar.frontend',
-                                        'news.index',
-                                        'events.list',
-                                        'newsletter.html',
-                                    ]);
-                                @endphp
-                                <li class="nav-item dropdown">
-                                    <a class="{{ $isEventsActive ? 'active' : '' }}"
-                                        href="{{ route('academic-calendar.frontend') }}">Events</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="{{ route('academic-calendar.frontend') }}">Upcoming event
-                                                calendar</a></li>
-                                        <li><a href="{{ route('news.index') }}">News</a></li>
-                                        <li><a href="{{ route('events.list') }}">Events Gallery</a></li>
-
-                                    </ul>
-                                </li>
-
-                                <li class="nav-item"><a class="{{ request()->routeIs('contact') ? 'active' : '' }}"
-                                        href="{{ route('contact') }}">Contact</a></li>
+                                    <li class="nav-item"><a
+                                            class="{{ request()->routeIs('contact') ? 'active' : '' }}"
+                                            href="{{ route('contact') }}">Contact</a></li>
                                 </ul>
                             </div>
                         </nav>
