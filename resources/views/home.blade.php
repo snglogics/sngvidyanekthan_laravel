@@ -324,12 +324,12 @@
         }
 
         /* .scroll-btn.left i {
-                                                                                                                                                                                                                                                                                                transform: rotate(180deg) !important;
-                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                    transform: rotate(180deg) !important;
+                                                                                                                                                                                                                                                                                                }
 
-                                                                                                                                                                                                                                                                                            .scroll-btn.right i {
-                                                                                                                                                                                                                                                                                                transform: rotate(0deg) !important;
-                                                                                                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                                                                                                .scroll-btn.right i {
+                                                                                                                                                                                                                                                                                                    transform: rotate(0deg) !important;
+                                                                                                                                                                                                                                                                                                } */
 
         .scroll-btn.left {
             left: -40px;
@@ -1099,9 +1099,9 @@
                                     </a>
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $event->header }}</h5>
-                                        @if (!empty($event->description))
+                                        {{-- @if (!empty($event->description))
                                             <p class="card-text">{{ $event->description }}</p>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </div>
                             @endforeach
@@ -1505,4 +1505,4 @@
 
 
 <!-- @section('scripts')
-                                                                                                                                                                                                                                                                                                                                                                <script src="{{ asset('js/principal-message.js') }}"></script> -->
+                                                                                                                                                                                                                                                                                                                                                                    <script src="{{ asset('js/principal-message.js') }}"></script> -->

@@ -257,6 +257,7 @@ Route::prefix('admin')->middleware(['auth'])->as('admin.')->group(function () {
 Route::get('/admin/timetablelist', [TimeTableController::class, 'timetableview'])->name('timetable.list');
 require __DIR__ . '/auth.php';
 Route::get('/admin/timetable/view', [TimetableController::class, 'timetableview'])->name('admin.timetable.view');
+Route::get('/timetable/{id}/download', [TimeTableController::class, 'download'])->name('admin.timetables.download');
 
 
 //News routes

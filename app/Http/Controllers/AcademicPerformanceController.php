@@ -24,13 +24,8 @@ class AcademicPerformanceController extends Controller
     {
         $validated = $request->validate([
             'student_name' => 'required|string|max:255',
-            'roll_number' => 'required|string|max:255|unique:academic_performances',
             'class' => 'required|string|max:255',
-            'section' => 'nullable|string|max:255',
-            'subjects_marks' => 'required|string',
-            'total_marks' => 'required|integer|min:0',
             'percentage' => 'required|numeric|min:0|max:100',
-            'grade' => 'nullable|string|max:255',
             'performance_description' => 'nullable|string',
             'term' => 'required|string|max:255',
             'year' => 'required|string|max:255',
@@ -72,13 +67,8 @@ class AcademicPerformanceController extends Controller
     {
         $validated = $request->validate([
             'student_name' => 'required|string|max:255',
-            'roll_number' => 'required|string|max:255|unique:academic_performances,roll_number,' . $academicPerformance->id,
             'class' => 'required|string|max:255',
-            'section' => 'nullable|string|max:255',
-            'subjects_marks' => 'required|json',
-            'total_marks' => 'required|integer|min:0',
             'percentage' => 'required|numeric|min:0|max:100',
-            'grade' => 'nullable|string|max:255',
             'performance_description' => 'nullable|string',
             'term' => 'required|string|max:255',
             'year' => 'required|string|max:255',
@@ -88,7 +78,6 @@ class AcademicPerformanceController extends Controller
         if ($request->hasFile('image_file')) {
             $cloudinary = $this->cloudinary();
 
-            // Delete old image if exists
             if ($academicPerformance->image_url) {
                 $publicId = 'academic_performances/' . pathinfo($academicPerformance->image_url, PATHINFO_FILENAME);
                 $cloudinary->uploadApi()->destroy($publicId, ['resource_type' => 'image']);
@@ -118,7 +107,6 @@ class AcademicPerformanceController extends Controller
             $cloudinary = $this->cloudinary();
 
             $publicId = 'academic_performances/' . pathinfo($academicPerformance->image_url, PATHINFO_FILENAME);
-
             $cloudinary->uploadApi()->destroy($publicId, [
                 'resource_type' => 'image',
             ]);
@@ -129,9 +117,6 @@ class AcademicPerformanceController extends Controller
         return redirect()->route('admin.academic_performances.index')->with('success', 'Academic performance deleted successfully.');
     }
 
-    /**
-     * Helper method to initialize Cloudinary instance
-     */
     private function cloudinary()
     {
         $config = new Configuration([

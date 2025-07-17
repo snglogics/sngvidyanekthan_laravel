@@ -8,13 +8,7 @@ class Timetable extends Model
 {
     protected $fillable = [
         'classname',
-        'section',
-        'day',
-        'period_number',
-        'subject',
-        'teacher_name',
-        'start_time',
-        'end_time',
-        'room_number'
+        'pdf_url',
+        'pdf_public_id'
     ];
 }

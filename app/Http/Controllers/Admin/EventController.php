@@ -22,13 +22,15 @@ class EventController extends Controller
     {
         try {
             $request->validate([
-                'common_header' => 'required|string|max:255',
+                'common_header' => 'required|string|max:5120',
+                'description' => 'nullable|string|max:10000', // ✅ Add validation for description
                 'headers' => 'required|array',
                 'images' => 'required|array',
                 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
             ]);
 
             $commonHeader = $request->input('common_header');
+            $description = $request->input('description'); // ✅ Get description
             $headers = $request->input('headers', []);
 
             $cloudinary = $this->cloudinary();
@@ -48,6 +50,7 @@ class EventController extends Controller
 
                 UploadEvents::create([
                     'common_header' => $commonHeader,
+                    'description' => $description, // ✅ Save description
                     'header' => $headers[$index] ?? null,
                     'image_url' => $uploadedFileUrl,
                 ]);

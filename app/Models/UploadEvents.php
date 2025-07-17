@@ -10,8 +10,8 @@ class UploadEvents extends Model
 
     protected $fillable = [
         'common_header',
+        'description',
         'header',
         'image_url',
     ];
 }
- 

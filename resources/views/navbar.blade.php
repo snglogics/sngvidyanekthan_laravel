@@ -273,9 +273,26 @@
                                     target="_blank" class="main-btn">Fee Payment</a>
                             </div>
 
-                            <div class="button me-2" style="flex-shrink: 0;">
+                            {{-- <div class="button me-2" style="flex-shrink: 0;">
                                 <a href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf"
                                     target="_blank" class="main-btn">DISCLOSURE</a>
+                            </div> --}}
+                            <div class="button dropdown me-2" style="flex-shrink: 0;">
+                                <a href="#" class="main-btn dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    Certificates
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item"
+                                        href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">📄
+                                        DISCLOSURE</a>
+                                    <a class="dropdown-item"
+                                        href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">📄
+                                        Fire & Safety</a>
+                                    <a class="dropdown-item"
+                                        href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">📄
+                                        Other</a>
+                                </div>
                             </div>
                         </div>
 

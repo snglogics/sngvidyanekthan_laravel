@@ -42,7 +42,15 @@
         <div class="container">
 
             @foreach ($groupedEvents as $commonHeader => $events)
-                <h4 class="text-dark fw-bold mb-4 mt-5">{{ $commonHeader }}</h4>
+                <div class="mb-3">
+                    <h4 class="text-dark fw-bold mb-1 mt-5">
+                        <i class="fas fa-folder-open me-2"></i>{{ $commonHeader }}
+                    </h4>
+
+                    @if (optional($events->first())->description)
+                        <p class="text-muted">{{ $events->first()->description }}</p>
+                    @endif
+                </div>
                 <div class="row g-4">
                     @foreach ($events as $event)
                         <div class="col-md-4 col-sm-6" data-aos="zoom-in">

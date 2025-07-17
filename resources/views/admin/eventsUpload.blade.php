@@ -26,6 +26,10 @@
                     <input type="text" name="common_header" class="form-control" placeholder="Enter Common Header"
                         required>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Event Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Optional"></textarea>
+                </div>
                 <div id="imageInputs" class="d-flex flex-column gap-3"></div>
                 <button type="button" class="btn btn-success  mt-3" id="addImageBtn">Add Image</button>
 
@@ -42,16 +46,27 @@
         <div class="gallery-display" data-aos="fade-up" data-aos-delay="100">
             @foreach ($galleryImages as $commonHeader => $images)
                 <div class="mb-4 border rounded shadow-sm p-3 bg-light">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="fw-bold text-primary"><i class="fas fa-folder-open me-2"></i>{{ $commonHeader }}</h4>
-                        <form action="{{ route('event.deleteByHeader') }}" method="POST"
-                            onsubmit="return confirm('Delete all images under {{ $commonHeader }}?');">
-                            @csrf
-                            <input type="hidden" name="common_header" value="{{ $commonHeader }}">
-                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete
-                                Group</button>
-                        </form>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="fw-bold text-primary mb-0">
+                                <i class="fas fa-folder-open me-2"></i>{{ $commonHeader }}
+                            </h4>
+
+                            <form action="{{ route('event.deleteByHeader') }}" method="POST"
+                                onsubmit="return confirm('Delete all images under {{ $commonHeader }}?');">
+                                @csrf
+                                <input type="hidden" name="common_header" value="{{ $commonHeader }}">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Delete Group
+                                </button>
+                            </form>
+                        </div>
+
+                        @if (optional($images->first())->description)
+                            <p class="text-muted mt-1 ms-1">{{ $images->first()->description }}</p>
+                        @endif
                     </div>
+
                     <div class="row g-4">
                         @foreach ($images as $image)
                             <div class="col-md-4 col-sm-6" data-aos="fade-up">

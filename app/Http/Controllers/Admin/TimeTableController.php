@@ -1,112 +1,181 @@
 <?php
 
+
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Timetable;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
+use Cloudinary\Cloudinary;
+use Cloudinary\Configuration\Configuration;
 
 class TimeTableController extends Controller
 {
-
-    public function timetableview(Request $request)
+    // 🔧 Cloudinary config helper
+    private function cloudinary()
     {
-        $query = Timetable::query();
+        $config = new Configuration([
+            'cloud' => [
+                'cloud_name' => config('cloudinary.cloud_name'),
+                'api_key'    => config('cloudinary.api_key'),
+                'api_secret' => config('cloudinary.api_secret'),
+            ],
+            'url' => ['secure' => true]
+        ]);
 
-        if ($request->filled('classname')) {
-            $query->where('classname', $request->classname);
-        }
-
-        if ($request->filled('section')) {
-            $query->where('section', $request->section);
-        }
-
-        $timetables = $query->orderBy('classname')
-            ->orderBy('period_number')
-            ->get();
-
-        $groupedTimetables = $timetables
-            ->groupBy(function ($item) {
-                return $item->classname . ($item->section ? '-' . $item->section : '');
-            })
-            ->map(function ($group) {
-                return $group->groupBy('day');
-            });
-
-        // Get unique classes and sections for dropdown
-        $allClasses = Timetable::select('classname')->distinct()->pluck('classname');
-        $allSections = Timetable::select('section')->distinct()->pluck('section');
-
-        return view('admin.timetable.timetable', compact('groupedTimetables', 'allClasses', 'allSections'));
+        return new Cloudinary($config);
     }
+
+    // 📄 Show all uploaded timetables
     public function index()
     {
-        $timetables = Timetable::orderBy('classname')
-            ->orderBy('section')
-            ->orderBy('created_at', 'asc')
-            ->get()
-            ->groupBy(function ($item) {
-                return $item->classname . ' - ' . ($item->section ?? 'No Section');
-            });
+        $timetables = Timetable::orderBy('classname')->get();
         return view('admin.timetable.index', compact('timetables'));
     }
 
+    // ➕ Show upload form
     public function create()
     {
         return view('admin.timetable.create');
     }
 
+    // 💾 Upload new timetable PDF
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                // your validation rules
-            ]);
+        $request->validate([
+            'classname' => 'required|string|max:255',
+            'timetable_pdf' => 'required|mimes:pdf|max:2048',
+        ]);
 
-            Timetable::create($request->all());
+        try {
+            $cloudinary = $this->cloudinary();
+
+            $uploadedFile = $cloudinary->uploadApi()->upload(
+                $request->file('timetable_pdf')->getRealPath(),
+                [
+                    'folder' => 'timetables',
+                    'public_id' => 'timetable_' . uniqid() . '.pdf',
+                    'overwrite' => true,
+                    'resource_type' => 'raw' // for PDF
+                ]
+            );
+
+            Timetable::create([
+                'classname' => $request->classname,
+                'pdf_url' => $uploadedFile['secure_url'],
+                'pdf_public_id' => $uploadedFile['public_id'],
+            ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Timetable entry created successfully.',
+                'message' => 'Timetable PDF uploaded successfully.',
                 'redirect' => route('admin.timetables.index')
             ]);
         } catch (\Exception $e) {
+            Log::error('Timetable upload failed: ' . $e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage() // More detailed error
+                'message' => 'Error: ' . $e->getMessage()
             ], 500);
         }
     }
 
+    // 📝 Edit timetable view
     public function edit(Timetable $timetable)
     {
         return view('admin.timetable.edit', compact('timetable'));
     }
 
+    // 🔁 Update timetable PDF
     public function update(Request $request, Timetable $timetable)
     {
         $request->validate([
             'classname' => 'required|string|max:255',
-            'section' => 'nullable|string|max:100',
-            'day' => 'required|string|max:50',
-            'period_number' => 'required|integer|min:1',
-            'subject' => 'required|string|max:255',
-            'teacher_name' => 'required|string|max:255',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'room_number' => 'nullable|string|max:100',
+            'timetable_pdf' => 'nullable|mimes:pdf|max:2048',
         ]);
 
-        $timetable->update($request->all());
+        try {
+            $data = ['classname' => $request->classname];
 
-        return redirect()->route('admin.timetables.index')
-            ->with('success', 'Timetable entry created successfully.');
+            if ($request->hasFile('timetable_pdf')) {
+                $cloudinary = $this->cloudinary();
+
+                // 🧹 Remove old PDF from Cloudinary
+                if ($timetable->pdf_public_id) {
+                    $cloudinary->uploadApi()->destroy($timetable->pdf_public_id, [
+                        'resource_type' => 'raw'
+                    ]);
+                }
+
+                // 📤 Upload new PDF
+                $uploadedFile = $cloudinary->uploadApi()->upload(
+                    $request->file('timetable_pdf')->getRealPath(),
+                    [
+                        'folder' => 'timetables',
+                        'public_id' => 'timetable_' . uniqid() . '.pdf',
+                        'overwrite' => true,
+                        'resource_type' => 'raw'
+                    ]
+                );
+
+                $data['pdf_url'] = $uploadedFile['secure_url'];
+                $data['pdf_public_id'] = $uploadedFile['public_id'];
+            }
+
+            $timetable->update($data);
+
+            return redirect()->route('admin.timetables.index')
+                ->with('success', 'Timetable updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Timetable update failed: ' . $e->getMessage());
+
+            return back()->with('error', 'Timetable update failed: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
+    // ❌ Delete timetable and PDF
     public function destroy(Timetable $timetable)
     {
-        $timetable->delete();
-        return redirect()->back()->with('success', 'Timetable deleted successfully.');
+        try {
+            if ($timetable->pdf_public_id) {
+                $cloudinary = $this->cloudinary();
+                $cloudinary->uploadApi()->destroy($timetable->pdf_public_id, [
+                    'resource_type' => 'raw'
+                ]);
+            }
+
+            $timetable->delete();
+
+            return redirect()->back()->with('success', 'Timetable deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Timetable deletion failed: ' . $e->getMessage());
+            return back()->with('error', 'Timetable deletion failed: ' . $e->getMessage());
+        }
+    }
+
+    public function timetableview()
+    {
+        $timetables = Timetable::orderBy('classname')->get();
+
+        return view('admin.timetable.timetable', compact('timetables'));
+    }
+
+    public function download($id)
+    {
+        $timetable = Timetable::findOrFail($id);
+        $filename = $timetable->classname . '_timetable.pdf';
+
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        return response()->streamDownload(function () use ($timetable) {
+            echo file_get_contents($timetable->pdf_url);
+        }, $filename, $headers);
     }
 }
