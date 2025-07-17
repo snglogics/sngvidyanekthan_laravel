@@ -56,7 +56,7 @@ class TimeTableController extends Controller
                 $request->file('timetable_pdf')->getRealPath(),
                 [
                     'folder' => 'timetables',
-                    'public_id' => 'timetable_' . uniqid() . '.pdf',
+                    'public_id' => 'timetable_' . uniqid(),
                     'overwrite' => true,
                     'resource_type' => 'auto' // for PDF
                 ]
@@ -115,7 +115,7 @@ class TimeTableController extends Controller
                     $request->file('timetable_pdf')->getRealPath(),
                     [
                         'folder' => 'timetables',
-                        'public_id' => 'timetable_' . uniqid() . '.pdf',
+                        'public_id' => 'timetable_' . uniqid(),
                         'overwrite' => true,
                         'resource_type' => 'auto'
                     ]
