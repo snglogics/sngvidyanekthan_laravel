@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('title', 'Class Timetable')
-@section('hero_title', 'Class Timetable')
+@section('hero_title', 'Exam Timetable')
 
 @section('styles')
     <style>
@@ -37,7 +37,7 @@
 
 @section('content')
     <div class="container py-5">
-        <h2 class="text-primary mb-4"><i class="bi bi-calendar-week me-2"></i>All Class Timetables</h2>
+        <h2 class="text-primary mb-4"><i class="bi bi-calendar-week me-2"></i>All Class Exam Timetables</h2>
 
         @if ($timetables->isEmpty())
             <div class="alert alert-info text-center">
@@ -53,7 +53,7 @@
                 <div class="mb-3">
                     <div class="toggle-header" onclick="togglePDF('{{ $id }}')">
                         <a href="{{ route('admin.timetables.view', $timetable->id) }}" class="text-decoration-none text-dark">
-                            <i class="bi bi-building me-2"></i>{{ $timetable->classname }}
+                            <i class="bi bi-building me-2"></i>Class {{ $timetable->classname }}
                         </a>
                         <i class="bi bi-chevron-down toggle-icon" id="icon-{{ $id }}"></i>
                     </div>
