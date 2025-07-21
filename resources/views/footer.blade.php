@@ -36,7 +36,7 @@
                                 <a href="#"><img src="{{ asset('frontend/images/logo.png') }}"
                                         alt="Logo"></a>
                             </div>
-                            <p>Senior Secondary School [CBSE]</br>
+                            <p>
                                 (Managed by Sree Narayana Dharma Sanghom Trust)
                             </p>
                             <ul class="mt-20">

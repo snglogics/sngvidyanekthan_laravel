@@ -63,8 +63,9 @@ Route::get('/footer', [FrontEndController::class, 'footer'])->name('footer');
 
 // Routes for Authentication
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-// Login page
-Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');  // Registration page
+
+// Signup page
+// Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');  // Registration page
 
 // dashboard route
 Route::middleware(['auth'])->group(function () {

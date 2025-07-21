@@ -481,35 +481,34 @@
                                             href="{{ route('student_council') }}">Student Life</a>
                                         <ul class="sub-menu">
 
-                                            <li><a href="{{ route('student_council.index') }}">Student Council</a>
-                                            </li>
-                                            <li><a href="{{ route('frontend.field_trips.index') }}">Field Trips and
-                                                    Tours</a></li>
-                                        </ul>
+                                            {{-- <li><a href="{{ route('student_council.index') }}">Student Council</a> --}}
                                     </li>
-                                    @php
-                                        $isEventsActive = in_array(Route::currentRouteName(), [
-                                            'academic-calendar.frontend',
-                                            'news.index',
-                                            'events.list',
-                                            'newsletter.html',
-                                        ]);
-                                    @endphp
-                                    <li class="nav-item dropdown">
-                                        <a class="{{ $isEventsActive ? 'active' : '' }}"
-                                            href="{{ route('academic-calendar.frontend') }}">Events</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="{{ route('academic-calendar.frontend') }}">Upcoming event
-                                                    calendar</a></li>
-                                            <li><a href="{{ route('news.index') }}">News</a></li>
-                                            <li><a href="{{ route('events.list') }}">Events Gallery</a></li>
+                                    <li><a href="{{ route('frontend.field_trips.index') }}">Field Trips and
+                                            Tours</a></li>
+                                </ul>
+                                </li>
+                                @php
+                                    $isEventsActive = in_array(Route::currentRouteName(), [
+                                        'academic-calendar.frontend',
+                                        'news.index',
+                                        'events.list',
+                                        'newsletter.html',
+                                    ]);
+                                @endphp
+                                <li class="nav-item dropdown">
+                                    <a class="{{ $isEventsActive ? 'active' : '' }}"
+                                        href="{{ route('academic-calendar.frontend') }}">Events</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="{{ route('academic-calendar.frontend') }}">Upcoming event
+                                                calendar</a></li>
+                                        <li><a href="{{ route('news.index') }}">News</a></li>
+                                        <li><a href="{{ route('events.list') }}">Events Gallery</a></li>
 
-                                        </ul>
-                                    </li>
+                                    </ul>
+                                </li>
 
-                                    <li class="nav-item"><a
-                                            class="{{ request()->routeIs('contact') ? 'active' : '' }}"
-                                            href="{{ route('contact') }}">Contact</a></li>
+                                <li class="nav-item"><a class="{{ request()->routeIs('contact') ? 'active' : '' }}"
+                                        href="{{ route('contact') }}">Contact</a></li>
                                 </ul>
                             </div>
                         </nav>
