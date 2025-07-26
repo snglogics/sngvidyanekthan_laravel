@@ -57,6 +57,11 @@ class FrontEndController extends Controller
         return view('about', compact('upcomingEvent'));
     }
 
+    public function upComingEvents()
+{
+    $upcomingEvent = upcoming_events::orderByDesc('event_date')->get();
+    return view('upcoming-events', compact('upcomingEvent'));
+}
     public function footer()
     {
         return view('footer');

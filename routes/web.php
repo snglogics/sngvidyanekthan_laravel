@@ -54,13 +54,13 @@ use App\Http\Controllers\StudentCouncilController;
 
 
 
-
+ 
 
 // Routes for the Frontend (Public Pages)
 Route::get('/', [FrontEndController::class, 'home'])->name('home');  // Define home route
 Route::get('/about', [FrontEndController::class, 'about'])->name('about');
 Route::get('/footer', [FrontEndController::class, 'footer'])->name('footer');
-
+Route::get('/upcoming-events', [FrontEndController::class, 'upComingEvents'])->name('upcoming.events');
 // Routes for Authentication
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 

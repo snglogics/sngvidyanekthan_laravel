@@ -499,8 +499,8 @@
                                     <a class="{{ $isEventsActive ? 'active' : '' }}"
                                         href="{{ route('academic-calendar.frontend') }}">Events</a>
                                     <ul class="sub-menu">
-                                        <li><a href="{{ route('academic-calendar.frontend') }}">Upcoming event
-                                                calendar</a></li>
+                                        <li><a href="{{ route('upcoming.events') }}">Upcoming event
+                                    </a></li>
                                         <li><a href="{{ route('news.index') }}">News</a></li>
                                         <li><a href="{{ route('events.list') }}">Events Gallery</a></li>
 
