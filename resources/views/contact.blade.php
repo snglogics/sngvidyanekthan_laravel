@@ -102,61 +102,64 @@
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('contact-form');
-            const submitBtn = document.getElementById('submitBtn');
-            const formMessage = document.getElementById('formMessage');
+    const form = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submitBtn');
+    const formMessage = document.getElementById('formMessage');
 
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                submitBtn.disabled = true;
-                submitBtn.innerText = 'Sending...';
-                formMessage.innerHTML = '';
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Sending...';
+        formMessage.innerHTML = '';
 
-                const formData = new FormData(form);
-                try {
-                    const response = await fetch("{{ route('contact.submit') }}", {
-                        method: "POST",
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                        },
-                        body: formData
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok && data.success) {
-                        formMessage.innerHTML =
-                            `<div class="alert alert-success">${data.message}</div>`;
-                        form.reset();
-                    } else {
-                        // Handle both general error and validation errors
-                        let errorText = data.message || 'Submission failed.';
-                        if (data.errors) {
-                            errorText += '<ul>';
-                            for (let key in data.errors) {
-                                errorText += `<li>${data.errors[key][0]}</li>`;
-                            }
-                            errorText += '</ul>';
-                        }
-                        formMessage.innerHTML = `<div class="alert alert-danger">${errorText}</div>`;
-                    }
-                } catch (error) {
-                    if (error instanceof SyntaxError) {
-                        // Likely a non-JSON response (like 422)
-                        const text = await error.response?.text?.();
-                        formMessage.innerHTML =
-                            `<div class="alert alert-danger">Submission failed. Server returned non-JSON response.</div>`;
-                    } else {
-                        formMessage.innerHTML =
-                            `<div class="alert alert-danger">An error occurred. Please try again.</div>`;
-                    }
-                } finally {
-                    // ✅ Reset button label and state regardless of success or failure
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = 'Send';
-                }
-
+        const formData = new FormData(form);
+        try {
+            const response = await fetch("{{ route('contact.submit') }}", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                },
+                body: formData
             });
-        });
+
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    formMessage.innerHTML = 
+                        `<div class="alert alert-success">${data.message}</div>`;
+                    form.reset();
+                } else {
+                    let errorText = data.message || 'Submission failed.';
+                    if (data.errors) {
+                        errorText += '<ul>';
+                        for (let key in data.errors) {
+                            errorText += `<li>${data.errors[key][0]}</li>`;
+                        }
+                        errorText += '</ul>';
+                    }
+                    formMessage.innerHTML = 
+                        `<div class="alert alert-danger">${errorText}</div>`;
+                }
+            } else {
+                // Handle non-JSON response
+                const text = await response.text();
+                formMessage.innerHTML = 
+                    `<div class="alert alert-danger">Unexpected response from server: ${text}</div>`;
+            }
+        } catch (error) {
+            // Network errors or other exceptions
+            console.error('Error:', error);
+            formMessage.innerHTML = 
+                `<div class="alert alert-danger">Network error occurred. Please try again.</div>`;
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Send';
+        }
+    });
+});
     </script>
 @endsection

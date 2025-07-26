@@ -14,85 +14,75 @@ class ContactController extends Controller
         return view('contact');
     }
 
-    public function submit(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'name'    => 'required|string|max:255',
-                'email'   => 'required|email',
-                'subject' => 'required|string|max:255',
-                'phone'   => 'required|string|max:15',
-                'messege' => 'required|string',
-            ]);
+   public function submit(Request $request)
+{
+    try {
+        $validator = Validator::make($request->all(), [
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|email',
+            'subject' => 'required|string|max:255',
+            'phone'   => 'required|string|max:15',
+            'messege' => 'required|string',
+        ]);
 
-            if ($validator->fails()) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Validation failed.',
-                        'errors' => $validator->errors()
-                    ], 422);
-                }
-
-                return redirect()->back()->withErrors($validator)->withInput();
-            }
-
-            $validated = $validator->validated();
-
-            // ✅ Send acknowledgment to the user
-            Mail::raw("
-            Dear {$validated['name']},
-
-            Thank you for contacting us! We have received your message and will get back to you shortly.
-
-            Here is a copy of your submission:
-            Name: {$validated['name']}
-            Email: {$validated['email']}
-            Phone: {$validated['phone']}
-            Subject: {$validated['subject']}
-            Message: {$validated['messege']}
-
-            Regards,
-            Your Website Team
-        ", function ($message) use ($validated) {
-                $message->to($validated['email'])
-                    ->from(config('mail.from.address'), config('mail.from.name'))
-                    ->subject('Thank you for contacting us!');
-            });
-
-            // ✅ Optionally: Send a copy to admin
-            Mail::raw("
-            New contact form submission:
-
-            Name: {$validated['name']}
-            Email: {$validated['email']}
-            Phone: {$validated['phone']}
-            Subject: {$validated['subject']}
-            Message: {$validated['messege']}
-        ", function ($message) {
-                $message->to(config('mail.from.address'))
-                    ->from(config('mail.from.address'), config('mail.from.name'))
-                    ->subject('New Contact Form Submission');
-            });
-
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Thank you! Your message has been sent, and you will receive a confirmation email.'
-                ]);
-            }
-
-            return redirect()->back()->with('success', 'Thank you! Your message has been sent, and you will receive a confirmation email.');
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Mail failed to send: ' . $e->getMessage()
-                ], 500);
-            }
-            return redirect()->back()->with('error', 'Mail failed to send: ' . $e->getMessage());
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $validator->errors()
+            ], 422);
         }
+
+        $validated = $validator->validated();
+
+        // Send acknowledgment to the user
+        Mail::raw("
+        Dear {$validated['name']},
+
+        Thank you for contacting us! We have received your message and will get back to you shortly.
+
+        Here is a copy of your submission:
+        Name: {$validated['name']}
+        Email: {$validated['email']}
+        Phone: {$validated['phone']}
+        Subject: {$validated['subject']}
+        Message: {$validated['messege']}
+
+        Regards,
+        Your Sivagiri Vidyanikethan Team
+        ", function ($message) use ($validated) {
+            $message->to($validated['email'])
+                ->from(config('mail.from.address'), config('mail.from.name'))
+                ->subject('Thank you for contacting us!');
+        });
+
+        // Optionally: Send a copy to admin
+        Mail::raw("
+        New contact form submission:
+
+        Name: {$validated['name']}
+        Email: {$validated['email']}
+        Phone: {$validated['phone']}
+        Subject: {$validated['subject']}
+        Message: {$validated['messege']}
+        ", function ($message) {
+            $message->to(config('mail.from.address'))
+                ->from(config('mail.from.address'), config('mail.from.name'))
+                ->subject('New Contact Form Submission');
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thank you! Your message has been sent, and you will receive a confirmation email.'
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while sending your message: ' . $e->getMessage()
+        ], 500);
     }
+}
 
 
     public function getintouchSubmit(Request $request)
