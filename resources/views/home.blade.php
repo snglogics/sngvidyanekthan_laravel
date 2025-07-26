@@ -324,12 +324,12 @@
         }
 
         /* .scroll-btn.left i {
-                                                                                                                                                                                                                                                                                                    transform: rotate(180deg) !important;
-                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                            transform: rotate(180deg) !important;
+                                                                                                                                                                                                                                                                                                        }
 
-                                                                                                                                                                                                                                                                                                .scroll-btn.right i {
-                                                                                                                                                                                                                                                                                                    transform: rotate(0deg) !important;
-                                                                                                                                                                                                                                                                                                } */
+                                                                                                                                                                                                                                                                                                        .scroll-btn.right i {
+                                                                                                                                                                                                                                                                                                            transform: rotate(0deg) !important;
+                                                                                                                                                                                                                                                                                                        } */
 
         .scroll-btn.left {
             left: -40px;
@@ -653,6 +653,13 @@
             color: #777;
             font-size: 1rem;
             line-height: 1.8;
+        }
+
+        .icon-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* optional spacing between icon and text */
         }
 
         @media (max-width: 767px) {
@@ -1505,4 +1512,4 @@
 
 
 <!-- @section('scripts')
-                                                                                                                                                                                                                                                                                                                                                                    <script src="{{ asset('js/principal-message.js') }}"></script> -->
+                                                                                                                                                                                                                                                                                                                                                                            <script src="{{ asset('js/principal-message.js') }}"></script> -->
