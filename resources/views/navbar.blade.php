@@ -466,7 +466,7 @@
                                             href="{{ route('magazines.list') }}">Gallery</a>
                                         <ul class="sub-menu">
                                             <li><a href="{{ route('magazines.list') }}">Magazine</a></li>
-                                            <li><a href="{{ route('gallery.list') }}">Photo Gallery</a></li>
+                                            <!-- <li><a href="{{ route('gallery.list') }}">Photo Gallery</a></li> -->
                                             <li><a href="{{ route('videos.list') }}">Videos</a></li>
                                         </ul>
                                     </li>

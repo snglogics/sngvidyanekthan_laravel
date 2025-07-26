@@ -97,30 +97,7 @@
 
             <h2 class="text-center fw-bold text-danger mt-5 mb-4" data-aos="fade-down">Our YouTube Channel</h2>
 
-            <!-- <div class="row">
-                @forelse($youtubeVideos as $video)
-                    @if (isset($video['id']['videoId']))
-                        <div class="col-md-4 mb-4" data-aos="fade-up">
-                            <div class="video-card">
-                                <div
-                                    class="video-title bg-danger text-white d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-youtube me-2 fs-5"></i> {{ $video['snippet']['title'] }}
-                                </div>
-                                <iframe class="led-video" width="100%" height="315"
-                                    src="https://www.youtube.com/embed/{{ $video['id']['videoId'] }}" title="YouTube video"
-                                    frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                                </iframe>
-                            </div>
-                        </div>
-                    @endif
-                @empty
-                    <div class="col-12">
-                        <div class="no-videos" data-aos="fade-up">No YouTube Videos Found</div>
-                    </div>
-                @endforelse
-            </div> -->
+           
 
 
         </div>
