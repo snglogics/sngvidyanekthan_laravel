@@ -95,7 +95,7 @@
                 </div>
             @endif
 
-            <h2 class="text-center fw-bold text-danger mt-5 mb-4" data-aos="fade-down">Our YouTube Channel</h2>
+            <!-- <h2 class="text-center fw-bold text-danger mt-5 mb-4" data-aos="fade-down">Our YouTube Channel</h2> -->
 
            
 

@@ -12,7 +12,7 @@
     <div class="container py-5">
         <div class="card shadow-sm border-0 rounded-4">
             <div class="card-header bg-primary text-white rounded-top-4 d-flex align-items-center">
-                <i class="bi bi-journal-plus fs-4 me-2"></i>
+                <i class="bi bi-journal-plus fs-4 me-2"></i> 
                 <h4 class="mb-0">Assessment Pattern</h4>
             </div>
 

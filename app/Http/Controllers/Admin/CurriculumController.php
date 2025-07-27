@@ -196,3 +196,4 @@ class CurriculumController extends Controller
         }
     }
 }
+

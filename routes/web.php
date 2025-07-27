@@ -47,11 +47,12 @@ use App\Http\Controllers\Admin\KindergartenSliderController;
 use App\Http\Controllers\Admin\KinderPrincipalMsgController;
 use App\Http\Controllers\Admin\KinderGalleryController;
 use App\Http\Controllers\Admin\BusController;
+use App\Http\Controllers\Admin\AssessmentController;
 use App\Http\Controllers\Frontend\BusRouteController;
 use App\Http\Controllers\Frontend\ViewSliderController;
 use App\Http\Controllers\SlidersViewController;
 use App\Http\Controllers\StudentCouncilController;
-
+use App\Http\Controllers\Frontend\AssessmentFrontendController;
 
 
  
@@ -517,3 +518,12 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 
 //student coucil frontend
 Route::get('/student_council', [App\Http\Controllers\Frontend\StudentCouncilController::class, 'index'])->name('student_council.index');
+//assessments
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    Route::resource('assessments', AssessmentController::class);
+});
+
+Route::group(['as' => 'frontend.'], function() {
+    Route::get('/assessments', [AssessmentFrontendController::class, 'index'])
+        ->name('assessments');
+        });
