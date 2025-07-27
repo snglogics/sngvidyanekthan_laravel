@@ -110,32 +110,32 @@
                     
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Father's Name</label>
-                            <input type="text" name="father_name" class="form-control">
+                            <label class="form-label">Father's Name <span class="text-danger">*</span></label>
+                            <input type="text" name="father_name" class="form-control" required>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label">Father's Occupation</label>
                             <input type="text" name="father_occupation" class="form-control">
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Mother's Name</label>
-                            <input type="text" name="mother_name" class="form-control">
+                            <label class="form-label">Mother's Name <span class="text-danger">*</span></label>
+                            <input type="text" name="mother_name" class="form-control" required>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label">Mother's Occupation</label>
                             <input type="text" name="mother_occupation" class="form-control">
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Address for Communication</label>
-                            <textarea name="address" class="form-control" rows="3"></textarea>
+                            <label class="form-label">Address for Communication <span class="text-danger">*</span></label>
+                            <textarea name="address" class="form-control" rows="3" required></textarea>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Phone No</label>
-                            <input type="text" name="phone_no" class="form-control">
+                            <label class="form-label">Phone No <span class="text-danger">*</span></label>
+                            <input type="text" name="phone_no" class="form-control" required>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">E-mail</label>
-                            <input type="email" name="email" class="form-control">
+                            <label class="form-label">E-mail <span class="text-danger">*</span></label>
+                            <input type="email" name="email" class="form-control" required>
                         </div>
                     </div>
                 </div>
@@ -162,8 +162,8 @@
                             <input type="text" name="religion_caste" class="form-control">
                         </div>
                         <div class="col-12 col-md-6">
-                            <label class="form-label">Category</label>
-                            <select name="category" class="form-control">
+                            <label class="form-label">Category <span class="text-danger">*</span></label>
+                            <select name="category" class="form-control" required>
                                 <option value="">Select</option>
                                 <option value="General">General</option>
                                 <option value="SC">SC</option>
