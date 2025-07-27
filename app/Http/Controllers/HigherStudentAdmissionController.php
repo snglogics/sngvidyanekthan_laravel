@@ -55,9 +55,9 @@ class HigherStudentAdmissionController extends Controller
             'hobbies' => 'nullable|string',
             'major_games' => 'nullable|string',
             'co_curricular_achievements' => 'nullable|string',
-            'subjects' => 'required|array',
-            'percentages' => 'required|array',
-            'grades' => 'required|array',
+            'subjects' => 'required|array|min:1',
+            'percentages' => 'required|array|min:1',
+            'grades' => 'required|array|min:1',
             'marks_table_image' => 'required|image|mimes:jpeg,png,jpg|max:4096',
             'photo' => 'required|image|mimes:jpeg,png,jpg|max:4096',
         ]);
