@@ -8,9 +8,11 @@ class AddDescriptionToEventUploadTable extends Migration
 {
     public function up()
     {
+        if (!Schema::hasColumn('event_upload', 'description')) {
         Schema::table('event_upload', function (Blueprint $table) {
-            $table->text('description')->nullable(); // ✅ Adds the column
+            $table->text('description')->nullable();
         });
+    }
     }
 
     public function down()
