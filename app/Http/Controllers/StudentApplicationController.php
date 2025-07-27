@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Cloudinary\Cloudinary;
 use Cloudinary\Configuration\Configuration;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
@@ -15,8 +14,6 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
-
-
 
 class StudentApplicationController extends Controller
 {
@@ -31,7 +28,6 @@ class StudentApplicationController extends Controller
     /**
      * Handle form submission
      */
-  
     public function submitForm(Request $request): RedirectResponse
     {
         // Enhanced validation rules
@@ -81,13 +77,12 @@ class StudentApplicationController extends Controller
                 'image',
                 'mimes:jpeg,png,jpg',
                 'max:2048',
-               
             ],
         ], [
             'pupil_name.regex' => 'Student name must be in block letters',
             'date_of_birth.before_or_equal' => 'Student must be at least 3 years old',
             'date_of_birth.after_or_equal' => 'Student must not be older than 6 years',
-            'photo.dimensions' => 'Photo must be at least 300x300 pixels ',
+            'photo.dimensions' => 'Photo must be at least 300x300 pixels',
         ]);
 
         if ($validator->fails()) {
@@ -130,23 +125,20 @@ class StudentApplicationController extends Controller
             $student = StudentApplication::create($data);
 
             // Generate and store PDF
-            $pdfUrl = $this->generateAndStorePdf($student);
-
-            // Send confirmation email
-            $this->sendConfirmationEmail($student, $pdfUrl);
+            $this->generateAndStorePdf($student);
 
             return redirect()->back()
                 ->with('success', 'Application submitted successfully! Your application number is: ' . $data['application_number']);
 
-        }  catch (\Exception $e) {
-    Log::error('Student application error: ' . $e->getMessage());
-    Log::error('Exception trace: ' . $e->getTraceAsString());
-    Log::error('Input data: ', $request->all());
-    
-    return redirect()->back()
-        ->with('error', 'Failed to submit application. Error: ' . $e->getMessage())
-        ->withInput();
-}
+        } catch (\Exception $e) {
+            Log::error('Student application error: ' . $e->getMessage());
+            Log::error('Exception trace: ' . $e->getTraceAsString());
+            Log::error('Input data: ', $request->all());
+            
+            return redirect()->back()
+                ->with('error', 'Failed to submit application. Error: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
     /**
@@ -156,8 +148,6 @@ class StudentApplicationController extends Controller
     {
         return 'APP-' . date('Y') . '-' . Str::upper(Str::random(6));
     }
-
-    // ... [Keep other methods exactly as they are] ...
 
     /**
      * Generate and store PDF for the application
@@ -178,41 +168,6 @@ class StudentApplicationController extends Controller
 
         return $pdfUrl;
     }
-
-    /**
-     * Send confirmation email with PDF attachment
-     */
-  private function sendConfirmationEmail(StudentApplication $student, string $pdfUrl): void
-{
-    try {
-        if (empty($student->email)) {
-            Log::warning('Student email is empty for student ID: ' . $student->id);
-            return; // don't proceed if no email
-        }
-
-        $pdfPath = storage_path('app/public/' . str_replace('storage/', '', $pdfUrl));
-
-        Mail::send(
-            'emails.application',
-            ['student' => $student],
-            function ($message) use ($student, $pdfPath) {
-                $message->to($student->email)
-                    ->cc(config('mail.admin_email')) // CC to admin
-                    ->subject('Application Confirmation - ' . $student->application_number)
-                    ->attach($pdfPath, [
-                        'as' => 'Application_' . $student->application_number . '.pdf',
-                        'mime' => 'application/pdf',
-                    ]);
-            }
-        );
-    } catch (\Exception $e) {
-        Log::error('Email sending failed: ' . $e->getMessage());
-    }
-}
-
-
-
-    
 
     /**
      * List all applications with search functionality
@@ -271,10 +226,6 @@ class StudentApplicationController extends Controller
         }
     }
 
-    /**
-     * Generate and store PDF for the application
-     */
-   
     /**
      * DRY helper for Cloudinary initialization
      */
