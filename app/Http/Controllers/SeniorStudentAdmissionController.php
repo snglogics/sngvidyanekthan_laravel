@@ -14,6 +14,43 @@ use Illuminate\Support\Facades\Log;
 class SeniorStudentAdmissionController extends Controller
 {
     /**
+     * Field labels for validation messages
+     */
+    protected $fieldLabels = [
+        'admission_class' => 'Class for Admission',
+        'pupil_name' => 'Student Name',
+        'gender' => 'Gender',
+        'date_of_birth' => 'Date of Birth',
+        'photo' => 'Passport Photo',
+        'aadhaar_no' => 'Aadhaar Number',
+        'father_name' => 'Father\'s Name',
+        'father_occupation' => 'Father\'s Occupation',
+        'mother_name' => 'Mother\'s Name',
+        'mother_occupation' => 'Mother\'s Occupation',
+        'address' => 'Address',
+        'phone_number' => 'Phone Number',
+        'whatsapp_number' => 'WhatsApp Number',
+        'email' => 'Email Address',
+        'annual_income' => 'Annual Income',
+        'nationality' => 'Nationality',
+        'religion_caste' => 'Religion & Caste',
+        'last_institution_attended' => 'Last Institution Attended',
+        'medium_of_instruction' => 'Medium of Instruction',
+        'mother_tongue' => 'Mother Tongue',
+        'parent_education' => 'Parent Education',
+        'family_members' => 'Family Members',
+        'siblings' => 'Siblings',
+        'immunization_status' => 'Immunization Status',
+        'local_guardian' => 'Local Guardian',
+        'hobbies' => 'Hobbies',
+        'games_played' => 'Games Played',
+        'cocurricular_achievements' => 'Co-curricular Achievements',
+        'cca_options' => 'CCA Options',
+        'year_of_passing' => 'Year of Passing',
+        'total_marks' => 'Total Marks'
+    ];
+
+    /**
      * Show the senior admission form
      */
     public function showForm(): View
@@ -26,21 +63,21 @@ class SeniorStudentAdmissionController extends Controller
      */
     public function submitForm(Request $request): RedirectResponse
     {
-        $data = $request->validate([
+        $rules = [
             'admission_class' => 'required|string|max:255',
             'pupil_name' => 'required|string|max:255',
             'gender' => 'required|in:Boy,Girl,Transgender',
-            'date_of_birth' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
             'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'aadhaar_no' => 'nullable|string|max:255',
-            'father_name' => 'nullable|string|max:255',
+            'aadhaar_no' => 'nullable|string|max:255|regex:/^[0-9]{12}$/',
+            'father_name' => 'required|string|max:255',
             'father_occupation' => 'nullable|string|max:255',
-            'mother_name' => 'nullable|string|max:255',
+            'mother_name' => 'required|string|max:255',
             'mother_occupation' => 'nullable|string|max:255',
-            'address' => 'nullable|string',
-            'phone_number' => 'nullable|string|max:255',
-            'whatsapp_number' => 'nullable|string|max:255',
-            'email' => 'nullable|string|email|max:255',
+            'address' => 'required|string',
+            'phone_number' => 'required|string|max:15|regex:/^[0-9]{10,15}$/',
+            'whatsapp_number' => 'nullable|string|max:15|regex:/^[0-9]{10,15}$/',
+            'email' => 'nullable|email|max:255',
             'annual_income' => 'nullable|string|max:255',
             'nationality' => 'nullable|string|max:255',
             'religion_caste' => 'nullable|string|max:255',
@@ -58,7 +95,29 @@ class SeniorStudentAdmissionController extends Controller
             'cca_options' => 'nullable|string',
             'year_of_passing' => 'nullable|string|max:255',
             'total_marks' => 'nullable|string|max:255',
-        ]);
+        ];
+
+        $messages = [
+            'required' => 'The :attribute field is required.',
+            'string' => 'The :attribute must be a string.',
+            'max' => 'The :attribute may not be greater than :max characters.',
+            'in' => 'The selected :attribute is invalid.',
+            'date' => 'The :attribute must be a valid date.',
+            'image' => 'The :attribute must be an image.',
+            'mimes' => 'The :attribute must be a file of type: :values.',
+            'email' => 'The :attribute must be a valid email address.',
+            'regex' => 'The :attribute format is invalid.',
+            'numeric' => 'The :attribute must be a number.',
+            'digits' => 'The :attribute must be :digits digits.',
+        ];
+
+        // Add custom attribute names
+        $customAttributes = [];
+        foreach ($this->fieldLabels as $field => $label) {
+            $customAttributes[$field] = $label;
+        }
+
+        $validatedData = $request->validate($rules, $messages, $customAttributes);
 
         try {
             $cloudinary = $this->cloudinary();
@@ -74,10 +133,10 @@ class SeniorStudentAdmissionController extends Controller
                 ]
             );
 
-            $data['photo_url'] = $photoResponse['secure_url'];
+            $validatedData['photo_url'] = $photoResponse['secure_url'];
 
             // Create student record
-            $student = SeniorStudentAdmission::create($data);
+            $student = SeniorStudentAdmission::create($validatedData);
 
             // Generate and upload PDF
             $pdf = Pdf::loadView('student_application.admissions.pdf', compact('student'));
@@ -102,12 +161,17 @@ class SeniorStudentAdmissionController extends Controller
                 unlink($pdfPath);
             }
 
-            return redirect()->back()
-                ->with('success', 'Application submitted successfully!');
+            $request->session()->forget(['success', 'error']);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Application submitted successfully! ID: ' . $student->id);
         } catch (\Exception $e) {
             Log::error('Senior student admission error: ' . $e->getMessage());
-            return redirect()->back()
-                ->with('error', 'Failed to submit application: ' . $e->getMessage());
+           return redirect()
+            ->back()
+            ->with('error', 'Failed to submit application: ' . $e->getMessage())
+            ->withInput();
         }
     }
 

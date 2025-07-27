@@ -16,12 +16,12 @@
             </div>
 
             {{-- Success Message --}}
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-                <script>
-                    alert("{{ session('success') }}");
-                </script>
-            @endif
+         @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
             {{-- Error Messages --}}
             @if ($errors->any())
@@ -32,20 +32,23 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif 
 
             <form action="{{ route('admissions.submit') }}" method="POST" enctype="multipart/form-data" id="admissionForm">
                 @csrf
 
                 {{-- Photo Upload --}}
-                <div class="text-center text-md-end mb-4">
-                    <label for="headerPhotoInput" class="d-inline-block" style="cursor: pointer;">
-                        <img id="headerPhotoPreview" src="https://via.placeholder.com/120x140?text=Photo" alt="Upload Photo"
-                            style="width: 100px; height: 120px; width: clamp(100px, 25vw, 120px); height: clamp(120px, 30vw, 140px); border: 2px solid #000; background-color: #f8f8f8; object-fit: cover;">
-                        <input type="file" id="headerPhotoInput" name="photo" accept="image/*"
-                            onchange="previewHeaderPhoto(event)" style="display: none;" required>
-                    </label>
-                    <small class="text-muted d-block">Click to upload passport size photo</small>
+                 <div class="mb-3 text-center text-md-end">
+                    <div
+                        style="width: 120px; height: 140px; border: 2px solid #000; background-color: #f8f8f8; display: inline-block;">
+                        <label for="headerPhotoInput" style="cursor: pointer; display: block; width: 100%; height: 100%;">
+                            <img id="headerPhotoPreview" src="https://via.placeholder.com/120x140?text=Photo"
+                                alt="Upload Photo" style="width: 100%; height: 100%; object-fit: cover;">
+                            <input type="file" id="headerPhotoInput" name="photo" accept="image/*"
+                                onchange="previewHeaderPhoto(event)" style="display: none;">
+                        </label>
+                    </div>
+                    <small id="photoError" class="text-danger d-block mt-2"></small>
                 </div>
 
                 {{-- Basic Details --}}
@@ -75,6 +78,18 @@
                         <label class="form-label">Aadhaar No.</label>
                         <input type="text" name="aadhaar_no" class="form-control" required>
                     </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Last Institution Attended</label>
+                        <input type="text" name="last_institution_attended" class="form-control">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Year of Passing</label>
+                        <input type="text" name="year_of_passing" class="form-control">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Total Marks Obtained</label>
+                        <input type="text" name="total_marks" class="form-control">
+                    </div>
                 </div>
 
                 {{-- Parent Details --}}
@@ -95,6 +110,14 @@
                     <div class="col-12 col-md-6">
                         <label class="form-label">Mother's Occupation</label>
                         <input type="text" name="mother_occupation" class="form-control">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Annual Income</label>
+                        <input type="text" name="annual_income" class="form-control">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Parent's Education</label>
+                        <input type="text" name="parent_education" class="form-control">
                     </div>
                 </div>
 
@@ -121,6 +144,23 @@
                     <textarea name="address" class="form-control" rows="3" required></textarea>
                 </div>
 
+                {{-- Family Details --}}
+                <h5 class="mt-4 mt-md-5 text-primary">Family Details</h5>
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Family Members</label>
+                        <textarea name="family_members" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Siblings (if any)</label>
+                        <textarea name="siblings" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Local Guardian (if any)</label>
+                        <input type="text" name="local_guardian" class="form-control">
+                    </div>
+                </div>
+
                 {{-- Other Details --}}
                 <h5 class="mt-4 mt-md-5 text-primary">Other Details</h5>
                 <div class="row g-3">
@@ -140,11 +180,77 @@
                         <label class="form-label">Blood Group</label>
                         <input type="text" name="blood_group" class="form-control">
                     </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Medium of Instruction</label>
+                        <input type="text" name="medium_of_instruction" class="form-control">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Immunization Status</label>
+                        <input type="text" name="immunization_status" class="form-control">
+                    </div>
                 </div>
 
-                <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-3 mt-md-4 py-2">Submit
-                    Application</button>
+                {{-- Interests and Activities --}}
+                <h5 class="mt-4 mt-md-5 text-primary">Interests and Activities</h5>
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Hobbies</label>
+                        <textarea name="hobbies" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Games/Sports Played</label>
+                        <textarea name="games_played" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Co-curricular Achievements</label>
+                        <textarea name="cocurricular_achievements" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">CCA Options Interested In</label>
+                        <textarea name="cca_options" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+
+                {{-- Declaration --}}
+                <div class="mt-4 mt-md-5 border-top pt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="declaration" required>
+                        <label class="form-check-label" for="declaration">
+                            I hereby declare that all the information provided in this form is true and correct to the best of my knowledge.
+                        </label>
+                    </div>
+                </div>
+
+               <div class="d-flex flex-column flex-md-row justify-content-between mt-4 gap-2">
+    <button type="button" class="btn btn-outline-primary flex-grow-1 flex-md-grow-0" id="preview-btn">
+        <i class="fas fa-eye me-2"></i>Preview Application
+    </button>
+    <button type="submit" id="submit-btn" class="btn btn-primary flex-grow-1 flex-md-grow-0">
+        <i class="fas fa-paper-plane me-2"></i>Submit Application
+    </button>
+</div>
             </form>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">Application Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="preview-content">
+                    <!-- Preview content will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="printPreview()">
+                        <i class="fas fa-print me-2"></i>Print
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -156,16 +262,176 @@
             }
             reader.readAsDataURL(event.target.files[0]);
         }
-    </script>
-@endsection
 
-@section('scripts')
-    <script>
-        document.querySelector('form').addEventListener('submit', function() {
+        // Preview functionality
+        document.getElementById('preview-btn').addEventListener('click', function() {
+            // Create a FormData object from the form
+            const formData = new FormData(document.getElementById('admissionForm'));
+            
+            // Convert FormData to a plain object
+            const formValues = {};
+            formData.forEach((value, key) => {
+                formValues[key] = value;
+            });
+
+            // Generate HTML for preview
+            const previewHtml = generatePreviewHtml(formValues);
+            
+            // Insert into modal
+            document.getElementById('preview-content').innerHTML = previewHtml;
+            
+            // Show modal
+            const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+            previewModal.show();
+        });
+
+        function generatePreviewHtml(data) {
+            return `
+                <div class="preview-container">
+                    <div class="text-center mb-4">
+                        <h5 class="text-uppercase fw-bold mb-1">"One Caste One Religion One God for Man"</h5>
+                        <h2 class="fw-bold text-primary mb-1">SIVAGIRI VIDYANIKETAN</h2>
+                        <h5 class="text-uppercase">Student Admission Form</h5>
+                        <p class="mb-1">(Managed by Sree Narayana Dharma Mangalam Trust, Singall Medu, Vatakara)</p>
+                        <h4 class="fw-bold text-decoration-underline mt-2">Application for Admission</h4>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="preview-section">
+                                <h5 class="text-primary border-bottom pb-2">Basic Details</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Class:</strong> ${data.admission_class || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Student Name:</strong> ${data.pupil_name || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Gender:</strong> ${data.gender || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Date of Birth:</strong> ${data.date_of_birth || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Aadhaar No:</strong> ${data.aadhaar_no || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Last Institution:</strong> ${data.last_institution_attended || 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="preview-section">
+                                <h5 class="text-primary border-bottom pb-2">Parent's Details</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Father's Name:</strong> ${data.father_name || 'N/A'}</p>
+                                        <p><strong>Occupation:</strong> ${data.father_occupation || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Mother's Name:</strong> ${data.mother_name || 'N/A'}</p>
+                                        <p><strong>Occupation:</strong> ${data.mother_occupation || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Annual Income:</strong> ${data.annual_income || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Parent's Education:</strong> ${data.parent_education || 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="preview-section">
+                                <h5 class="text-primary border-bottom pb-2">Contact Details</h5>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p><strong>Phone:</strong> ${data.phone_number || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><strong>WhatsApp:</strong> ${data.whatsapp_number || 'N/A'}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><strong>Email:</strong> ${data.email || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <p><strong>Address:</strong> ${data.address || 'N/A'}</p>
+                            </div>
+
+                            <div class="preview-section">
+                                <h5 class="text-primary border-bottom pb-2">Family Details</h5>
+                                <p><strong>Family Members:</strong> ${data.family_members || 'N/A'}</p>
+                                <p><strong>Siblings:</strong> ${data.siblings || 'N/A'}</p>
+                                <p><strong>Local Guardian:</strong> ${data.local_guardian || 'N/A'}</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <img id="previewPhoto" src="${document.getElementById('headerPhotoPreview').src}" 
+                                    alt="Student Photo" class="img-thumbnail mb-3" style="max-width: 150px;">
+                            </div>
+
+                            <div class="preview-section">
+                                <h5 class="text-primary border-bottom pb-2">Other Details</h5>
+                                <p><strong>Nationality:</strong> ${data.nationality || 'N/A'}</p>
+                                <p><strong>Religion & Caste:</strong> ${data.religion_caste || 'N/A'}</p>
+                                <p><strong>Mother Tongue:</strong> ${data.mother_tongue || 'N/A'}</p>
+                                <p><strong>Blood Group:</strong> ${data.blood_group || 'N/A'}</p>
+                                <p><strong>Medium of Instruction:</strong> ${data.medium_of_instruction || 'N/A'}</p>
+                                <p><strong>Immunization Status:</strong> ${data.immunization_status || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <h5 class="text-primary border-bottom pb-2">Interests and Activities</h5>
+                        <p><strong>Hobbies:</strong> ${data.hobbies || 'N/A'}</p>
+                        <p><strong>Games/Sports Played:</strong> ${data.games_played || 'N/A'}</p>
+                        <p><strong>Co-curricular Achievements:</strong> ${data.cocurricular_achievements || 'N/A'}</p>
+                        <p><strong>CCA Options Interested In:</strong> ${data.cca_options || 'N/A'}</p>
+                    </div>
+
+                    <div class="preview-section">
+                        <h5 class="text-primary border-bottom pb-2">Academic Details</h5>
+                        <p><strong>Year of Passing:</strong> ${data.year_of_passing || 'N/A'}</p>
+                        <p><strong>Total Marks Obtained:</strong> ${data.total_marks || 'N/A'}</p>
+                    </div>
+
+                    <div class="mt-4 border-top pt-3">
+                        <p class="text-muted">I hereby declare that all the information provided above is true and correct.</p>
+                        <div class="d-flex justify-content-between mt-4">
+                            <div>
+                                <p class="border-top pt-2">Parent/Guardian Signature</p>
+                            </div>
+                            <div>
+                                <p class="border-top pt-2">Date</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function printPreview() {
+            const printContent = document.getElementById('preview-content').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            
+            // Reinitialize modal after print
+            const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+            previewModal.show();
+        }
+
+        // Form submission handler
+        document.getElementById('admissionForm').addEventListener('submit', function() {
             const btn = document.getElementById('submit-btn');
-            btn.disabled = true; // prevent multiple clicks
-            btn.innerHTML =
-                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+              return true;
         });
     </script>
 
@@ -180,6 +446,16 @@
         .form-select {
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
+        }
+
+        .preview-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .preview-section:last-child {
+            border-bottom: none;
         }
 
         @media (max-width: 767.98px) {

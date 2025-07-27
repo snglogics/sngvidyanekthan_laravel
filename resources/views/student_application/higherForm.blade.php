@@ -25,7 +25,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif 
+            @endif
 
             <form id="admissionForm" action="{{ route('higher-admission.submit') }}" method="POST"
                 enctype="multipart/form-data" class="needs-validation" novalidate>
