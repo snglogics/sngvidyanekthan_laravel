@@ -1,6 +1,6 @@
 @extends('layouts.admin') 
 
-@section('title', 'Kinder Gallery List')
+@section('title', 'KG HEAD')
 @section('breadcrumb-title', 'Kinder Gallery List')
 @section('content')
 

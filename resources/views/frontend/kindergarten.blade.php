@@ -121,7 +121,7 @@
         }
     </style>
 @endsection
-@section('title', 'Kinder Home')
+@section('title', 'KG HEAD')
 @section('content')
     <section id="kinder-slider-part" class="slider-active">
         @foreach ($kinderSliders as $slider)
