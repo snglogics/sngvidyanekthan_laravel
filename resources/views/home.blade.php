@@ -254,7 +254,7 @@
 
         .event-card img {
             width: 100%;
-            height: 180px;
+            height: 230px;
             object-fit: cover;
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
@@ -317,11 +317,12 @@
             align-items: center;
             justify-content: center;
         }
+        
 
-        .scroll-btn i {
+        /* .scroll-btn i {
             font-size: 1.25rem;
             transition: all 0.3s ease;
-        }
+        } */
 
         .scroll-btn:hover {
             background-color: #0f64af;
@@ -333,20 +334,14 @@
             transform: translateX(4px);
         }
 
-        /* .scroll-btn.left i {
-                                                                                                                                                                                                                                                                                                            transform: rotate(180deg) !important;
-                                                                                                                                                                                                                                                                                                        }
-
-                                                                                                                                                                                                                                                                                                        .scroll-btn.right i {
-                                                                                                                                                                                                                                                                                                            transform: rotate(0deg) !important;
-                                                                                                                                                                                                                                                                                                        } */
-
+       
+   
         .scroll-btn.left {
-            left: -40px;
+            left: -0px;
         }
 
         .scroll-btn.right {
-            right: -40px;
+            right: -0px;
         }
 
 
@@ -1165,7 +1160,7 @@
         <!-- Toggle Button -->
         <button id="toggle-btn" class="blinking-text  btn btn-light position-fixed"
             style="top: 120px; right: 20px; z-index: 10000;">
-            <a href="#"><i class="fa fa-bell"></i></a>
+           <i class="fa fa-bell"></i></a>
             <!-- <span>{{ $announcementCount ?? 0 }}</span> -->
         </button>
 
