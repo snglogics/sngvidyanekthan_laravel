@@ -1223,7 +1223,7 @@
                             <i class="fas fa-clock"></i>
                             <h4>School Timing</h4>
                         </div>
-                        <p>Monday - Friday: 8:00 AM - 4:00 PM<br>Saturday: 9:00 AM - 1:00 PM<br>Sunday: Closed</p>
+                        <p>Monday - Friday: 8:20 AM - 3:00 PM<br>Saturday: 9:00 AM - 1:00 PM<br>Sunday: Closed</p>
                     </div>
                 </div>
                 <div class="map-container">

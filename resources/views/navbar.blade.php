@@ -387,7 +387,7 @@
                                     @endphp
                                     <li class="nav-item dropdown">
                                         <a class="{{ $isAcademicsActive ? 'active' : '' }}"
-                                            href="{{ route('curriculums.list') }}">Academics</a>
+                                            href="{{ route('frontend.assessments') }}">Academics</a>
                                         <ul class="sub-menu">
                                             <li><a href="{{ route('frontend.assessments') }}">Assessment pattern </a></li>
                                             <li><a href="{{ route('academic-calendar.frontend') }}">Academic
