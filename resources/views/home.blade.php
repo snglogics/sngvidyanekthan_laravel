@@ -229,7 +229,17 @@
             overflow: hidden;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+.image-wrapper {
+    display: block;
+    text-align: center;
+    padding: 10px; /* optional, for spacing */
+}
 
+.image-wrapper img {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+}
         .event-carousel::-webkit-scrollbar {
             display: none;
         }
@@ -1087,7 +1097,7 @@
 
 
 
-
+<!-- Events -->
 
 
     <div class="mt-80">
@@ -1101,16 +1111,13 @@
                         <div class="event-carousel">
                             @foreach ($group as $event)
                                 <div class="event-card">
-                                    <a href="{{ route('events.list') }}">
-                                        <img src="{{ $event->image_url }}" alt="event">
-                                    </a>
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $event->header }}</h5>
-                                        {{-- @if (!empty($event->description))
-                                            <p class="card-text">{{ $event->description }}</p>
-                                        @endif --}}
-                                    </div>
-                                </div>
+    <a href="{{ route('events.list') }}" class="image-wrapper">
+        <img src="{{ $event->image_url }}" alt="event">
+    </a>
+    <div class="card-body">
+        <h5 class="card-title">{{ $event->header }}</h5>
+    </div>
+</div>
                             @endforeach
                         </div>
                         <button class="scroll-btn right" onclick="scrollEvents(this, 1)"><i
