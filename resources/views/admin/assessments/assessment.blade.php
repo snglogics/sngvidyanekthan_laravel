@@ -75,7 +75,7 @@
                     <div class="assessment-header" onclick="toggleAssessment('{{ $id }}')">
                         <div class="d-flex align-items-center">
                             <i class="fas fa-graduation-cap text-primary me-3"></i>
-                            <h5 class="mb-0">{{ $assessment->classname }} Assessments</h5>
+                            <h5 class="mb-0">{{ $assessment->classname }}</h5>
                         </div>
                         <i class="fas fa-chevron-down toggle-icon" id="icon-{{ $id }}"></i>
                     </div>

@@ -170,7 +170,7 @@
                     </div>
                     <div class="col-12 col-md-4">
                         <label class="form-label">Whatsapp No.</label>
-                        <input type="text" name="whatsapp_number" class="form-control @error('whatsapp_number') is-invalid @enderror" value="{{ old('whatsapp_number') }}">
+                        <input type="text" name="whatsapp_number" class="form-control @error('whatsapp_number') is-invalid @enderror" value="{{ old('whatsapp_number') }} " required>
                         @error('whatsapp_number')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
