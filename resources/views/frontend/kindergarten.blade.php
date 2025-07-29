@@ -56,7 +56,16 @@
             margin-top: 16px;
         }
 
-        .principal-name {
+        .principal-head {
+            font-size: 1.5rem;
+            color: #216dafff;
+            font-weight: 700;
+            margin-top: 20px;
+            position: relative;
+            text-align: center;
+            z-index: 1;
+        }
+         .principal-name {
             font-size: 1.5rem;
             color: #0f64af;
             font-weight: 700;
@@ -121,7 +130,7 @@
         }
     </style>
 @endsection
-@section('title', 'KG HEAD')
+@section('title', 'Kinder Home')
 @section('content')
     <section id="kinder-slider-part" class="slider-active">
         @foreach ($kinderSliders as $slider)
@@ -146,10 +155,12 @@
     </section>
 
     {{-- Principal message --}}
-
+     <p class="principal-head">KG HEAD</p>
     <div class="container principal-section">
         <div class="principal-quote-container">
+        
             <div class="principal-image-container">
+                
                 <img src="{{ asset($principalMsg->image_url) }}" alt="Principal">
                 <p class="principal-name">{{ $principalMsg->image_name }}</p>
             </div>

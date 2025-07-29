@@ -63,6 +63,7 @@ class HigherStudentAdmissionController extends Controller
         ]);
 
         try {
+            
             $cloudinary = $this->cloudinary();
 
             // Upload Marks Table Image

@@ -19,7 +19,7 @@
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show">
                     <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
+                        @foreach ($errors->all() as $error) 
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>

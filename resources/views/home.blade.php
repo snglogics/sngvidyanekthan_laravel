@@ -5,6 +5,13 @@
 
 
     <style>
+
+        .bg_cover {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* margin: 2px; */
+}
         #category-part {
             background-color: #ffffff;
             padding: 80px 0;
@@ -583,7 +590,10 @@
         .submit-btn:hover {
             background-color: #084080;
         }
-
+.rotate-icon {
+    transform: rotate(180deg); /* Rotates 180 degrees */
+    transition: transform 0.3s ease; /* Smooth animation */
+}
         @media (max-width: 768px) {
             .form-row {
                 flex-direction: column;
@@ -874,7 +884,7 @@
 
 
         @foreach ($sliders as $slider)
-            <div class="single-slider bg_cover pt-150" style="background-image: url('{{ $slider['image_url'] }}')"
+            <div class="single-slider bg_cover pt-150" style="background-image: url('{{ $slider['image_url'] }}') "
                 data-overlay="4">
                 <div class="container">
                     <div class="row">
@@ -1212,7 +1222,7 @@
                     </div>
                     <div class="info-card">
                         <div class="icon-title-wrap">
-                            <i class="fas fa-phone-alt"></i>
+                            <i class="fas fa-phone-alt rotate-icon"></i>
                             <h4>Our Contact Info</h4>
                         </div>
                         <p>+91 7994573586<br>

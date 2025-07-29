@@ -32,12 +32,22 @@
                 </div>
             </div>
 
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+           @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <script>
+        // Ensure the alert stays visible after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll to the alert if it exists
+            const alert = document.querySelector('.alert-success');
+            if (alert) {
+                alert.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+@endif
 
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show">

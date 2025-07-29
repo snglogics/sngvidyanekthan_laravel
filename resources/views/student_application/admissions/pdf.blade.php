@@ -62,7 +62,7 @@
             <td>{{ $student->admission_class }}</td>
         </tr>
         <tr>
-            <th>Pupil's Name</th>
+            <th>Student's Name</th>
             <td>{{ $student->pupil_name }}</td>
         </tr>
         <tr>

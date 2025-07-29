@@ -48,7 +48,7 @@
     </div>
     <!-- Filter Section -->
     <div class="filter-container">
-        <form method="GET" action="{{ route('frontend.assessments') }}" class="row g-3">
+        <form method="GET" action="{{ route('admin.assessment.view') }}" class="row g-3">
             <div class="col-md-4">
                 <label for="class" class="form-label">Filter by Class</label>
                 <select name="class" id="class" class="form-select">
@@ -62,7 +62,7 @@
                 <button type="submit" class="btn btn-primary me-2">
                     <i class="bi bi-funnel"></i> Apply Filter
                 </button>
-                <a href="{{ route('frontend.assessments') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-counterclockwise"></i> Reset
                 </a>
             </div>

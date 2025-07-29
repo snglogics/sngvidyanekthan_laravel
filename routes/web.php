@@ -262,6 +262,18 @@ Route::get('/admin/timetable/view', [TimetableController::class, 'timetableview'
 Route::get('/timetable/{id}/download', [TimeTableController::class, 'download'])->name('admin.timetables.download');
 Route::get('/admin/timetables/{id}', [TimeTableController::class, 'view'])->name('admin.timetables.view');
 
+//Assessments
+
+Route::prefix('admin')->middleware(['auth'])->as('admin.')->group(function () {
+  Route::resource('assessments', AssessmentController::class);
+});
+
+Route::get('/admin/assessmentlist', [AssessmentController::class, 'assessmentview'])->name('assessment.list');
+require __DIR__ . '/auth.php';
+Route::get('/admin/assessment/view', [AssessmentController::class, 'assessmentview'])->name('admin.assessment.view');
+Route::get('/assessment/{id}/download', [AssessmentController::class, 'download'])->name('admin.assessments.download');
+Route::get('/admin/assessments/{id}', [AssessmentController::class, 'view'])->name('admin.assessments.view');
+
 
 //News routes
 Route::prefix('admin')->middleware('auth')->group(function () {
@@ -519,11 +531,11 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 //student coucil frontend
 Route::get('/student_council', [App\Http\Controllers\Frontend\StudentCouncilController::class, 'index'])->name('student_council.index');
 //assessments
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
-    Route::resource('assessments', AssessmentController::class);
-});
+// Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+//     Route::resource('assessments', AssessmentController::class);
+// });
 
-Route::group(['as' => 'frontend.'], function() {
-    Route::get('/assessments', [AssessmentFrontendController::class, 'index'])
-        ->name('assessments');
-        });
+// Route::group(['as' => 'frontend.'], function() {
+//     Route::get('/assessments', [AssessmentFrontendController::class, 'index'])
+//         ->name('assessments');
+//         });

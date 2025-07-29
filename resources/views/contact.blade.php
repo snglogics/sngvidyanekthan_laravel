@@ -23,7 +23,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="singel-form form-group">
-                                            <input name="email" type="email" placeholder="Email" required>
+                                           <input 
+    type="email" 
+    name="email" 
+    class="form-control" 
+    required 
+    pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    title="Please enter a valid email (e.g., user@example.com)"
+>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -33,7 +40,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="singel-form form-group">
-                                            <input name="phone" type="text" placeholder="Phone" required>
+                                            <input name="phone" type="text" placeholder="Phone" required pattern="\d{10}" title="Enter a 10-digit mobile number">
                                         </div>
                                     </div>
                                     <div class="col-md-12">

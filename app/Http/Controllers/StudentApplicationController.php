@@ -92,6 +92,7 @@ class StudentApplicationController extends Controller
         }
 
         try {
+             set_time_limit(120);
             $data = $validator->validated();
             
             // Format data consistently
@@ -101,14 +102,17 @@ class StudentApplicationController extends Controller
             $data['mother_name'] = Str::title($data['mother_name']);
 
             // Handle photo upload
+              \Log::debug('Attempting Cloudinary upload');
             $cloudinary = $this->cloudinary();
             $uploadResponse = $cloudinary->uploadApi()->upload(
                 $request->file('photo')->getRealPath(),
+                
                 [
                     'folder' => 'admission_photos',
                     'public_id' => 'student_' . Str::slug($data['pupil_name']) . '_' . time(),
                     'overwrite' => true,
                     'resource_type' => 'image',
+                    'timeout' => 60,
                     'transformation' => [
                         'width' => 400,
                         'height' => 533,
@@ -117,7 +121,7 @@ class StudentApplicationController extends Controller
                     ]
                 ]
             );
-
+ \Log::debug('Cloudinary upload successful');
             $data['photo_url'] = $uploadResponse['secure_url'];
             $data['application_number'] = $this->generateApplicationNumber();
 
@@ -127,9 +131,8 @@ class StudentApplicationController extends Controller
             // Generate and store PDF
             $this->generateAndStorePdf($student);
 
-            return redirect()->back()
-                ->with('success', 'Application submitted successfully! Your application number is: ' . $data['application_number']);
-
+           return redirect()->route('student.application.form')
+    ->with('success', 'Application submitted successfully! Your application number is: ' . $data['application_number']);
         } catch (\Exception $e) {
             Log::error('Student application error: ' . $e->getMessage());
             Log::error('Exception trace: ' . $e->getTraceAsString());
