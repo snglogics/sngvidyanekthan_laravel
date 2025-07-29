@@ -19,7 +19,7 @@
             @if ($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show">
                     <ul class="mb-0">
-                        @foreach ($errors->all() as $error) 
+                        @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -307,15 +307,15 @@
     <tr>
         <td>{{ $i-5 }}</td>
         <td>
-            <input type="text" name="subjects[]" class="form-control subject-input" 
+            <input type="text" name="board_subjects[]" class="form-control subject-input" 
                    value="{{ old('subjects.'.$i) }}" data-table="board">
         </td>
         <td>
-            <input type="text" name="percentages[]" class="form-control percentage-input" 
+            <input type="text" name="board_percentages[]" class="form-control percentage-input" 
                    value="{{ old('percentages.'.$i) }}" data-table="board">
         </td>
         <td>
-            <input type="text" name="grades[]" class="form-control grade-input" 
+            <input type="text" name="board_grades[]" class="form-control grade-input" 
                    value="{{ old('grades.'.$i) }}" data-table="board">
         </td>
     </tr>
