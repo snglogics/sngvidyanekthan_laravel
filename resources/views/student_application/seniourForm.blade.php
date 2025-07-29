@@ -12,9 +12,9 @@
             </div>
 
             {{-- Success Message --}}
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Success!</strong> {{ session('success') }}
+                    {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
@@ -64,7 +64,7 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label">Gender</label>
-                        <select name="gender" class="form-select @error('gender') is-invalid @enderror" required>
+                        <select name="gender" class="form-control @error('gender') is-invalid @enderror" required>
                             <option value="">Select</option>
                             <option value="Boy" {{ old('gender') == 'Boy' ? 'selected' : '' }}>Boy</option>
                             <option value="Girl" {{ old('gender') == 'Girl' ? 'selected' : '' }}>Girl</option>

@@ -61,8 +61,9 @@ class SeniorStudentAdmissionController extends Controller
     /**
      * Handle form submission
      */
-    public function submitForm(Request $request): RedirectResponse
+    public function submitSeniorForm(Request $request): RedirectResponse
     {
+        
         $rules = [
             'admission_class' => 'required|string|max:255',
             'pupil_name' => 'required|string|max:255',
@@ -134,38 +135,35 @@ class SeniorStudentAdmissionController extends Controller
             );
 
             $validatedData['photo_url'] = $photoResponse['secure_url'];
-
+SeniorStudentAdmission::create($validatedData);
             // Create student record
-            $student = SeniorStudentAdmission::create($validatedData);
+            // $student = SeniorStudentAdmission::create($validatedData);
 
             // Generate and upload PDF
-            $pdf = Pdf::loadView('student_application.admissions.pdf', compact('student'));
-            $pdfPath = storage_path('app/public/admissions/' . $student->id . '.pdf');
-            $pdf->save($pdfPath);
+            // $pdf = Pdf::loadView('student_application.admissions.pdf', compact('student'));
+            // $pdfPath = storage_path('app/public/admissions/' . $student->id . '.pdf');
+            // $pdf->save($pdfPath);
 
-            $pdfResponse = $cloudinary->uploadApi()->upload(
-                $pdfPath,
-                [
-                    'folder' => 'student_admissions',
-                    'public_id' => 'admission_' . $student->id,
-                    'resource_type' => 'raw',
-                    'format' => 'pdf'
-                ]
-            );
+            // $pdfResponse = $cloudinary->uploadApi()->upload(
+            //     $pdfPath,
+            //     [
+            //         'folder' => 'student_admissions',
+            //         'public_id' => 'admission_' . $student->id,
+            //         'resource_type' => 'raw',
+            //         'format' => 'pdf'
+            //     ]
+            // );
 
-            $downloadUrl = $pdfResponse['secure_url'] . '?fl_attachment=admission_form';
-            $student->update(['pdf_url' => $downloadUrl]);
+            // $downloadUrl = $pdfResponse['secure_url'] . '?fl_attachment=admission_form';
+            // $student->update(['pdf_url' => $downloadUrl]);
 
             // Clean up local file
-            if (file_exists($pdfPath)) {
-                unlink($pdfPath);
-            }
+           
 
-            $request->session()->forget(['success', 'error']);
+           
 
-        return redirect()
-            ->back()
-            ->with('success', 'Application submitted successfully! ID: ' . $student->id);
+        return redirect()->route('admissions.form')->with('success', 'Application submitted successfully!');
+
         } catch (\Exception $e) {
             Log::error('Senior student admission error: ' . $e->getMessage());
            return redirect()

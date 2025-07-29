@@ -1222,7 +1222,7 @@
                     </div>
                     <div class="info-card">
                         <div class="icon-title-wrap">
-                            <i class="fas fa-phone-alt rotate-icon"></i>
+                            <i class="fas fa-mobile-alt "></i>
                             <h4>Our Contact Info</h4>
                         </div>
                         <p>+91 7994573586<br>

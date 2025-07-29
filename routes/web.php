@@ -307,7 +307,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     ->name('primary-students.destroy');
 });
 // Handle the form submission
-Route::post('/admissions/senior', [SeniorStudentAdmissionController::class, 'submitForm'])->name('admissions.submit');
+Route::post('/admissions/senior', [SeniorStudentAdmissionController::class, 'submitSeniorForm'])->name('admissions.submit');
 // academic performance
 
 Route::prefix('admin')->middleware(['auth'])->as('admin.')->group(function () {
