@@ -102,7 +102,9 @@
                     toastr.error("An unexpected error occurred.", "Upload Error");
                 }
             } catch (error) {
-                toastr.error(error.message || "An unexpected error occurred.", "Upload Error");
+                console.error("Full error object:", error);
+
+                toastr.error(error.message || "An unexpected error occurred.", error);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<i class="fas fa-cloud-upload-alt me-2"></i>Upload Video`;
