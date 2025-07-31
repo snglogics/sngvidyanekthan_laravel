@@ -105,7 +105,7 @@
                 let message = "An unexpected error occurred.";
 
                 if (text.startsWith("<!DOCTYPE") || text.startsWith("<html")) {
-                    message = "Server returned HTML instead of JSON. Check the Laravel logs.";
+                    message = "Upgrade Cloudinary plan for upload more than 10MB file.";
                 } else {
                     message = text;
                 }
