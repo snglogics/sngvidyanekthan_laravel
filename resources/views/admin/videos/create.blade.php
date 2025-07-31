@@ -72,7 +72,8 @@
                 const response = await fetch("{{ route('admin.videos.store') }}", {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: formData
                 });
@@ -87,7 +88,7 @@
                         toastr.success(data.message || "Uploaded successfully", "Success");
                         form.reset();
                     } else {
-                        toastr.error(data.message || "Upload failed", "Error");
+                        toastr.error(data.message || "Upload failed", "Try agian with smaller file");
                     }
                 } else if (response.status === 422) {
                     const data = await response.json();

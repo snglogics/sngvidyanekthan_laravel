@@ -8,6 +8,8 @@ use Cloudinary\Cloudinary;
 use Cloudinary\Configuration\Configuration;
 use App\Models\VideoAlbum;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
+
 
 
 class VideoAlbumController extends Controller
@@ -20,7 +22,7 @@ class VideoAlbumController extends Controller
         // $url = "https://www.googleapis.com/youtube/v3/search?order=date&part=snippet&channelId={$channelId}&maxResults=6&type=video&key={$apiKey}";
 
         // $json = file_get_contents($url);
-        // $youtubeData = json_decode($json, true);
+        // $youtubeData = json_decode($json, true); 
 
         // $youtubeVideos = $youtubeData['items'] ?? [];
         $customVideos = VideoAlbum::all();
@@ -44,56 +46,81 @@ class VideoAlbumController extends Controller
         return view('admin.videos.create');
     }
 
-    public function store(Request $request)
-    {
-        try {
-            $request->validate([
-                'title' => 'required|string|max:255',
-                'video' => 'required|mimetypes:video/mp4,video/avi,video/mov,video/quicktime|max:204800', // Max 200MB
-                'type' => 'required|in:album,virtual',
-                'description' => 'nullable|string',
-            ]);
-        } catch (ValidationException $e) {
-            return redirect()->back()
-                ->withErrors($e->errors())
-                ->withInput()
-                ->with('error', 'Validation failed.');
+
+
+public function store(Request $request)
+{
+    try {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'video' => 'required|mimetypes:video/mp4,video/avi,video/mov,video/quicktime|max:204800', // Max 200MB
+            'type' => 'required|in:album,virtual',
+            'description' => 'nullable|string',
+        ]);
+    } catch (ValidationException $e) {
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $e->errors(),
+            ], 422);
         }
-
-        try {
-            $cloudinary = $this->cloudinary();
-
-            $upload = $cloudinary->uploadApi()->upload(
-                $request->file('video')->getRealPath(),
-                [
-                    'resource_type' => 'video',
-                    'folder' => 'video_albums',
-                    'public_id' => uniqid(),
-                    'eager' => [
-                        ['quality' => 'auto', 'fetch_format' => 'auto']
-                    ],
-                    'eager_async' => true,
-                    'overwrite' => true,
-                ]
-            );
-
-            VideoAlbum::create([
-                'title' => $request->title,
-                'type' => $request->type,
-                'description' => $request->description,
-                'video_url' => $upload['secure_url'],
-                'public_id' => $upload['public_id'],
-                'duration' => $upload['duration'] ?? null,
-                'format' => $upload['format'] ?? null,
-            ]);
-
-            return redirect()->route('admin.videos.index')->with('success', 'Video uploaded successfully.');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Upload failed: ' . $e->getMessage());
-        }
+        return redirect()->back()
+            ->withErrors($e->errors())
+            ->withInput()
+            ->with('error', 'Validation failed.');
     }
+
+    try {
+        $cloudinary = $this->cloudinary();
+
+        $upload = $cloudinary->uploadApi()->upload(
+            $request->file('video')->getRealPath(),
+            [
+                'resource_type' => 'video',
+                'folder' => 'video_albums',
+                'public_id' => uniqid(),
+                'eager' => [
+                    ['quality' => 'auto', 'fetch_format' => 'auto']
+                ],
+                'eager_async' => true,
+                'overwrite' => true,
+            ]
+        );
+
+        VideoAlbum::create([
+            'title' => $request->title,
+            'type' => $request->type,
+            'description' => $request->description,
+            'video_url' => $upload['secure_url'],
+            'public_id' => $upload['public_id'],
+            'duration' => $upload['duration'] ?? null,
+            'format' => $upload['format'] ?? null,
+        ]);
+
+       if ($request->expectsJson() || $request->isJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Video uploaded successfully.'
+            ]);
+        }
+
+        return redirect()->route('admin.videos.index')->with('success', 'Video uploaded successfully.');
+    } catch (\Exception $e) {
+        Log::error('Video upload failed: ' . $e->getMessage());
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Upload failed: ' . $e->getMessage(),
+            ], 500);
+        }
+
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Upload failed: ' . $e->getMessage());
+    }
+}
 
 
     public function destroy($id)

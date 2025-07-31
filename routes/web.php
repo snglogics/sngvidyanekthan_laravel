@@ -530,12 +530,3 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 
 //student coucil frontend
 Route::get('/student_council', [App\Http\Controllers\Frontend\StudentCouncilController::class, 'index'])->name('student_council.index');
-//assessments
-// Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
-//     Route::resource('assessments', AssessmentController::class);
-// });
-
-// Route::group(['as' => 'frontend.'], function() {
-//     Route::get('/assessments', [AssessmentFrontendController::class, 'index'])
-//         ->name('assessments');
-//         });
