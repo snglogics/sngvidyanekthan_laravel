@@ -53,62 +53,75 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script>
-        const form = document.getElementById('uploadForm');
-        const submitBtn = document.getElementById('submitBtn');
+    @section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    const form = document.getElementById('uploadForm');
+    const submitBtn = document.getElementById('submitBtn');
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Uploading...
         `;
 
-            const formData = new FormData(form);
+        const formData = new FormData(form);
 
-            try {
-                const response = await fetch("{{ route('admin.videos.store') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                         'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: formData
-                });
+        try {
+            const response = await fetch("{{ route('admin.videos.store') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
 
-                if (response.status === 413) {
-                    throw new Error("The uploaded file is too large.");
-                }
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        toastr.success(data.message || "Uploaded successfully", "Success");
-                        form.reset();
-                    } else {
-                        toastr.error(data.message || "Upload failed", "Try agian with smaller file");
-                    }
-                } else if (response.status === 422) {
-                    const data = await response.json();
-                    const errors = data.errors;
-                    for (let field in errors) {
-                        errors[field].forEach(msg => toastr.error(msg, "Validation Error"));
-                    }
-                } else {
-                    const text = await response.text();
-                    console.error("Unexpected response:", text);
-                    toastr.error("An unexpected error occurred.", "Upload Error");
-                }
-            } catch (error) {
-                console.error("Full error object:", error);
-
-                toastr.error(error.message || "An unexpected error occurred.", error);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fas fa-cloud-upload-alt me-2"></i>Upload Video`;
+            if (response.status === 413) {
+                throw new Error("The uploaded file is too large.");
             }
-        });
-    </script>
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.success) {
+                    toastr.success(data.message || "Uploaded successfully", "Success");
+                    form.reset();
+                } else {
+                    toastr.error(data.message || "Upload failed. Try again with a smaller file.", "Server Response");
+                }
+            } else if (response.status === 422) {
+                const data = await response.json();
+                const errors = data.errors;
+                for (let field in errors) {
+                    errors[field].forEach(msg => toastr.error(msg, "Validation Error"));
+                }
+            } else {
+                const text = await response.text();
+                console.error("Unexpected response:", text);
+
+                let message = "An unexpected error occurred.";
+
+                if (text.startsWith("<!DOCTYPE") || text.startsWith("<html")) {
+                    message = "Server returned HTML instead of JSON. Check the Laravel logs.";
+                } else {
+                    message = text;
+                }
+
+                toastr.error(message, `Error ${response.status}`);
+            }
+
+        } catch (error) {
+            console.error("Upload failed:", error);
+            toastr.error(error.message || "An unknown error occurred.", "Upload Failed");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="fas fa-cloud-upload-alt me-2"></i>Upload Video`;
+        }
+    });
+</script>
+@endsection
+
 @endsection
