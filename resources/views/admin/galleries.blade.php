@@ -8,11 +8,8 @@
 
         @php
             $buttons = [
-                ['route' => 'admin.gallery.index', 'label' => 'Gallery', 'icon' => 'fas fa-images', 'color' => 'primary'],
                 ['route' => 'admin.videos.create', 'label' => 'Videos', 'icon' => 'fas fa-video', 'color' => 'success'],
                 ['route' => 'admin.magazines.index', 'label' => 'Manazine', 'icon' => 'fas fa-book-open', 'color' => 'info'],
-                ['route' => 'admin.events.create', 'label' => '+ New', 'icon' => 'fas fa-plus-circle', 'color' => 'info'],
-                ['route' => 'events.upload', 'label' => '+ New', 'icon' => 'fas fa-plus-circle', 'color' => 'info'],
             ];
         @endphp
 

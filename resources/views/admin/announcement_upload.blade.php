@@ -128,7 +128,7 @@
                 }
             } catch (error) {
                 console.error('Upload Error:', error);
-                toastr.error('Something went wrong.', 'Error');
+                toastr.error('Something went wrong.', 'Upload File');
             } finally {
                 // Reset button text and re-enable it
                 submitBtn.textContent = 'Upload Announcement';

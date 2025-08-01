@@ -10,8 +10,6 @@
             $buttons = [
                 ['route' => 'admin.events.index', 'label' => 'Upcoming Events', 'icon' => 'fas fa-calendar-check', 'color' => 'primary'],
                 ['route' => 'news.create', 'label' => 'News', 'icon' => 'fas fa-newspaper', 'color' => 'success'],
-                ['route' => 'announcement.uploadForm', 'label' => 'Public Updates', 'icon' => 'fas fa-bullhorn', 'color' => 'warning'],
-                ['route' => 'admin.magazines.index', 'label' => 'Manazine', 'icon' => 'fas fa-book-open', 'color' => 'info'],
                 ['route' => 'events.upload', 'label' => 'Update Events', 'icon' => 'fas fa-upload', 'color' => 'info'],
             ];
         @endphp

@@ -21,12 +21,13 @@
                         'icon' => 'fas fa-university',
                         'color' => 'info',
                     ],
-                    [
-                        'route' => 'admin.pta-members.index',
-                        'label' => 'PTA Members',
-                        'icon' => 'fas fa-users',
-                        'color' => 'info',
+                     [
+                        'route' => 'admin.buses.index',
+                        'label' => 'Bus Route',
+                        'icon' => 'fas fa-bus',
+                        'color' => 'success',
                     ],
+                    
                 ];
             @endphp
 
@@ -48,3 +49,10 @@
         </div>
     </div>
 @endsection
+
+<!-- [
+                        'route' => 'admin.pta-members.index',
+                        'label' => 'PTA Members',
+                        'icon' => 'fas fa-users',
+                        'color' => 'info',
+                    ], -->

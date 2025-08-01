@@ -10,10 +10,8 @@
             $buttons = [
                 ['route' => 'admin.co_curricular_programs.index', 'label' => 'co-curricular', 'icon' => 'fas fa-palette', 'color' => 'primary'],
                 ['route' => 'admin.clubs.index', 'label' => 'Clubs', 'icon' => 'fas fa-masks-theater', 'color' => 'primary'],
-                ['route' => 'events.upload', 'label' => 'Events', 'icon' => 'fas fa-calendar-check', 'color' => 'success'],
                 ['route' => 'admin.interschool-participations.index', 'label' => 'Interschool Activity', 'icon' => 'fas fa-people-arrows', 'color' => 'warning'],
-                ['route' => 'admin.events.create', 'label' => '+ New', 'icon' => 'fas fa-plus-circle', 'color' => 'info'],
-                ['route' => 'events.upload', 'label' => '+ New', 'icon' => 'fas fa-plus-circle', 'color' => 'info'],
+              
             ];
         @endphp
 

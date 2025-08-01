@@ -14,18 +14,9 @@
                         'icon' => 'fas fa-users',
                         'color' => 'primary',
                     ],
-                    [
-                        'route' => 'admin.live-classes.create',
-                        'label' => 'Digital Classroom',
-                        'icon' => 'fas fa-chalkboard-teacher',
-                        'color' => 'success',
-                    ],
-                    [
-                        'route' => 'admin.buses.index',
-                        'label' => 'Bus Route',
-                        'icon' => 'fas fa-bus',
-                        'color' => 'success',
-                    ],
+                    
+                  
+                   
                 ];
             @endphp
 

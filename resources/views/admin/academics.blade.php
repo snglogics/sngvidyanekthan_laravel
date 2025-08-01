@@ -11,8 +11,7 @@
                 ['route' => 'admin.curriculums.index', 'label' => 'curriculum', 'icon' => 'fas fa-book-open', 'color' => 'primary'],
                 ['route' => 'admin.assessments.index', 'label' => 'assessments', 'icon' => 'fas fa-pencil-alt', 'color' => 'primary'],
                 ['route' => 'admin.academic-calendars.index', 'label' => 'academic Calendar', 'icon' => 'fas fa-calendar-alt', 'color' => 'success'],
-                ['route' => 'admin.syllabuses.index', 'label' => 'Online syllabus', 'icon' => 'fas fa-file-alt', 'color' => 'warning'],
-                ['route' => 'admin.timetables.index', 'label' => 'Timetable', 'icon' => 'fas fa-clock', 'color' => 'info'],
+                 ['route' => 'admin.timetables.index', 'label' => 'Timetable', 'icon' => 'fas fa-clock', 'color' => 'info'],
                
             ];
         @endphp

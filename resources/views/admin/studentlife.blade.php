@@ -8,24 +8,14 @@
 
             @php
                 $buttons = [
-                    [
-                        'route' => 'admin.sports_games.index',
-                        'label' => 'Sports & Games',
-                        'icon' => 'fas fa-football-ball',
-                        'color' => 'success',
-                    ],
+                   
                     [
                         'route' => 'admin.field_trips.index',
                         'label' => 'Field Trips & Tours',
                         'icon' => 'fas fa-route',
                         'color' => 'info',
                     ],
-                    [
-                        'route' => 'admin.student_council.index',
-                        'label' => 'Student Council',
-                        'icon' => 'fas fa-user-graduate',
-                        'color' => 'info',
-                    ],
+                    
                 ];
             @endphp
 
@@ -47,3 +37,10 @@
         </div>
     </div>
 @endsection
+
+<!--  [
+                        'route' => 'admin.sports_games.index',
+                        'label' => 'Sports & Games',
+                        'icon' => 'fas fa-football-ball',
+                        'color' => 'success',
+                    ], -->
