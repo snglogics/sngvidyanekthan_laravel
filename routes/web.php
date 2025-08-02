@@ -66,7 +66,7 @@ Route::get('/upcoming-events', [FrontEndController::class, 'upComingEvents'])->n
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
 // Signup page
-// Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');  // Registration page
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');  // Registration page
 
 // dashboard route
 Route::middleware(['auth'])->group(function () {
