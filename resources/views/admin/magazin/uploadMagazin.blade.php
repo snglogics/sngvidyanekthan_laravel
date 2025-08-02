@@ -40,6 +40,12 @@
 @section('content')
 
 <div class="card mb-4">
+    {{-- 🔴 Display controller-level error (like Cloudinary failure) --}}
+    @if(session('error'))
+        <div class="alert alert-danger mt-3">
+            <i class="bi bi-x-circle"></i> {{ session('error') }}
+        </div>
+    @endif
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><i class="bi bi-cloud-upload-fill"></i> Upload New Magazine</h5>
     </div>
@@ -50,11 +56,17 @@
                 <div class="col-md-6 mb-3">
                     <label for="title" class="form-label">Magazine Title</label>
                     <input type="text" name="title" placeholder="Enter title" required class="form-control">
+                    @error('title')
+        <div class="text-danger mt-1">{{ $message }}</div>
+    @enderror
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="pdf" class="form-label">Upload PDF</label>
-                    <input type="file" name="pdf" accept="application/pdf" required class="form-control">
-                </div>
+    <label for="pdf" class="form-label">Upload PDF</label>
+    <input type="file" name="pdf" accept="application/pdf" required class="form-control">
+    @error('pdf')
+        <div class="text-danger mt-1">{{ $message }}</div>
+    @enderror
+</div>
             </div>
             <button type="submit" class="btn btn-success" id="upload-btn">
                 <i class="bi bi-upload"></i> Upload Magazine

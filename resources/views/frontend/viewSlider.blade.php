@@ -7,16 +7,16 @@
                 class="bg-white rounded-2xl shadow-lg border overflow-hidden hover:shadow-2xl transition duration-300 ease-in-out">
 
                 <div class="w-full h-64 md:h-96 overflow-hidden">
-                    <img src="{{ $slider['image_url'] }}" alt="{{ $slider['header'] ?? 'Slide Image' }}"
+                    <img src="{{ $slider->image }}" alt="{{ $slider->heading ?? 'Slide Image' }}"
                         class="w-full h-full object-cover object-center transform hover:scale-105 transition duration-500 ease-in-out">
                 </div>
 
                 <div class="p-8 md:p-10 lg:p-12">
                     <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-2 border-l-4 border-blue-500 pl-4">
-                        {{ $slider['header'] ?? '' }}
+                        {{ $slider->heading ?? '' }}
                     </h2>
                     <p class="text-gray-700 text-lg md:text-xl leading-relaxed tracking-wide whitespace-pre-line p-4">
-                        {!! nl2br(e($slider['common_header'] ?? '')) !!}
+                        {!! nl2br(e($slider->description ?? '')) !!}
                     </p>
                     <div class="mt-6">
                         <a href="{{ route('about') }}"
@@ -27,6 +27,5 @@
                 </div>
             </div>
         @endforeach
-
     </section>
 @endsection

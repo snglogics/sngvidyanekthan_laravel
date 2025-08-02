@@ -72,108 +72,165 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (['slider1', 'slider2', 'slider3'] as $slider)
-                        <tr>
-                            <td>
-                                <label for="{{ $slider }}" class="d-inline-block">
-                                    <img id="preview_{{ $slider }}"
-                                        src="{{ $images[$slider] ?? 'https://cdn-icons-png.flaticon.com/512/847/847969.png' }}"
-                                        alt="{{ $slider }}" class="preview-image" />
-                                </label>
-                                <input type="file" id="{{ $slider }}" name="{{ $slider }}"
-                                    class="d-none file-upload" data-slider="{{ $slider }}" accept="image/*">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="{{ $slider }}_heading"
-                                    placeholder="Enter heading" value="{{ $images[$slider . '_heading'] ?? '' }}">
-                            </td>
-                            <td>
-                                <textarea class="form-control" id="{{ $slider }}_description" placeholder="Enter description" rows="3">{{ $images[$slider . '_description'] ?? '' }}</textarea>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-success upload-btn w-100"
-                                    data-slider="{{ $slider }}">
-                                    <i class="bi bi-cloud-upload me-1"></i> Upload
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
+    @foreach ($sliders as $slider)
+        <tr data-id="{{ $slider->id }}">
+            <td>
+                <label class="d-inline-block">
+                    <img id="preview_{{ $slider->id }}"
+                        src="{{ $slider->image ?? 'https://cdn-icons-png.flaticon.com/512/847/847969.png' }}"
+                        alt="Slider Image" class="preview-image" />
+                </label>
+                <input type="file" class="d-none file-upload" data-id="{{ $slider->id }}" accept="image/*">
+            </td>
+            <td>
+                <input type="text" class="form-control heading-input"
+                    placeholder="Enter heading" value="{{ $slider->heading }}">
+            </td>
+            <td>
+                <textarea class="form-control description-input"
+                    placeholder="Enter description" rows="3">{{ $slider->description }}</textarea>
+            </td>
+            <td class="d-flex flex-column gap-2">
+    <button type="button" class="btn btn-success upload-btn w-100"
+        data-id="{{ $slider->id }}">
+        <i class="bi bi-cloud-upload me-1"></i> Upload
+    </button>
+    <button type="button" class="btn btn-danger delete-btn w-100"
+        data-id="{{ $slider->id }}">
+        <i class="bi bi-trash me-1"></i> Delete
+    </button>
+</td>
+        </tr>
+    @endforeach
+
+    {{-- Empty row for new slider --}}
+    <tr data-id="">
+        <td>
+            <label class="d-inline-block">
+                <img id="preview_new"
+                    src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                    alt="New Slider" class="preview-image" />
+            </label>
+            <input type="file" class="d-none file-upload" data-id="new" accept="image/*">
+        </td>
+        <td><input type="text" class="form-control heading-input" placeholder="Enter heading"></td>
+        <td><textarea class="form-control description-input" placeholder="Enter description" rows="3"></textarea></td>
+        <td>
+            <button type="button" class="btn btn-success upload-btn w-100" data-id="new">
+                <i class="bi bi-cloud-upload me-1"></i> Upload
+            </button>
+        </td>
+    </tr>
+</tbody>
+
             </table>
         </div>
     </div>
 @endsection
 
 @section('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <script>
-        document.querySelectorAll('.file-upload').forEach(input => {
-            input.addEventListener('change', function(event) {
-                const [file] = event.target.files;
-                if (file) {
-                    const preview = document.getElementById(`preview_${event.target.dataset.slider}`);
-                    preview.src = URL.createObjectURL(file);
-                }
-            });
+<script>
+    document.querySelectorAll('.preview-image').forEach((img, i) => {
+        img.addEventListener('click', () => {
+            const input = img.closest('td').querySelector('.file-upload');
+            input.click();
         });
+    });
 
-        document.querySelectorAll('.upload-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                const slider = button.dataset.slider;
-                const fileInput = document.getElementById(slider);
+    document.querySelectorAll('.file-upload').forEach(input => {
+        input.addEventListener('change', function () {
+            const [file] = this.files;
+            if (file) {
+                const previewId = this.dataset.id === 'new' ? 'preview_new' : `preview_${this.dataset.id}`;
+                document.getElementById(previewId).src = URL.createObjectURL(file);
+            }
+        });
+    });
 
-                if (!fileInput.files.length) {
-                    toastr.warning('Please select an image first.', 'Notice');
-                    return;
-                }
+    document.querySelectorAll('.upload-btn').forEach(button => {
+        button.addEventListener('click', async function () {
+            const id = this.dataset.id;
+            const row = this.closest('tr');
+            const fileInput = row.querySelector('.file-upload');
+            const heading = row.querySelector('.heading-input').value;
+            const description = row.querySelector('.description-input').value;
 
-                const formData = new FormData();
+            const formData = new FormData();
+            if (fileInput.files.length > 0) {
                 formData.append('image', fileInput.files[0]);
-                formData.append('slider', slider);
+            }
+            formData.append('heading', heading);
+            formData.append('description', description);
 
-                const headingInput = document.getElementById(`${slider}_heading`);
-                const descriptionInput = document.getElementById(`${slider}_description`);
-                formData.append('heading', headingInput.value || '');
-                formData.append('description', descriptionInput.value || '');
+            if (id && id !== 'new') {
+                formData.append('slider_id', id);
+            }
 
-                button.disabled = true;
-                button.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Uploading`;
+            const buttonOriginalHTML = this.innerHTML;
+            this.disabled = true;
+            this.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Uploading`;
 
-                try {
-                    const response = await fetch("{{ route('slider.upload') }}", {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                            'Accept': 'application/json'
-                        },
-                        body: formData
-                    });
+            try {
+                const response = await fetch("{{ route('slider.upload') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
 
-                    const contentType = response.headers.get("content-type");
+                const result = await response.json();
 
-                    if (contentType && contentType.includes("application/json")) {
-                        const result = await response.json();
-
-                        if (result.success) {
-                            toastr.success(result.message, 'Success');
-                        } else {
-                            toastr.error(result.message || 'Upload failed.', 'Error');
-                        }
-                    } else {
-                        const errorText = await response.text();
-                        console.error(errorText);
-                        toastr.error('Unexpected error. ' + errorText, );
-                    }
-                } catch (error) {
-                    console.error('Upload Error:', error);
-                    toastr.error('Something went wrong during upload.', 'Error');
+                if (result.success) {
+                    toastr.success(result.message, 'Success');
+                    setTimeout(() => location.reload(), 800);
+                } else {
+                    toastr.error(result.message || 'Upload failed.', 'Error');
                 }
+            } catch (error) {
+                toastr.error('Something went wrong.', 'Error');
+                console.error(error);
+            }
 
-                button.disabled = false;
-                button.innerHTML = `<i class="bi bi-cloud-upload me-1"></i> Upload`;
-            });
+            this.disabled = false;
+            this.innerHTML = buttonOriginalHTML;
         });
-    </script>
+    });
+</script>
+<script>
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', async function () {
+            const id = this.dataset.id;
+
+            if (!confirm("Are you sure you want to delete this slider?")) return;
+
+            try {
+                const response = await fetch("{{ route('slider.delete') }}", {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    toastr.success(result.message, 'Deleted');
+                    setTimeout(() => location.reload(), 800);
+                } else {
+                    toastr.error(result.message || 'Failed to delete.', 'Error');
+                }
+            } catch (error) {
+                toastr.error('Delete failed.', 'Error');
+                console.error(error);
+            }
+        });
+    });
+</script>
+
 @endsection
+

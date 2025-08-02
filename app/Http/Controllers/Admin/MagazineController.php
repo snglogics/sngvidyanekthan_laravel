@@ -33,10 +33,11 @@ class MagazineController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'pdf' => 'required|mimes:pdf|max:20480', // 20MB
+            'pdf' => 'required|mimes:pdf|max:102400' // 100MB
         ]);
 
         try {
+            Log::info('File size (bytes): ' . $request->file('pdf')->getSize());
             $cloudinary = $this->cloudinary();
 
             Log::info('Starting file upload: ' . $request->file('pdf')->getClientOriginalName());

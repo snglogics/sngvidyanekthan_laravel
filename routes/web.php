@@ -109,6 +109,8 @@ Route::post('/upload-image', [ImageUploadController::class, 'upload'])->name('im
 //upload slider
 Route::get('/admin/slider-upload', [SliderController::class, 'showSliderUpload'])->name('upload.slider');
 Route::post('/admin/slider-upload', [SliderController::class, 'sliderupload'])->name('slider.upload');
+Route::delete('/admin/slider-delete', [SliderController::class, 'destroy'])->name('slider.delete');
+
 // view slider
 
 Route::get('/sliderView', [SlidersViewController::class, 'viewSlider'])->name('slider');

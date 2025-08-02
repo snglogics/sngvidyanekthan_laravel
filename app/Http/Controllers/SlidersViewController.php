@@ -2,38 +2,19 @@
 
 namespace App\Http\Controllers;
 
-
-
 use App\Models\Slider;
-
 
 class SlidersViewController extends Controller
 {
+    /**
+     * Show frontend slider preview
+     */
     public function viewSlider()
     {
+        // Get all sliders (latest first, or customize order)
+        $sliders = Slider::latest()->get();
 
-
-
-        $slider = Slider::first();
-
-        $sliders = [
-            [
-                'image_url' => $slider->slider1,
-                'header' => $slider->slider1_heading,
-                'common_header' => $slider->slider1_description,
-            ],
-            [
-                'image_url' => $slider->slider2,
-                'header' => $slider->slider2_heading,
-                'common_header' => $slider->slider2_description,
-            ],
-            [
-                'image_url' => $slider->slider3,
-                'header' => $slider->slider3_heading,
-                'common_header' => $slider->slider3_description,
-            ],
-        ];
-
+        // Return them directly to the view
         return view('frontend.viewSlider', compact('sliders'));
     }
 }

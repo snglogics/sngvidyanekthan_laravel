@@ -481,7 +481,7 @@
         .info-card i {
             font-size: 2rem;
             color: #0f64af;
-            margin-bottom: 15px;
+            margin-bottom: 2px;
         }
 
         .info-card h4 {
@@ -881,32 +881,36 @@
     <!--====== SLIDER PART START ======-->
 
     <section id="slider-part" class="slider-active">
-
-
-        @foreach ($sliders as $slider)
-            <div class="single-slider bg_cover pt-150" style="background-image: url('{{ $slider['image_url'] }}') "
-                data-overlay="4">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-7 col-lg-9">
-                            <div class="slider-cont">
-                                <h1 data-animation="bounceInLeft" data-delay="1s">{{ $slider['header'] ?? '' }}</h1>
-                                <p data-animation="fadeInUp" data-delay="1.3s">
-                                    {{ \Illuminate\Support\Str::limit($slider['common_header'] ?? '', 400, '...') }}</p>
-                                <ul>
-                                    <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn"
-                                            href="{{ route('slider') }}">Read More</a></li>
-                                    <li><a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2"
-                                            href="{{ route('contact') }}">Contact Us</a></li>
-                                </ul>
-                            </div>
+    @foreach ($sliders as $slider)
+        <div class="single-slider bg_cover pt-150"
+             style="background-image: url('{{ $slider->image }}')"
+             data-overlay="4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-7 col-lg-9">
+                        <div class="slider-cont">
+                            <h1 data-animation="bounceInLeft" data-delay="1s">{{ $slider->heading ?? '' }}</h1>
+                            <p data-animation="fadeInUp" data-delay="1.3s">
+                                {{ \Illuminate\Support\Str::limit($slider->description ?? '', 400, '...') }}
+                            </p>
+                            <ul>
+                                <li>
+                                    <a data-animation="fadeInUp" data-delay="1.6s" class="main-btn"
+                                       href="{{ route('slider') }}">Read More</a>
+                                </li>
+                                <li>
+                                    <a data-animation="fadeInUp" data-delay="1.9s" class="main-btn main-btn-2"
+                                       href="{{ route('contact') }}">Contact Us</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        @endforeach
+        </div>
+    @endforeach
+</section>
 
-    </section>
 
     <!--====== SLIDER PART ENDS ======-->
 
@@ -1222,13 +1226,18 @@
                     </div>
                     <div class="info-card">
                         <div class="icon-title-wrap">
-                            <i class="fas fa-mobile-alt "></i>
+                             <i class="fas fa-mobile-alt "></i>
+                            
                             <h4>Our Contact Info</h4>
+                           
                         </div>
-                        <p>+91 7994573586<br>
-                            +0484-2632102, 2626490<br>
-                            svidyaaluva@yahoo.com <br>
-                            aluvasvidya@gmail.com</p>
+                        <p> <i class="fas fa-mobile" style="font-size: 12px;"></i>
++91 7994573586</br>
+                           <i class="fas fa-phone-alt" style="font-size: 12px;"></i>
+
+ +0484-2632102, 2626490</br>
+                            <i class="fas fa-envelope" style="font-size: 12px;"></i> svidyaaluva@yahoo.com </br>
+                            <i class="fas fa-envelope" style="font-size: 12px;"></i> aluvasvidya@gmail.com</p>
                     </div>
                     <div class="info-card">
                         <div class="icon-title-wrap">
