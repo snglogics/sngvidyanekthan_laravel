@@ -67,7 +67,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 90vh;
             background-color: rgba(0,0,0,0.8);
             z-index: 1000;
             align-items: center;
@@ -77,7 +77,7 @@
         .modal-content {
             width: 80%;
             max-width: 900px;
-            max-height: 90vh;
+            max-height: 100vh;
             overflow: auto;
             position: relative;
             background-size: cover;
@@ -155,7 +155,9 @@
             @forelse($upcomingEvent as $event)
                 <li class="mb-3">
                     <div class="singel-event event-with-bg" 
-                         style="background-image: url('{{ $event->image_url }}')"
+                         style="background-image: url('{{ $event->image_url }}'); background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;"
                          onclick="openEventModal('{{ $event->image_url }}', '{{ addslashes($event->heading) }}', '{{ \Carbon\Carbon::parse($event->event_date)->format('d F Y') }}', '{{ addslashes($event->time_interval) }}', '{{ addslashes($event->venue) }}', '{{ addslashes($event->description) }}')">
                         <div class="event-content">
                             <span><i class="fa fa-calendar"></i>
@@ -181,33 +183,38 @@
 <div id="eventModal" class="event-modal">
     <div class="modal-content" id="modalContent">
         <span class="close-modal" onclick="closeEventModal()">&times;</span>
-        <div class="modal-body">
-            <h2 id="modalEventTitle"></h2>
-            <p><i class="fa fa-calendar"></i> <span id="modalEventDate"></span></p>
-            <p><i class="fa fa-clock-o"></i> <span id="modalEventTime"></span></p>
-            <p><i class="fa fa-map-marker"></i> <span id="modalEventVenue"></span></p>
-            <p id="modalEventDescription"></p>
-        </div>
+        <div class="modal-body d-flex justify-content-between flex-wrap gap-4">
+    <div class="modal-text flex-grow-1">
+        <h2 id="modalEventTitle"></h2>
+        <p><i class="fa fa-calendar"></i> <span id="modalEventDate"></span></p>
+        <p><i class="fa fa-clock-o"></i> <span id="modalEventTime"></span></p>
+        <p><i class="fa fa-map-marker"></i> <span id="modalEventVenue"></span></p>
+        <p id="modalEventDescription"></p>
+    </div>
+    <div class="modal-img" style="flex: 0 0 280px;">
+        <img id="modalEventImage" src="" alt="Event Image" style="width:100%; height:auto; border-radius:10px;">
+    </div>
+</div>
+
     </div>
 </div>
 
 <script>
-    function openEventModal(imageUrl, title, date, time, venue, description) {
-        const modal = document.getElementById('eventModal');
-        const modalContent = document.getElementById('modalContent');
-        
-        // Set the background image and content
-        modalContent.style.backgroundImage = `url('${imageUrl}')`;
-        document.getElementById('modalEventTitle').textContent = title;
-        document.getElementById('modalEventDate').textContent = date;
-        document.getElementById('modalEventTime').textContent = time;
-        document.getElementById('modalEventVenue').textContent = venue;
-        document.getElementById('modalEventDescription').textContent = description;
-        
-        // Show the modal
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
-    }
+function openEventModal(imageUrl, title, date, time, venue, description) {
+    const modal = document.getElementById('eventModal');
+    const modalContent = document.getElementById('modalContent');
+
+    // Set content
+    document.getElementById('modalEventTitle').textContent = title;
+    document.getElementById('modalEventDate').textContent = date;
+    document.getElementById('modalEventTime').textContent = time;
+    document.getElementById('modalEventVenue').textContent = venue;
+    document.getElementById('modalEventDescription').textContent = description;
+    document.getElementById('modalEventImage').src = imageUrl;
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
     
     function closeEventModal() {
         document.getElementById('eventModal').style.display = 'none';
