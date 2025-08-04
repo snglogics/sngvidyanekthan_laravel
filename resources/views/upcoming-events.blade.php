@@ -34,6 +34,7 @@
             width: calc(100% - 40px); /* Account for padding */
             margin-left: 0;
             margin-right: 0;
+            min-height: 200px;
         }
         
         .event-with-bg:hover {
@@ -73,6 +74,8 @@
             align-items: center;
             justify-content: center;
         }
+        
+
         
         .modal-content {
             width: 80%;
@@ -137,6 +140,7 @@
             .event-content {
                 padding-left: 10px;
                 padding-right: 10px;
+                color:white;
             }
         }
     </style>
@@ -155,19 +159,21 @@
             @forelse($upcomingEvent as $event)
                 <li class="mb-3">
                     <div class="singel-event event-with-bg" 
-                         style="background-image: url('{{ $event->image_url }}'); background-size: cover;
+                         style="background-image: url('{{ asset('frontend/images/eventsbg.jpg') }}'); background-size: cover;
     background-position: center;
     background-repeat: no-repeat;"
                          onclick="openEventModal('{{ $event->image_url }}', '{{ addslashes($event->heading) }}', '{{ \Carbon\Carbon::parse($event->event_date)->format('d F Y') }}', '{{ addslashes($event->time_interval) }}', '{{ addslashes($event->venue) }}', '{{ addslashes($event->description) }}')">
                         <div class="event-content">
-                            <span><i class="fa fa-calendar"></i>
-                                {{ \Carbon\Carbon::parse($event->event_date)->format('d F Y') }}</span>
-                            <a href="#" style="color: white;">
-                                <h4>{{ $event->heading }}</h4>
-                            </a>
-                            <span><i class="fa fa-clock-o"></i> {{ $event->time_interval }}</span>
-                            <span><i class="fa fa-map-marker"></i> {{ $event->venue }}</span>
-                        </div>
+    <span style="color: white;"><i class="fa fa-calendar"></i>
+        {{ \Carbon\Carbon::parse($event->event_date)->format('d F Y') }}</span>
+
+    <a href="#" style="color: white;">
+        <h4>{{ $event->heading }}</h4>
+    </a>
+
+    <span style="color: white;"><i class="fa fa-clock-o"></i> {{ $event->time_interval }}</span>
+    <span style="color: white;"><i class="fa fa-map-marker"></i> {{ $event->venue }}</span>
+</div>
                     </div>
                 </li>
             @empty
@@ -180,16 +186,18 @@
 </div>
 
 <!-- Event Modal -->
-<div id="eventModal" class="event-modal">
-    <div class="modal-content" id="modalContent">
+<div id="eventModal" class="event-modal" >
+    <div class="modal-content" id="modalContent"  style="background-image: url('{{ asset('frontend/images/eventsbg.jpg') }}'); 
+    background-position: right;
+    background-repeat: no-repeat;">
         <span class="close-modal" onclick="closeEventModal()">&times;</span>
         <div class="modal-body d-flex justify-content-between flex-wrap gap-4">
     <div class="modal-text flex-grow-1">
-        <h2 id="modalEventTitle"></h2>
-        <p><i class="fa fa-calendar"></i> <span id="modalEventDate"></span></p>
-        <p><i class="fa fa-clock-o"></i> <span id="modalEventTime"></span></p>
-        <p><i class="fa fa-map-marker"></i> <span id="modalEventVenue"></span></p>
-        <p id="modalEventDescription"></p>
+        <h2 id="modalEventTitle" style="color: yellow;"></h2>
+        <p><i class="fa fa-calendar"></i> <span id="modalEventDate" style="color: white;"></span></p>
+        <p><i class="fa fa-clock-o"></i> <span id="modalEventTime" style="color: white;"></span></p>
+        <p><i class="fa fa-map-marker"></i> <span id="modalEventVenue" style="color: white;"></span></p>
+        <p id="modalEventDescription" style="color: yellow;"></p>
     </div>
     <div class="modal-img" style="flex: 0 0 280px;">
         <img id="modalEventImage" src="" alt="Event Image" style="width:100%; height:auto; border-radius:10px;">
