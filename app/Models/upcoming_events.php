@@ -14,4 +14,5 @@ class upcoming_events extends Model
         'venue',
         'image_url',
     ];
+    
 }

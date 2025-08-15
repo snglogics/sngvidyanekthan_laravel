@@ -158,6 +158,8 @@
         <ul class="list-unstyled">
             @forelse($upcomingEvent as $event)
                 <li class="mb-3">
+
+                
                     <div class="singel-event event-with-bg" 
                          style="background-image: url('{{ asset('frontend/images/eventsbg.jpg') }}'); background-size: cover;
     background-position: center;

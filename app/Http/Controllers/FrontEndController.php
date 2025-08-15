@@ -11,7 +11,8 @@ use App\Models\PrincipalMsg;
 use App\Models\upcoming_events;
 use App\Models\ManagerMsg;
 use App\Models\News;
-
+use Carbon\Carbon;
+use App\Models\Certificate;
 class FrontEndController extends Controller
 {
     public function home()
@@ -26,25 +27,33 @@ class FrontEndController extends Controller
         // Fetch all slider records
         //  $scrollers = Slider::first();
         $scrollers = News::whereNotNull('image_url')->get();
-
+        $certificates = Certificate::all(); 
         
-$sliders = Slider::latest()->get();
+        $sliders = Slider::latest()->get();
         
 
-        return view('home', compact('sliders', 'announcements', 'scrollers', 'principalMsg', 'events'));
+        return view('home', compact('sliders', 'announcements', 'scrollers', 'principalMsg', 'events', 'certificates'));
     }
 
 
     public function about()
-    {
-        $upcomingEvent = upcoming_events::orderByDesc('event_date')->get();
-        return view('about', compact('upcomingEvent'));
-    }
+   {
+    $upcomingEvent = upcoming_events::whereDate('event_date', '>=', Carbon::today())
+        ->orderByDesc('event_date')
+        ->get();
+
+         $certificates = Certificate::all();
+    return view('about', compact('upcomingEvent', 'certificates'));
+}
 
     public function upComingEvents()
 {
-    $upcomingEvent = upcoming_events::orderByDesc('event_date')->get();
-    return view('upcoming-events', compact('upcomingEvent'));
+    $upcomingEvent = upcoming_events::whereDate('event_date', '>=', Carbon::today())
+        ->orderBy('event_date', 'asc') // Soonest first
+        ->get();
+        $certificates = Certificate::all(); 
+
+    return view('upcoming-events', compact('upcomingEvent', 'certificates'));
 }
     public function footer()
     {
@@ -60,6 +69,7 @@ $sliders = Slider::latest()->get();
     {
         $principalMsg = PrincipalMsg::latest()->first();
         $managerMsg = ManagerMsg::latest()->first();
-        return view('prinicpalmsgpage', compact('principalMsg', 'managerMsg'));
+        $certificates = Certificate::all(); 
+        return view('prinicpalmsgpage', compact('principalMsg', 'managerMsg', 'certificates'));
     }
 }

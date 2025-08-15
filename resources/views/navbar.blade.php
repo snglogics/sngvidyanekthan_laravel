@@ -286,12 +286,14 @@
                                     <a class="dropdown-item"
                                         href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">📄
                                         DISCLOSURE</a>
-                                    <a class="dropdown-item"
-                                        href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">📄
-                                        Fire & Safety</a>
-                                    <a class="dropdown-item"
-                                        href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">📄
-                                        Other</a>
+                                    
+                                         <!-- Dynamic certificates from database -->
+        @foreach($certificates as $certificate)
+            <a class="dropdown-item" href="{{ route('certificates.download', $certificate->id) }}" download>
+                📄 {{ $certificate->title }}
+            </a>
+        @endforeach
+                                    
                                 </div>
                             </div>
                         </div>

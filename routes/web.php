@@ -46,6 +46,7 @@ use App\Http\Controllers\Frontend\PTAMemberController;
 use App\Http\Controllers\Admin\KindergartenSliderController;
 use App\Http\Controllers\Admin\KinderPrincipalMsgController;
 use App\Http\Controllers\Admin\KinderGalleryController;
+use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Admin\BusController;
 use App\Http\Controllers\Admin\AssessmentController;
 use App\Http\Controllers\Frontend\BusRouteController;
@@ -532,3 +533,16 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
 
 //student coucil frontend
 Route::get('/student_council', [App\Http\Controllers\Frontend\StudentCouncilController::class, 'index'])->name('student_council.index');
+
+//certificates upload
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/certificates', [CertificateController::class, 'index'])->name('admin.certificates.index');
+    Route::post('/certificates', [CertificateController::class, 'store'])->name('admin.certificates.store');
+    Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('admin.certificates.edit');
+    Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('admin.certificates.update');
+    Route::delete('/certificates/{id}', [CertificateController::class, 'destroy'])->name('admin.certificates.destroy');
+    Route::get('/certificates/{id}/download', [CertificateController::class, 'download'])->name('certificates.download');
+});
+
+Route::get('/certificateslist', [CertificateController::class, 'list'])->name('certificates.list');
+Route::get('/certificates/{id}', [CertificateController::class, 'show'])->name('certificates.show');

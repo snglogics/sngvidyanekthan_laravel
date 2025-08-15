@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Announcement;
 
-class ProfileController extends Controller
+
+class NavbarController extends Controller
 {
     public function announcementCount()
     {

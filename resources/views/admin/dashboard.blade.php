@@ -48,6 +48,7 @@
     ['route' => 'admin.event', 'label' => 'Events', 'icon' => 'fas fa-calendar-day', 'color' => 'info'],
     ['route' => 'admin.onlineapplications', 'label' => 'Online Applications', 'icon' => 'fas fa-file-alt', 'color' => 'info'],
     ['route' => 'admin.kinderHome', 'label' => 'Kinder Home', 'icon' => 'fas fa-home', 'color' => 'success'],
+    ['route' => 'admin.certificates.index', 'label' => 'Upload Certificates', 'icon' => 'fas fa-certificate', 'color' => 'success'],
 ];
         @endphp
 
