@@ -288,11 +288,18 @@
                                         DISCLOSURE</a>
                                     
                                          <!-- Dynamic certificates from database -->
-        @foreach($certificates as $certificate)
-            <a class="dropdown-item" href="{{ route('certificates.download', $certificate->id) }}" download>
-                📄 {{ $certificate->title }}
-            </a>
-        @endforeach
+       
+
+        @if(isset($certificates) && count($certificates) > 0)
+    @foreach($certificates as $certificate)
+        <a class="dropdown-item" href="{{ route('certificates.download', $certificate->id) }}" download>
+            📄 {{ $certificate->title }}
+        </a>
+    @endforeach
+@else
+    <!-- Fallback content if certificates are not available -->
+    <a class="dropdown-item" href="#">No certificates available</a>
+@endif
                                     
                                 </div>
                             </div>
