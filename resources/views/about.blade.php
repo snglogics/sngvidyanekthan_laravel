@@ -120,7 +120,7 @@
 
                 // Add line breaks manually using <br><br>
                 const fullText =
-                    `Since the day of establishment, Sivagiri Vidya niketan has been maintaining its multilevel quality provided by supportive administration and devoted teachers. SVN has always been kept distinctive with an open-minded acceptance of booming technologies like smart classrooms and robotics in training its wards to cope up with the changing era.\n\nThe success of the school has been evolved from its tireless endeavour to help the students climb the academic ladder on the firm footholds of ethical values and discipline. Our ultimate objective is to help in moulding the total personality of a child in the challenging world. School name is Sivagiri Vidya Niketan.`;
+                    `Since the day of establishment, Sivagiri Vidyaniketan has been maintaining its multilevel quality provided by supportive administration and devoted teachers. SVN has always been kept distinctive with an open-minded acceptance of booming technologies like smart classrooms and robotics in training its wards to cope up with the changing era.\n\nThe success of the school has been evolved from its tireless endeavour to help the students climb the academic ladder on the firm footholds of ethical values and discipline. Our ultimate objective is to help in moulding the total personality of a child in the challenging world. School name is Sivagiri Vidya Nikethan.`;
 
                 // Replace newlines with <br> tags
                 const htmlText = fullText.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
