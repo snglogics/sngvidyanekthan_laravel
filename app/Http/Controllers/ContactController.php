@@ -49,7 +49,7 @@ class ContactController extends Controller
         Message: {$validated['messege']}
 
         Regards,
-        Your Sivagiri Vidyanikethan Team
+        Your Sivagiri Vidya niketan Team
         ", function ($message) use ($validated) {
             $message->to($validated['email'])
                 ->from(config('mail.from.address'), config('mail.from.name'))

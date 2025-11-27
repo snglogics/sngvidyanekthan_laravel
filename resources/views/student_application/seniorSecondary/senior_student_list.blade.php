@@ -7,7 +7,7 @@
             <div class="text-center mb-4">
                 <h2 class="fw-bold text-primary mb-1">
                     <i class="fas fa-school me-2"></i>Sivagiri
-                    Vidyaniketan
+                    Vidya Niketan
                 </h2>
                 <h4 class="text-uppercase text-secondary">
                     <i class="fas fa-user-graduate me-2"></i>Senior Secondary Admissions

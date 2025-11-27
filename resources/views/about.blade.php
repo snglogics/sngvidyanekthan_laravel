@@ -30,20 +30,20 @@
                         <div class="section-title mt-50"
                             style="background-color: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 8px;">
                             <h5>About us</h5>
-                            <h2 class="text-primary">Welcome to Sivagiri Vidyaniketan </h2>
+                            <h2 class="text-primary">Welcome to Sivagiri Vidya niketan </h2>
                         </div> <!-- section title -->
 
                         <div class="about-cont"
                             style="background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px;">
                             {{-- First 2 paragraphs always visible --}}
                             <p>Knowledge, the pathway to freedom, can be attained only through
-                                education. Sivagiri Vidyaniketan stands unique by perceiving Guru's
+                                education. Sivagiri Vidya niketan stands unique by perceiving Guru's
                                 ideal"Achieve freedom through education” and with the motto “Dream...
                                 Achieve.…and Lead...”</p>
                             <p>The school was started its glorious journey in 1973 as "Sadanam"
                                 under SN Charities, and thereafter headed by Sreenarayana Dharma
                                 Sangham Trust since1987, the organization was renamed as Sivagiri
-                                Vidyaniketan in1990. Its affiliation in 1992, made the school the first and
+                                Vidya niketan in1990. Its affiliation in 1992, made the school the first and
                                 fore most one in Aluva to follow Central Board of Secondary Education
                                 syllabus. The year 2005 was fortunate to witness its illustrious
                                 upgradation to the Higher Secondary level.</p>
@@ -120,7 +120,7 @@
 
                 // Add line breaks manually using <br><br>
                 const fullText =
-                    `Since the day of establishment, Sivagiri Vidyaniketan has been maintaining its multilevel quality provided by supportive administration and devoted teachers. SVN has always been kept distinctive with an open-minded acceptance of booming technologies like smart classrooms and robotics in training its wards to cope up with the changing era.\n\nThe success of the school has been evolved from its tireless endeavour to help the students climb the academic ladder on the firm footholds of ethical values and discipline. Our ultimate objective is to help in moulding the total personality of a child in the challenging world. School name is Sivagiri Vidyanikethan.`;
+                    `Since the day of establishment, Sivagiri Vidya niketan has been maintaining its multilevel quality provided by supportive administration and devoted teachers. SVN has always been kept distinctive with an open-minded acceptance of booming technologies like smart classrooms and robotics in training its wards to cope up with the changing era.\n\nThe success of the school has been evolved from its tireless endeavour to help the students climb the academic ladder on the firm footholds of ethical values and discipline. Our ultimate objective is to help in moulding the total personality of a child in the challenging world. School name is Sivagiri Vidya Niketan.`;
 
                 // Replace newlines with <br> tags
                 const htmlText = fullText.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');

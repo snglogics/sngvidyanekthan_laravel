@@ -63,7 +63,7 @@
     <div class=" py-5" id="printSection">
         <div class="card shadow-lg p-5">
             <div class="text-center mb-5">
-                <h2 class="fw-bold text-primary mb-1">SIVAGIRI VIDYANIKETAN</h2>
+                <h2 class="fw-bold text-primary mb-1">SIVAGIRI VIDYA NIKETAN</h2>
                 <h4 class="text-uppercase">Student Admission Details</h4>
             </div>
 

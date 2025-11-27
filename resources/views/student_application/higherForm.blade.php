@@ -4,7 +4,7 @@
     <div class="container py-3 py-lg-5">
         <div class="card shadow-lg p-3 p-lg-5">
             <div class="text-center mb-4 mb-lg-5">
-                <h2 class="fw-bold text-primary mb-1">SIVAGIRI VIDYANIKETAN</h2>
+                <h2 class="fw-bold text-primary mb-1">SIVAGIRI VIDYA NIKETAN</h2>
                 <h4 class="text-uppercase">Senior Student Admission Form</h4>
             </div>
 
@@ -587,7 +587,7 @@
             
             let previewHtml = `
                 <div class="preview-header text-center mb-4">
-                    <h4 class="fw-bold text-primary">SIVAGIRI VIDYANIKETAN</h4>
+                    <h4 class="fw-bold text-primary">SIVAGIRI VIDYA NIKETAN</h4>
                     <h5 class="text-uppercase">Senior Student Admission Form</h5>
                 </div>
                 

@@ -64,7 +64,7 @@
         <div class="card shadow-lg p-5">
             <div class="text-center mb-4">
                 <h2 class="fw-bold text-primary">Sivagiri
-                    Vidyaniketan</h2>
+                    Vidya Niketan</h2>
                 <h4 class="text-uppercase">Primary Student Application Details</h4>
             </div>
 

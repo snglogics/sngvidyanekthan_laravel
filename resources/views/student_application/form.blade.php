@@ -25,7 +25,7 @@
             <div class="position-relative d-flex justify-content-between align-items-start mb-4">
                 <div class="text-center flex-grow-1 pe-4">
                     <h5 class="text-uppercase fw-bold mb-1" style="font-size: 18px;">"One Caste One Religion One God for Man"</h5>
-                    <h3 class="fw-bold text-primary mb-1">SREENARAYANA VIDYANIKETAN</h3>
+                    <h3 class="fw-bold text-primary mb-1">SREENARAYANA VIDYA NIKETAN</h3>
                     <h5 class="text-uppercase">Kindergarten</h5>
                     <p>(Managed by Sree Narayana Dharma Mangalam Trust, Singall Medu, Vatakara)</p>
                     <h4 class="fw-bold text-decoration-underline">Application for Admission</h4>

@@ -19,7 +19,7 @@
         .filter-container select,
         .filter-container button {
             flex: 1;
-            max-width: 200px;
+            min-width: 150px;
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #ddd;
@@ -172,6 +172,110 @@
         .filter-container button {
             min-width: 120px;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+
+            .filter-container select,
+            .filter-container button {
+                min-width: 100%;
+                max-width: 100%;
+                flex: none;
+            }
+
+            .teacher-card {
+                flex-direction: column;
+                max-width: 400px;
+                margin: 10px auto;
+            }
+
+            .teacher-card img {
+                width: 100%;
+                height: 300px;
+                border-radius: 15px 15px 0 0;
+            }
+
+            .teacher-card .card-body {
+                padding: 15px;
+            }
+
+            .teacher-card .card-body h3 {
+                font-size: 20px;
+            }
+
+            .teacher-card .card-body h5 {
+                font-size: 16px;
+            }
+
+            .teacher-card .details-list li {
+                font-size: 13px;
+            }
+
+            .teacher-card .view-profile-btn {
+                width: 100%;
+                text-align: center;
+                padding: 12px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .filter-container {
+                margin-bottom: 20px;
+                padding: 0.75rem;
+            }
+
+            .teacher-card {
+                margin: 8px auto;
+                border-radius: 12px;
+            }
+
+            .teacher-card img {
+                height: 250px;
+            }
+
+            .teacher-card .card-body {
+                padding: 12px;
+            }
+
+            .teacher-card .card-body h3 {
+                font-size: 18px;
+            }
+
+            .teacher-card .card-body h5 {
+                font-size: 15px;
+            }
+
+            .teacher-card .details-list li {
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+
+            .teacher-card .details-list li i {
+                font-size: 16px;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .teacher-card img {
+                height: 220px;
+            }
+
+            .teacher-card .card-body h3 {
+                font-size: 17px;
+            }
+
+            .teacher-card .view-profile-btn {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+        }
     </style>
     <style>
         .parallax-section {
@@ -202,6 +306,20 @@
         .teacher-list-container {
             position: relative;
             z-index: 1;
+        }
+
+        /* Responsive adjustments for parallax section */
+        @media (max-width: 768px) {
+            .parallax-section {
+                padding: 40px 0;
+                background-attachment: scroll; /* Better performance on mobile */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .parallax-section {
+                padding: 30px 0;
+            }
         }
     </style>
 @endsection

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sivagiri Vidyaniketan</title>
+    <title>Sivagiri Vidya niketan</title>
 
     <!--====== Favicon Icon ======-->
 
@@ -243,7 +243,7 @@
                             <!-- School Name -->
                             <div class="school-name sparkle-effect ms-1"
                                 style="font-family: 'Algerian'; flex-shrink: 1;">
-                                <div class="fw-bold">SIVAGIRI VIDYANIKETHAN</div>
+                                <div class="fw-bold">SIVAGIRI VIDYA NIKETAN</div>
                                 <div class="text-uppercase small">Senior Secondary School, ALUVA</div>
                                 <div class="text-uppercase small">(CBSE AFFILIATION NO,930060)</div>
                             </div>

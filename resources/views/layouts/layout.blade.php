@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Sivagiri Vidyaniketan')</title>
+    <title>@yield('title', 'Sivagiri Vidya Niketan')</title>
 
     
     <!-- Global Styles -->
@@ -36,11 +36,14 @@
      .campus-hero {
         background: url('/frontend/images/campusImg.jpg') no-repeat center center/cover;
         color: #fff;
-        padding: 100px 0;
+        padding: 80px 0;
         text-align: center;
         position: relative;
         box-sizing: border-box;
-        
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .campus-hero::before {
@@ -51,27 +54,91 @@
     }
 
     .campus-hero h1 {
-    position: relative;
-    font-size: 3rem;
-    font-weight: 700;
-    z-index: 1;
-    color: rgb(190, 174, 174);
+        position: relative;
+        font-size: 3rem;
+        font-weight: 700;
+        z-index: 1;
+        color: rgb(190, 174, 174);
+        margin: 0;
+        padding: 0 20px;
 
-    /* Gradient fill */
-   
+        /* Gradient fill */
+        /* Glow effect */
+        text-shadow:
+            0 0 5px rgba(255, 255, 255, 0.7),
+            0 0 10px rgba(2, 58, 26, 0.6),
+            0 0 20px rgba(31, 5, 73, 0.5);
 
-    /* Glow effect */
-    text-shadow:
-        0 0 5px rgba(255, 255, 255, 0.7),
-        0 0 10px rgba(2, 58, 26, 0.6),
-        0 0 20px rgba(31, 5, 73, 0.5);
+        animation: shine 2s infinite linear;
+    }
 
-    animation: shine 2s infinite linear;
-}
+    /* Responsive font sizes */
+    @media (max-width: 1200px) {
+        .campus-hero h1 {
+            font-size: 2.8rem;
+        }
+    }
 
-/* Optional: Add subtle border-like illusion */
+    @media (max-width: 992px) {
+        .campus-hero {
+            padding: 70px 0;
+            min-height: 250px;
+        }
+        
+        .campus-hero h1 {
+            font-size: 2.5rem;
+        }
+    }
 
+    @media (max-width: 768px) {
+        .campus-hero {
+            padding: 60px 0;
+            min-height: 220px;
+        }
+        
+        .campus-hero h1 {
+            font-size: 2.2rem;
+            padding: 0 15px;
+        }
+    }
 
+    @media (max-width: 576px) {
+        .campus-hero {
+            padding: 50px 0;
+            min-height: 200px;
+        }
+        
+        .campus-hero h1 {
+            font-size: 1.8rem;
+            padding: 0 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .campus-hero {
+            padding: 40px 0;
+            min-height: 180px;
+        }
+        
+        .campus-hero h1 {
+            font-size: 1.6rem;
+            padding: 0 8px;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .campus-hero {
+            padding: 30px 0;
+            min-height: 160px;
+        }
+        
+        .campus-hero h1 {
+            font-size: 1.4rem;
+            padding: 0 5px;
+        }
+    }
+
+    /* Optional: Add subtle border-like illusion */
     </style>
 
    <style>

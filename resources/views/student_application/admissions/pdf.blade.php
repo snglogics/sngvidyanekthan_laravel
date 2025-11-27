@@ -47,7 +47,7 @@
 
 <body>
 
-    <h2>SIVAGIRI VIDYANIKETAN</h2>
+    <h2>SIVAGIRI VIDYA NIKETAN</h2>
     <h4>Student Admission Form</h4>
 
     @if ($student->photo_url)

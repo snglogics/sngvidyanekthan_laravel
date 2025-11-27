@@ -5,7 +5,7 @@
         <div class="card shadow-lg p-3 p-md-5">
             <div class="text-center mb-4 mb-md-5">
                 <h5 class="text-uppercase fw-bold mb-1" style="font-size: clamp(14px, 3vw, 18px);">"One Caste One Religion One God for Man"</h5>
-                <h2 class="fw-bold text-primary mb-1" style="font-size: clamp(1.5rem, 4vw, 2rem);">SIVAGIRI VIDYANIKETAN</h2>
+                <h2 class="fw-bold text-primary mb-1" style="font-size: clamp(1.5rem, 4vw, 2rem);">SIVAGIRI VIDYA NIKETAN</h2>
                 <h5 class="text-uppercase" style="font-size: clamp(1rem, 2.5vw, 1.25rem);">Student Admission Form</h5>
                 <p class="mb-1" style="font-size: clamp(12px, 2.5vw, 14px);">(Managed by Sree Narayana Dharma Mangalam Trust, Singall Medu, Vatakara)</p>
                 <h4 class="fw-bold text-decoration-underline mt-2" style="font-size: clamp(1.1rem, 3vw, 1.4rem);">Application for Admission</h4>
@@ -381,7 +381,7 @@
                 <div class="preview-container">
                     <div class="text-center mb-4">
                         <h5 class="text-uppercase fw-bold mb-1">"One Caste One Religion One God for Man"</h5>
-                        <h2 class="fw-bold text-primary mb-1">SIVAGIRI VIDYANIKETAN</h2>
+                        <h2 class="fw-bold text-primary mb-1">SIVAGIRI VIDYA NIKETAN</h2>
                         <h5 class="text-uppercase">Student Admission Form</h5>
                         <p class="mb-1">(Managed by Sree Narayana Dharma Mangalam Trust, Singall Medu, Vatakara)</p>
                         <h4 class="fw-bold text-decoration-underline mt-2">Application for Admission</h4>

@@ -167,6 +167,7 @@
             padding: 0 20px;
             margin-top: 16px;
         }
+        
 
         .principal-name {
             font-size: 1.5rem;
@@ -178,8 +179,8 @@
         }
 
         .principal-image-container img {
-            width: 200px;
-            height: 200px;
+            width: 400px;
+            height: 400px;
             border-radius: 50%;
             object-fit: cover;
             /* margin-bottom: 15px; */
@@ -912,48 +913,7 @@
 </section>
 
 
-    <!--====== SLIDER PART ENDS ======-->
-
-    <!--====== CATEGORY PART START ======-->
-
-    {{-- <section id="category-part">
-    <div class="container">
-        <div class="category pt-40 pb-80">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="category-text pt-40">
-                        <h2>Our Facilities</h2>
-                        <p class="text-white" style="font-size: 14px; padding: 10px 0 10px 50px;">
-                            We provide a wide range of facilities to ensure a holistic learning experience for our students.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-8">
-                    <div class="position-relative mt-40">
-                        <div class="category-slied d-flex">
-                            @foreach ([['icon' => 'laboratory.png', 'label' => 'Laboratories', 'color' => 'color-1'], ['icon' => 'sports.png', 'label' => 'Sport Facility', 'color' => 'color-2'], ['icon' => 'libraray.png', 'label' => 'Library', 'color' => 'color-3'], ['icon' => 'digitalClass.png', 'label' => 'Digital Class', 'color' => 'color-1'], ['icon' => 'canteen.png', 'label' => 'Canteen', 'color' => 'color-2'], ['icon' => 'auditorium.png', 'label' => 'Auditorium', 'color' => 'color-3']] as $item)
-                            <div class="single-category text-center {{ $item['color'] }}" style="width: 250px;">
-                                <a href="#">
-                                    <span class="singel-category d-block p-3">
-                                        <span class="icon mb-3 d-block">
-                                            <img src="frontend/images/{{ $item['icon'] }}" alt="Icon" style="width: 80px;">
-                                        </span>
-                                        <span class="cont d-block">
-                                            <strong>{{ $item['label'] }}</strong>
-                                        </span>
-                                    </span>
-                                </a>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section> --}}
+   
     <section id="category-part">
         <div class="container">
             <div class="row">
@@ -1017,7 +977,7 @@
                 <p class="principal-name font-semibold mt-2 text-lg">{{ $principalMsg->image_name }}</p>
             </div>
 
-            <p id="principal-message" class="principal-quote text-gray-700 text-base leading-relaxed">
+            <p id="principal-message" class="principal-quote text-gray-700 text-base leading-relaxed ">
                 {{ $principalMsg->image_description }}
             </p>
 
@@ -1220,7 +1180,7 @@
                             <i class="fas fa-map-marker-alt"></i>
                             <h4>Our Address</h4>
                         </div>
-                        Sivagiri Vidyaniketan
+                        Sivagiri Vidya niketan
                         Vadihira Rd, Keeramkunnu,
                         <p>Keezhmadu, Aluva, <br>Kerala 683105</p>
                     </div>
@@ -1296,7 +1256,7 @@
             <div class="cta-content">
                 <h2>Empowering Education Through Technology</h2>
                 <p>Discover a modern learning environment built for students, parents, and teachers. Join us in shaping the
-                    future of education at Sree Narayana Vidyaniketan.</p>
+                    future of education at Sree Narayana Vidya Niketan.</p>
                 <a href="{{ route('contact') }}" class="cta-button">Apply Now</a>
             </div>
         </section>

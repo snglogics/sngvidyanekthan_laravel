@@ -5,7 +5,7 @@
         <div class="card shadow-lg border-0 rounded-4 p-4">
             <div class="text-center mb-4">
                 <h2 class="fw-bold text-primary mb-1">
-                    <i class="fas fa-school me-2"></i>SIVAGIRI VIDYANIKETAN
+                    <i class="fas fa-school me-2"></i>SIVAGIRI VIDYA NIKETAN
                 </h2>
                 <h4 class="text-uppercase text-secondary">
                     <i class="fas fa-users me-2"></i>Student Admissions List
