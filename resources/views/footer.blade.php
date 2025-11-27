@@ -55,7 +55,6 @@
                                 <h6>Sitemap</h6>
                             </div>
                             <ul>
-                                <li><a href="{{ route('home') }}"><i class="fa fa-angle-right"></i>Home</a></li>
                                 <li><a href="{{ route('about') }}"><i class="fa fa-angle-right"></i>About us</a></li>
                                 <li><a href="{{ route('house_life') }}"><i class="fa fa-angle-right"></i>Activities</a>
                                 </li>
@@ -69,8 +68,7 @@
                                 <li><a href="bus-route"><i class="fa fa-angle-right"></i>Bus Routes</a></li>
                                 <li><a href="{{ route('teachers.public') }}"><i
                                             class="fa fa-angle-right"></i>Teachers</a></li>
-                                <li><a href="{{ route('frontend.sports_games.index') }}"><i
-                                            class="fa fa-angle-right"></i>Sprots</a></li>
+                               
                                 <li><a href="{{ route('contact') }}"><i class="fa fa-angle-right"></i>Contact</a></li>
                             </ul>
                         </div> <!-- footer link -->

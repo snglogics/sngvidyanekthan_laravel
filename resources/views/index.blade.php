@@ -242,7 +242,7 @@
                 <div class="row">
                     <div class="col-xl-7 col-lg-9">
                         <div class="slider-cont">
-                            <h1 data-animation="bounceInLeft" data-delay="1s">Sivagiri Vidya Nikethan</h1>
+                            <h1 data-animation="bounceInLeft" data-delay="1s">Sivagiri Vidya Niketan</h1>
                             <p data-animation="fadeInUp" data-delay="1.3s">Donec vitae sapien ut libearo venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt  Sed fringilla mauri amet nibh.</p>
                             <ul>
                                 <li><a data-animation="fadeInUp" data-delay="1.6s" class="main-btn" href="#">Read More</a></li>
@@ -376,7 +376,7 @@
                 <div class="col-lg-5">
                     <div class="section-title mt-50">
                         <h5>About us</h5>
-                        <h2>Welcome to Vidya Nikethan </h2>
+                        <h2>Welcome to Vidya Niketan </h2>
                     </div> <!-- section title -->
                     <div class="about-cont">
                         <p>Lorem ipsum gravida nibh vel velit auctor aliquetn sollicitudirem quibibendum auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet . Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt  mauris. <br> <br> auci elit cons equat ipsutis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet . Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt  mauris</p>

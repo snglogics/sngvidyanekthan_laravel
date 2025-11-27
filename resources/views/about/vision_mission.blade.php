@@ -99,7 +99,7 @@
             </div>
 
             <!-- Core Values -->
-            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <!-- <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
                 <div class="info-section" style="background-image: url('{{ asset('frontend/images/values.jpg') }}');">
                     <div>
                         <div class="info-icon"><i class="fas fa-heart"></i></div>
@@ -107,7 +107,7 @@
                         <p>Our core values — <strong>Integrity, Compassion, Excellence, Equality</strong>, and <strong>Responsibility</strong> — serve as guiding principles in our journey. These values are woven into the fabric of our school culture, shaping learners who make meaningful contributions to the world.</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </section>

@@ -920,7 +920,7 @@
                 <div class="col-lg-5 left-section">
                     <h2>Our <span>Facilities<span></h2>
                     <p class="section-description">We provide a wide range of facilities to ensure a holistic learning
-                        experience for our students. From state-of-the-art labs to spacious sports facilities, we prioritize
+                        experience for our students. Canteen to Cafeteria, we prioritize
                         both academic and extracurricular growth.</p>
                 </div>
                 <div class="col-lg-7">
@@ -946,7 +946,7 @@
                 @php
                     $stats = [
                         ['icon' => 'fa-solid fa-user-graduate', 'count' => '1200+', 'title' => 'Students'],
-                        ['icon' => 'fa-solid fa-chalkboard-teacher', 'count' => '85+', 'title' => 'Teachers'],
+                        ['icon' => 'fa-solid fa-chalkboard-teacher', 'count' => '50+', 'title' => 'Teachers'],
                         ['icon' => 'fa-solid fa-award', 'count' => '25+', 'title' => 'Years of Excellence'],
                     ];
                 @endphp
@@ -1047,17 +1047,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="cta-card">
-                        <div class="icon-title-wrap">
-                            <i class="fas fa-clock"></i>
-                            <h3>Flexible Learning Schedules</h3>
-                        </div>
-                        <p>Learn at your own pace with our flexible learning options. Balance your education with a busy
-                            lifestyle and achieve your goals on your own schedule.</p>
-                        <a href="{{ route('contact') }}" class="cta-btn">Contact us →</a>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </section>

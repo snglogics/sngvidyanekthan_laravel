@@ -208,7 +208,7 @@
                             <ul>
                                 <li class="sparkle-container">
                                     <img src="{{ asset('frontend/images/all-icon/map.png') }}" alt="icon">
-                                    <span class="sparkle-text">Bridge Rd, Periyar Nagar, Aluva, Kerala 683101</span>
+                                    <span class="sparkle-text">Vadihira Rd, Keeramkunnu, Keezhmadu Aluva, Kerala</span>
 
                                     <img src="{{ asset('frontend/images/all-icon/email.png') }}" alt="icon">
                                     <span class="sparkle-text">aluvasvidya@gmail.com</span>
@@ -243,16 +243,15 @@
                             <!-- School Name -->
                             <div class="school-name sparkle-effect ms-1"
                                 style="font-family: 'Algerian'; flex-shrink: 1;">
-                                <div class="fw-bold">SIVAGIRI VIDYA NIKETAN</div>
-                                <div class="text-uppercase small">Senior Secondary School, ALUVA</div>
-                                <div class="text-uppercase small">(CBSE AFFILIATION NO,930060)</div>
+                                <div class="fw-bold">SIVAGIRI VIDYA NIKETAN, ALUVA</div>
+                                <div class="text-uppercase small">(CBSE AFFILIATION NO: 930060)</div>
                             </div>
                         </div>
 
                         <!-- Right Section: Buttons (Desktop only) -->
                         <div class="d-none d-lg-flex align-items-center" style="flex-wrap: nowrap; flex-shrink: 0;">
                             <div class="kinder-button-wrapper me-2" style="flex-shrink: 0;">
-                                <a href="{{ route('kindergarten.sliders') }}" class="kinder-button">Kinder Garten</a>
+                                <a href="{{ route('kindergarten.sliders') }}" class="kinder-button">Kindergarten</a>
                             </div>
 
                             <div class="button dropdown me-2" style="flex-shrink: 0;">
@@ -329,7 +328,7 @@
                                     href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf"
                                     target="_blank">📢 Disclosure</a>
                                 <a class="dropdown-item kinder-button"
-                                    href="{{ route('kindergarten.sliders') }}">Kinder Garten</a>
+                                    href="{{ route('kindergarten.sliders') }}">Kindergarten</a>
                             </div>
                         </div>
                     </div>
