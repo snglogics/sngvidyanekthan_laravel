@@ -544,7 +544,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 });
 
 Route::get('/certificates/{id}/download', [CertificateController::class, 'download'])->name('certificates.download');
-Route::get('/certificates/{id}/view', [CertificateController::class, 'viewFile'])->name('certificates.view');
+Route::get('/view-certificate/{id}', [CertificateController::class, 'viewFile'])->name('certificates.view');
+Route::get('/test-route', function () {
+  return 'Test Route Working'; });
 
 Route::get('/certificateslist', [CertificateController::class, 'list'])->name('certificates.list');
 Route::get('/certificates/{id}', [CertificateController::class, 'show'])->name('certificates.show');
