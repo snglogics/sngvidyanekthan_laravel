@@ -291,7 +291,7 @@
 
         @if(isset($certificates) && count($certificates) > 0)
     @foreach($certificates as $certificate)
-        <a class="dropdown-item" href="{{ route('certificates.view', ['id' => $certificate->id, 'slug' => \Illuminate\Support\Str::slug($certificate->title)]) }}" target="_blank">
+        <a class="dropdown-item" href="{{ route('certificates.view', $certificate->id) }}" target="_blank">
             📄 {{ $certificate->title }}
         </a>
     @endforeach

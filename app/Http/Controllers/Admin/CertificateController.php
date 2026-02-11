@@ -145,16 +145,23 @@ class CertificateController extends Controller
         }, $filename, $headers);
     }
 
-    public function viewFile($id, $slug = null)
+    public function viewFile($id)
     {
         $certificate = Certificate::findOrFail($id);
+
+        $filename = $certificate->title . '.pdf';
 
         // Basic validation of the URL
         if (empty($certificate->pdf_url)) {
             abort(404, 'PDF URL not found');
         }
 
-        return view('admin.certificatesupload.view', compact('certificate'));
+        return response()->stream(function () use ($certificate) {
+            readfile($certificate->pdf_url);
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        ]);
     }
 
     private function cloudinary()
