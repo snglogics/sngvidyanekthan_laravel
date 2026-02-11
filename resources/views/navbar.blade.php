@@ -327,7 +327,18 @@
                                 <a class="dropdown-item"
                                     href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf"
                                     target="_blank">📢 Disclosure</a>
-                                <a class="dropdown-item kinder-button"
+
+                                    <div class="dropdown-divider"></div>
+                                    <h6 class="dropdown-header">Certificates</h6>
+                                    @if(isset($certificates) && count($certificates) > 0)
+                                        @foreach($certificates as $certificate)
+                                            <a class="dropdown-item" href="{{ route('certificates.view', $certificate->id) }}" target="_blank">
+                                                📄 {{ $certificate->title }}
+                                            </a>
+                                        @endforeach
+                                    @endif
+
+                                <a class="dropdown-item kinder-button mt-2"
                                     href="{{ route('kindergarten.sliders') }}">Kindergarten</a>
                             </div>
                         </div>
