@@ -282,9 +282,9 @@
                                     Certificates
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item"
+                                    <!-- <a class="dropdown-item"
                                         href="http://sivagirividyaniketan.edu.in/wp-content/uploads/2023/07/MANDATORY-PUBLIC-DISCLOSURES.pdf">📄
-                                        DISCLOSURE</a>
+                                        DISCLOSURE</a> -->
                                     
                                          <!-- Dynamic certificates from database -->
        
