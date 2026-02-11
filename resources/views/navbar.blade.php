@@ -291,7 +291,7 @@
 
         @if(isset($certificates) && count($certificates) > 0)
     @foreach($certificates as $certificate)
-        <a class="dropdown-item" href="{{ route('certificates.download', $certificate->id) }}" download>
+        <a class="dropdown-item" href="{{ route('certificates.view', $certificate->id) }}" target="_blank">
             📄 {{ $certificate->title }}
         </a>
     @endforeach

@@ -69,48 +69,48 @@ class CertificateController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'title' => 'required|string|max:255',
-        'pdf' => 'nullable|mimes:pdf|max:102400', // 100MB
-    ]);
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'pdf' => 'nullable|mimes:pdf|max:102400', // 100MB
+        ]);
 
-    try {
-        $certificate = Certificate::findOrFail($id);
-        $certificate->title = $request->title;
+        try {
+            $certificate = Certificate::findOrFail($id);
+            $certificate->title = $request->title;
 
-        if ($request->hasFile('pdf')) {
-            $cloudinary = $this->cloudinary();
+            if ($request->hasFile('pdf')) {
+                $cloudinary = $this->cloudinary();
 
-            // Delete old file if exists
-            if ($certificate->public_id) {
-                $cloudinary->uploadApi()->destroy($certificate->public_id, ['resource_type' => 'raw']);
+                // Delete old file if exists
+                if ($certificate->public_id) {
+                    $cloudinary->uploadApi()->destroy($certificate->public_id, ['resource_type' => 'raw']);
+                }
+
+                $uploaded = $cloudinary->uploadApi()->upload($request->file('pdf')->getRealPath(), [
+                    'resource_type' => 'raw',
+                    'folder' => 'certificates',
+                    'public_id' => 'certificate_' . uniqid(),
+                    'overwrite' => true,
+                ]);
+
+                $certificate->pdf_url = $uploaded['secure_url'];
+                $certificate->public_id = $uploaded['public_id'];
             }
 
-            $uploaded = $cloudinary->uploadApi()->upload($request->file('pdf')->getRealPath(), [
-                'resource_type' => 'raw',
-                'folder' => 'certificates',
-                'public_id' => 'certificate_' . uniqid(),
-                'overwrite' => true,
-            ]);
+            $certificate->save();
 
-            $certificate->pdf_url = $uploaded['secure_url'];
-            $certificate->public_id = $uploaded['public_id'];
+            return redirect()->route('admin.certificates.index')
+                ->with('success', 'Certificate updated successfully!');
+
+        } catch (\Exception $e) {
+            Log::error('Update failed: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Update failed: ' . $e->getMessage());
         }
-
-        $certificate->save();
-        
-        return redirect()->route('admin.certificates.index')
-            ->with('success', 'Certificate updated successfully!');
-            
-    } catch (\Exception $e) {
-        Log::error('Update failed: ' . $e->getMessage());
-        
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'Update failed: ' . $e->getMessage());
     }
-}
 
     public function destroy($id)
     {
@@ -145,12 +145,27 @@ class CertificateController extends Controller
         }, $filename, $headers);
     }
 
+    public function viewFile($id)
+    {
+        $certificate = Certificate::findOrFail($id);
+
+        $filename = $certificate->title . '.pdf';
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        ];
+
+        return response()->stream(function () use ($certificate) {
+            echo file_get_contents($certificate->pdf_url);
+        }, 200, $headers);
+    }
+
     private function cloudinary()
     {
         $config = new Configuration([
             'cloud' => [
                 'cloud_name' => config('cloudinary.cloud_name'),
-                'api_key'    => config('cloudinary.api_key'),
+                'api_key' => config('cloudinary.api_key'),
                 'api_secret' => config('cloudinary.api_secret'),
             ],
             'url' => [

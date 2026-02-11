@@ -56,7 +56,7 @@ use App\Http\Controllers\StudentCouncilController;
 use App\Http\Controllers\Frontend\AssessmentFrontendController;
 
 
- 
+
 
 // Routes for the Frontend (Public Pages)
 Route::get('/', [FrontEndController::class, 'home'])->name('home');  // Define home route
@@ -496,11 +496,11 @@ Route::get('/pta-members', [PTAMemberController::class, 'index'])->name('pta-mem
 
 //club activity
 Route::resource('admin/clubs', ClubActivityController::class)->names([
-  'index'   => 'admin.clubs.index',
-  'create'  => 'admin.clubs.create',
-  'store'   => 'admin.clubs.store',
-  'edit'    => 'admin.clubs.edit',
-  'update'  => 'admin.clubs.update',
+  'index' => 'admin.clubs.index',
+  'create' => 'admin.clubs.create',
+  'store' => 'admin.clubs.store',
+  'edit' => 'admin.clubs.edit',
+  'update' => 'admin.clubs.update',
   'destroy' => 'admin.clubs.destroy',
 ]);
 // kindergarder Slider
@@ -536,12 +536,13 @@ Route::get('/student_council', [App\Http\Controllers\Frontend\StudentCouncilCont
 
 //certificates upload
 Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/certificates', [CertificateController::class, 'index'])->name('admin.certificates.index');
-    Route::post('/certificates', [CertificateController::class, 'store'])->name('admin.certificates.store');
-    Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('admin.certificates.edit');
-    Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('admin.certificates.update');
-    Route::delete('/certificates/{id}', [CertificateController::class, 'destroy'])->name('admin.certificates.destroy');
-    Route::get('/certificates/{id}/download', [CertificateController::class, 'download'])->name('certificates.download');
+  Route::get('/certificates', [CertificateController::class, 'index'])->name('admin.certificates.index');
+  Route::post('/certificates', [CertificateController::class, 'store'])->name('admin.certificates.store');
+  Route::get('/certificates/{id}/edit', [CertificateController::class, 'edit'])->name('admin.certificates.edit');
+  Route::put('/certificates/{id}', [CertificateController::class, 'update'])->name('admin.certificates.update');
+  Route::delete('/certificates/{id}', [CertificateController::class, 'destroy'])->name('admin.certificates.destroy');
+  Route::get('/certificates/{id}/download', [CertificateController::class, 'download'])->name('certificates.download');
+  Route::get('/certificates/{id}/view', [CertificateController::class, 'viewFile'])->name('certificates.view');
 });
 
 Route::get('/certificateslist', [CertificateController::class, 'list'])->name('certificates.list');
