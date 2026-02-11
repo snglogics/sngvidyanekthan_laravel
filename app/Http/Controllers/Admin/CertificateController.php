@@ -148,7 +148,16 @@ class CertificateController extends Controller
     public function viewFile($id)
     {
         $certificate = Certificate::findOrFail($id);
-        return redirect($certificate->pdf_url);
+
+        $filename = $certificate->title . '.pdf';
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        ];
+
+        return response()->stream(function () use ($certificate) {
+            echo file_get_contents($certificate->pdf_url);
+        }, 200, $headers);
     }
 
     private function cloudinary()
